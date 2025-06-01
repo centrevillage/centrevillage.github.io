@@ -7,7 +7,7 @@ tags:
  - Sequencer
  - Oscillator
  - Deep_26mm
-price: "19,800 JPY"
+price: "38,500 JPY"
 consumption: "50mA (+12V) / 50mA (-12V) / 0mA (+5V)"
 hp: 12
 deep: 26
