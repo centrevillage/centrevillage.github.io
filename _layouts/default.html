@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="{{ page.lang | default: site.lang | default: "en" }}">
+
+  {%- include head.html -%}
+
+  <body class="pushable">
+    <div class="pusher" aria-label="Content">
+      {%- include header.html -%}
+      <div class="main-content">
+        {{ content }}
+      </div>
+    </div>
+  </body>
+
+</html>

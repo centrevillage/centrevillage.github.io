@@ -1,0 +1,32 @@
+---
+layout: default
+---
+
+{{ content }}
+
+{%- if site.products.size > 0 -%}
+  <h2>{{ page.list_title | default: "Products:" }}</h2>
+  <div class="ui cards">
+    {%- for product in site.products -%}
+      <a class="ui card" href="{{ product.url | relative_url }}">
+        <div class="image">
+          <img src="/assets/img/{{ product.image }}">
+        </div>
+        <div class="content">
+          <div class="header">
+            {{ product.name | escape }}
+            <div class="ui right floated medium label">{{ product.deep | escape }} HP</div>
+          </div>
+          <br>
+
+          {%- for tag in product.tags -%}
+            <div class="ui small label label-margin">{{ tag | escape }}</div>
+          {%- endfor -%}
+        </div>
+      </a>
+    {%- endfor -%}
+  </div>
+
+  <p class="rss-subscribe">subscribe <a href="{{ "/feed.xml" | relative_url }}">via RSS</a></p>
+{%- endif -%}
+

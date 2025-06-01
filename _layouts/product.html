@@ -1,0 +1,50 @@
+---
+layout: default
+---
+<div class="ui text menu">
+  <div class="item">
+    <a class="ui button" href="/">&lt; Back</a>
+  </div>
+  <h1 class="item">{{ page.title | escape }}</h1>
+</div>
+<div class="ui grid stackable">
+  {%- if page.tags.size > 0 -%}
+    <div class="row">
+      <div class="column">
+        {%- for tag in page.tags -%}
+          <div class="ui medium label label-margin">{{ tag | escape }}</div>
+        {%- endfor -%}
+      </div>
+    </div>
+  {%- endif -%}
+  <div class="row">
+    <div class="six wide column">
+      <img class="ui image rounded bordered" src="/assets/img/{{ page.image }}">
+      <table class="ui definition table">
+        <tbody>
+          <tr>
+            <td>価格</td>
+            <td>{{ page.price }}</td>
+          </tr>
+          <tr>
+            <td>消費電流</td>
+            <td>{{ page.consumption }}</td>
+          </tr>
+          <tr>
+            <td>幅</td>
+            <td>{{ page.hp }} HP</td>
+          </tr>
+          <tr>
+            <td>深さ</td>
+            <td>{{ page.deep }} mm</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="ten wide column">
+      <div class="ui segment">
+        {{ content }}
+      </div>
+    </div>
+  </div>
+</div>
