@@ -10,6 +10,7 @@ consumption: "0mA (+12V) / 0mA (-12V) / 5mA (+5V)"
 hp: 2
 deep: 26
 date: 2023-08-01
+active: true
 ---
 
 Available at Japanese stores:

@@ -13,6 +13,7 @@ consumption: "50mA (+12V) / 50mA (-12V) / 0mA (+5V)"
 hp: 4
 deep: 26
 date: 2025-02-08
+active: true
 ---
 
 # Versatile Crossfade VCA

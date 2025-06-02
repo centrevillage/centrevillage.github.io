@@ -10,6 +10,7 @@ consumption: "25mA (+12V) / 5mA (-12V) / 0mA (+5V)"
 hp: 12
 deep: 28
 date: 2022-03-30
+active: true
 ---
 
 # The MINI version of the "C Quencer".

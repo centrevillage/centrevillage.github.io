@@ -10,6 +10,7 @@ consumption: "5mA (+12V) / 5mA (-12V) / 0mA (+5V)"
 hp: 2
 deep: 26
 date: 2024-11-11
+active: true
 ---
 
 # Compact Chainable Soft Clipping Mixer

@@ -10,6 +10,7 @@ consumption: "25mA (+12V) / 10mA (-12V) / 5mA (+5V)"
 hp: 2
 deep: 36
 date: 2023-11-20
+active: true
 ---
 
 This module is available at the [Official Store](https://centrevillage.stores.jp/items/655b538fc52ca90333a77cdf) only.

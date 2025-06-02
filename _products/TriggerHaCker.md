@@ -11,6 +11,7 @@ consumption: "50mA (+12V) / 25mA (-12V) / 0mA (+5V)"
 hp: 12
 deep: 36
 date: 2018-07-01
+active: false
 ---
 
 5x5 matrix trigger sequencer.

@@ -10,6 +10,7 @@ consumption: "25mA (+12V) / 25mA (-12V) / 0mA (+5V)"
 hp: 2
 deep: 35
 date: 2021-11-25
+active: true
 ---
 
 # Compact Voltage Adder

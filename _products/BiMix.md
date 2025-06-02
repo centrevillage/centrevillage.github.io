@@ -10,6 +10,7 @@ consumption: "20mA (+12V) / 20mA (-12V) / 0mA (+5V)"
 hp: 2
 deep: 35
 date: 2022-02-03
+active: true
 ---
 
 # 2 Channel Bipolar Mixer

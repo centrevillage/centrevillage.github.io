@@ -12,6 +12,7 @@ consumption: "20mA (+12V) / 20mA (-12V) / 0mA (+5V)"
 hp: 2
 deep: 35
 date: 2021-12-19
+active: true
 ---
 
 # Plus Mix - Unity Mixer with Gate Controlled Switch

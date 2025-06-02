@@ -14,6 +14,7 @@ consumption: "20mA (+12V) / 10mA (-12V) / 5mA (+5V)"
 hp: 2
 deep: 36
 date: 2023-09-15
+active: true
 ---
 
 # Compact Versatile Oscillator

@@ -12,6 +12,7 @@ consumption: "0mA (+12V) / 0mA (-12V) / 0mA (+5V)"
 hp: 2
 deep: 16
 date: 2021-11-19
+active: true
 ---
 
 # Passive Switchable Multiple

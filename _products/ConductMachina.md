@@ -10,6 +10,7 @@ consumption: "0mA (+12V) / 0mA (-12V) / 50mA (+5V)"
 hp: ""
 deep: ""
 date: 2022-06-01
+active: true
 ---
 
 # Live Timer with USB-MIDI interface

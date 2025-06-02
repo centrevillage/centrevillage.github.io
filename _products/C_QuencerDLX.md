@@ -11,6 +11,7 @@ consumption: "	50mA (+12V) / 25mA (-12V) / 0mA (+5V)"
 hp: 26
 deep: 26
 date: 2018-04-01
+active: false
 ---
 
 Available now at Japanese stores:

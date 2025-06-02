@@ -10,6 +10,7 @@ consumption: "25mA (+12V) / 10mA (-12V) / 5mA (+5V)"
 hp: 4
 deep: 26
 date: 2024-07-27
+active: true
 ---
 
 # Digital Controlled Analog Sequencer

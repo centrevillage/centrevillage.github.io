@@ -10,6 +10,7 @@ consumption: "120mA (+12V) / 90mA (-12V) / 0mA (+5V)"
 hp: 12
 deep: 26
 date: 2024-08-21
+active: true
 ---
 
 # Digital Controlled Analog Mixer

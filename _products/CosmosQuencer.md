@@ -12,6 +12,7 @@ consumption: "50mA (+12V) / 50mA (-12V) / 0mA (+5V)"
 hp: 12
 deep: 26
 date: 2023-03-17
+active: true
 ---
 
 # Performance Sequencer

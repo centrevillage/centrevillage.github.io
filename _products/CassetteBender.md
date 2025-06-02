@@ -13,6 +13,7 @@ consumption: ""
 hp: ""
 deep: ""
 date: 2019-04-01
+active: false
 ---
 
 This is not a eurorack module.

@@ -10,6 +10,7 @@ consumption: "30mA (+12V) / 2mA (-12V) / 0mA (+5V)"
 hp: 4
 deep: 27
 date: 2021-11-19
+active: true
 ---
 
 # Compact Euclidean-Rhythm Sequencer

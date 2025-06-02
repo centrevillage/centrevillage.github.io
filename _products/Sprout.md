@@ -10,6 +10,7 @@ consumption: "5mA (+12V) / 5mA (-12V) / 200mA (+5V)"
 hp: 4
 deep: 36
 date: 2023-07-22
+active: true
 ---
 
 This module is available at the Japanese stores.
