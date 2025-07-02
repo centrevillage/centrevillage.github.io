@@ -11,6 +11,7 @@ hp: 2
 deep: 36
 date: 2023-11-20
 active: true
+publish: true
 ---
 
 This module is available at the [Official Store](https://centrevillage.stores.jp/items/655b538fc52ca90333a77cdf) only.

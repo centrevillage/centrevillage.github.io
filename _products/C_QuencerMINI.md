@@ -11,6 +11,7 @@ hp: 12
 deep: 28
 date: 2022-03-30
 active: true
+publish: true
 ---
 
 # The MINI version of the "C Quencer".

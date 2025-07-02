@@ -11,6 +11,7 @@ hp: 2
 deep: 36
 date: 2022-08-03
 active: true
+publish: true
 ---
 
 # Traditional Japanese Analog Saw Core Oscillator

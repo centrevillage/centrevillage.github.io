@@ -11,6 +11,7 @@ hp: 4
 deep: 27
 date: 2021-11-19
 active: true
+publish: true
 ---
 
 # Compact Euclidean-Rhythm Sequencer

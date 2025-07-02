@@ -12,6 +12,7 @@ hp: 26
 deep: 26
 date: 2018-04-01
 active: false
+publish: true
 ---
 
 Available now at Japanese stores:

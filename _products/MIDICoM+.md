@@ -11,6 +11,7 @@ hp: 2
 deep: 26
 date: 2023-08-01
 active: true
+publish: true
 ---
 
 Available at Japanese stores:

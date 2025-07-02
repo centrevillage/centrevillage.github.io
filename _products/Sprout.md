@@ -11,6 +11,7 @@ hp: 4
 deep: 36
 date: 2023-07-22
 active: true
+publish: true
 ---
 
 This module is available at the Japanese stores.

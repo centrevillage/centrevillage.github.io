@@ -11,6 +11,7 @@ hp: 2
 deep: 35
 date: 2022-02-03
 active: true
+publish: true
 ---
 
 # 2 Channel Bipolar Mixer

@@ -11,6 +11,7 @@ hp: ""
 deep: ""
 date: 2022-06-01
 active: true
+publish: true
 ---
 
 # Live Timer with USB-MIDI interface

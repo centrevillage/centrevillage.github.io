@@ -11,6 +11,7 @@ hp: 2
 deep: 26
 date: 2024-11-11
 active: true
+publish: true
 ---
 
 # Compact Chainable Soft Clipping Mixer

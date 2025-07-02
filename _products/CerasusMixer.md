@@ -11,6 +11,7 @@ hp: 12
 deep: 26
 date: 2024-08-21
 active: true
+publish: true
 ---
 
 # Digital Controlled Analog Mixer

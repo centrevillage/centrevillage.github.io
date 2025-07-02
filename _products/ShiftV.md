@@ -11,6 +11,7 @@ hp: 2
 deep: 35
 date: 2021-11-25
 active: true
+publish: true
 ---
 
 # Compact Voltage Adder

@@ -13,6 +13,7 @@ hp: ""
 deep: ""
 date: 2022-12-01
 active: true
+publish: true
 ---
 
 ## English

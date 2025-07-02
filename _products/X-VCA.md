@@ -14,6 +14,7 @@ hp: 4
 deep: 26
 date: 2025-02-08
 active: true
+publish: true
 ---
 
 # Versatile Crossfade VCA

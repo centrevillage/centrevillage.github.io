@@ -14,6 +14,7 @@ hp: ""
 deep: ""
 date: 2019-04-01
 active: false
+publish: true
 ---
 
 This is not a eurorack module.

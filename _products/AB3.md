@@ -13,6 +13,7 @@ hp: 2
 deep: 16
 date: 2021-11-19
 active: true
+publish: true
 ---
 
 # Passive Switchable Multiple

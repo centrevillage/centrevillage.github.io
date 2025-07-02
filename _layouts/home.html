@@ -9,7 +9,7 @@ layout: default
   <div class="ui cards">
     {%- assign products = site.products -%}
     {%- for product in products -%}
-      {%- if product.active -%}
+      {%- if product.publish and product.active -%}
         <a class="ui card" href="{{ product.url | relative_url }}">
           <div class="image">
             <img src="/assets/img/{{ product.image }}">
@@ -34,7 +34,7 @@ layout: default
   <h2>Discontinued:</h2>
   <div class="ui cards">
     {%- for product in products -%}
-      {%- if product.active == false -%}
+      {%- if product.publish and product.active == false -%}
         <a class="ui card" href="{{ product.url | relative_url }}">
           <div class="image">
             <img src="/assets/img/{{ product.image }}">

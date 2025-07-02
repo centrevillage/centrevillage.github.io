@@ -11,6 +11,7 @@ hp: 2
 deep: 23
 date: 2019-05-01
 active: false
+publish: true
 ---
 
 MIDI Expander for C Quencer DLX and TriggerHaCker.

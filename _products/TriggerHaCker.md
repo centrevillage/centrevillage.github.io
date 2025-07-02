@@ -12,6 +12,7 @@ hp: 12
 deep: 36
 date: 2018-07-01
 active: false
+publish: true
 ---
 
 5x5 matrix trigger sequencer.

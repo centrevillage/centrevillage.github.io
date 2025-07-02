@@ -11,6 +11,7 @@ hp: 4
 deep: 26
 date: 2024-07-27
 active: true
+publish: true
 ---
 
 # Digital Controlled Analog Sequencer

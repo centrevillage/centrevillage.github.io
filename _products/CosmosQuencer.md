@@ -13,6 +13,7 @@ hp: 12
 deep: 26
 date: 2023-03-17
 active: true
+publish: true
 ---
 
 # Performance Sequencer

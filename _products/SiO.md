@@ -15,6 +15,7 @@ hp: 2
 deep: 36
 date: 2023-09-15
 active: true
+publish: true
 ---
 
 # Compact Versatile Oscillator

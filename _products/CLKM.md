@@ -12,6 +12,7 @@ hp: 2
 deep: 36
 date: 2022-02-23
 active: true
+publish: true
 ---
 
 # Compact Clock Master
