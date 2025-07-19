@@ -13,14 +13,17 @@ price: "49,500 JPY"
 consumption: "100mA (+12V) / 25mA (-12V) / 0mA (+5V)"
 hp: 12
 deep: 34
-date: 2025-07-1
+date: 2025-07-19
 active: true
-publish: false
+publish: true
 ---
 
-Comming Soon...
-
 # 5-Channel Trigger/Gate Sequencer
+
+Available now at Japanese stores:
+
+- [Five G](https://fiveg.net/?pid=187658133)
+- [Clock Face Modular](https://clockfacemodular.com/products/centrevillage-trigger-hacker2)
 
 ## English
 
