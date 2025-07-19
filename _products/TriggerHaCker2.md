@@ -60,6 +60,8 @@ Additionally, each step can include microsteps, probabilities, and trigger condi
 - Pattern chaining/sequencing
 - Up to 64 memory slots
 
+*The English manual will be released soon.*
+
 ## 日本語
 
 **Trigger HaCker 2** は5チャネルのトリガー/ゲートシーケンサーで、**Trigger HaCker**の後継機種です。
@@ -94,3 +96,5 @@ Additionally, each step can include microsteps, probabilities, and trigger condi
 - モジュレーションマトリクス(MOD入力と各トラックのCV値)
 - パターンチェイン/シーケンス
 - 最大64のメモリースロット
+
+[マニュアル](https://docs.google.com/document/d/1hvjuUJE3FYF_-dRES8jboTOAEbQJrE-20eO_cIdUNGk/edit?usp=sharing)
