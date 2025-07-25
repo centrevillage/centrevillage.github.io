@@ -60,7 +60,7 @@ Additionally, each step can include microsteps, probabilities, and trigger condi
 - Pattern chaining/sequencing
 - Up to 64 memory slots
 
-*The English manual will be released soon.*
+[Manual](https://docs.google.com/document/d/1Tgko1aRZTMDhhTn_QcxhiRlwVIaRisJhJ6eNGmJN1UM/edit?usp=sharing)
 
 ## 日本語
 
