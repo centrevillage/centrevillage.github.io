@@ -24,6 +24,7 @@ Available now at Japanese stores:
 
 - [Five G](https://fiveg.net/?pid=187658133)
 - [Clock Face Modular](https://clockfacemodular.com/products/centrevillage-trigger-hacker2)
+- [centrevillage synth store](https://centrevillage.stores.jp/items/68845d854b7d39712bae7b02)
 
 ## English
 
