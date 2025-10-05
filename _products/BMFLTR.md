@@ -38,7 +38,7 @@ It can be used as a sine wave oscillator by patching it to the V/OCT input.
 
 In addition, the built-in limiter circuit limits the output volume to a range of approximately +-9V, so the volume will not increase dramatically even if the oscillation becomes unstable.
 
-(BMFLTR is a circuit designed by Osamu Hoshuyama with some original improvements. Thanks! : https://understandcircuit.seesaa.net/article/201202article_1.html)
+(BMFLTR is a unique improvement based on the circuit designed by Osamu Hoshuyama. Thanks! : https://understandcircuit.seesaa.net/article/201202article_1.html)
 
 ## 日本語
 
