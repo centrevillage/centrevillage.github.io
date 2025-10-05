@@ -5,7 +5,7 @@ name: "BMFLTR"
 image: BMFLTR.png
 tags:
  - VCF
-price: "19,800 JPY"
+price: "17,600 JPY"
 consumption: "15mA (+12V) / 15mA (-12V) / 0mA (+5V)"
 hp: 6
 deep: 26
