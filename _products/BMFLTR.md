@@ -11,12 +11,16 @@ hp: 6
 deep: 26
 date: 2025-10-01
 active: true
-publish: false
+publish: true
 ---
 
 # Band-Mix State Variable Filter
 
-Comming soon...
+
+Available now at Japanese stores:
+
+- [Five G](https://fiveg.net)
+- [Clock Face Modular](https://clockfacemodular.com)
 
 ## English
 
