@@ -19,8 +19,9 @@ publish: true
 
 Available now at Japanese stores:
 
-- [Five G](https://fiveg.net)
-- [Clock Face Modular](https://clockfacemodular.com)
+- [Five G](https://fiveg.net/?pid=189016461)
+- [Clock Face Modular](https://clockfacemodular.com/products/centrevillage-bmfltr)
+- [centrevillage synth store](https://centrevillage.stores.jp/items/68f865a8ea1c92bbbaad5029)
 
 ## English
 
