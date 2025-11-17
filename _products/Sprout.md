@@ -68,3 +68,11 @@ The preset effects available on Sprout are as follows:
   - Modern Delay
   - FDN Reverb
 
+### Beta Testing Firmware
+
+#### [firmware ver 2.0 beta](https://drive.google.com/file/d/16JEsHgtLZTo1sdYhFNE860P8yHnGZ8L0/view?usp=sharing)
+  - Repeater 
+  - Sampler
+
+[Manual](https://docs.google.com/document/d/1apVUUiGIaIQViQSAks7RVHKDTl2Ry1V78VCpQpplp_M/edit?usp=sharing)
+
