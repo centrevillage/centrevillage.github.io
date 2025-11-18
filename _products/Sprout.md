@@ -46,6 +46,13 @@ Sprout は"Electro-Smith Daisy Seed”をコアとする高解像度 (96kHz/24bi
   - Modern Delay
   - FDN Reverb
 
+### ベータ版ファームウェア
+
+#### [firmware ver 2.0 beta](https://drive.google.com/file/d/16JEsHgtLZTo1sdYhFNE860P8yHnGZ8L0/view?usp=sharing)
+  - Repeater 
+  - Sampler
+
+[マニュアル](https://docs.google.com/document/d/1apVUUiGIaIQViQSAks7RVHKDTl2Ry1V78VCpQpplp_M/edit?usp=sharing)
 
 ## English
 
@@ -74,5 +81,5 @@ The preset effects available on Sprout are as follows:
   - Repeater 
   - Sampler
 
-[Manual](https://docs.google.com/document/d/1apVUUiGIaIQViQSAks7RVHKDTl2Ry1V78VCpQpplp_M/edit?usp=sharing)
+[Manual](https://docs.google.com/document/d/142V0yAuUvugsJmAiCbDv9kSxcT6qSRdWkPANhdt3ZkA/edit?usp=sharing)
 
