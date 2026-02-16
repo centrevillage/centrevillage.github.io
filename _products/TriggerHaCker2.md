@@ -63,6 +63,19 @@ Additionally, each step can include microsteps, probabilities, and trigger condi
 
 [Manual](https://docs.google.com/document/d/1Tgko1aRZTMDhhTn_QcxhiRlwVIaRisJhJ6eNGmJN1UM/edit?usp=sharing)
 
+### firmware
+
+[ver 1.1](https://drive.google.com/file/d/1QIR6-KtVGYylsfVg4eetU6C8317osbhq/view?usp=sharing)
+
+bugfix:
+
+- Accent modulation not working properly.
+- When modulation is set in CV Mod mode, the CV value is used as modulation even when the source track's Gate is OFF.
+- When the step length is Max, the gate signal is not continued when u step gates are consecutive.
+- Track change shortcuts cannot be used in modulation mode.
+- Changing the Clock Mod setting while a sequence is playing causes false timing.
+
+
 ## 日本語
 
 **Trigger HaCker 2** は5チャネルのトリガー/ゲートシーケンサーで、**Trigger HaCker**の後継機種です。
@@ -99,3 +112,15 @@ Additionally, each step can include microsteps, probabilities, and trigger condi
 - 最大64のメモリースロット
 
 [マニュアル](https://docs.google.com/document/d/1hvjuUJE3FYF_-dRES8jboTOAEbQJrE-20eO_cIdUNGk/edit?usp=sharing)
+
+### ファームウェア
+
+[ver 1.1](https://drive.google.com/file/d/1QIR6-KtVGYylsfVg4eetU6C8317osbhq/view?usp=sharing)
+
+bugfix:
+
+- accent modulationが正しく機能していない
+- CV Modモードでmodulationを設定時に、ソースとなるトラックのGateがOFFのタイミングでもCVの値がモジュレーションとして使われてしまう
+- step lengthがMaxのとき、u stepのゲートが連続した場合にゲート信号が繋がらない
+- modulation mode時、トラック変更ショートカット操作が使えない
+- シーケンス再生中にClock Mod設定を変更するとタイミングがズレる
