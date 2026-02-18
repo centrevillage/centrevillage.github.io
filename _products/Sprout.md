@@ -35,24 +35,27 @@ Sprout は"Electro-Smith Daisy Seed”をコアとする高解像度 (96kHz/24bi
 - Modern Delay (最大10秒のディレイタイム。ピッチシフトや逆再生が可能)
 - FDN Reverb (反響音のピッチシフト (いわゆるシマー）が可能)
 
-[マニュアル](https://docs.google.com/document/d/1SiaH4ZhvJiI9CSoyR5WHONj1kXMO7MvjcIarB974zro/edit?usp=sharing)
+ver 2.0 で以下のエフェクトが追加されました。
+
+- Repeater (ビートシンクしたルーパーエフェクト)
+- Sampler (SD/MMC Card上のサンプルを再生したり録音できるサンプラー)
+
+[マニュアル](https://docs.google.com/document/d/1apVUUiGIaIQViQSAks7RVHKDTl2Ry1V78VCpQpplp_M/edit?usp=sharing)
+
+独自のカスタムエフェクトを開発する場合は、下記のGitHubプロジェクトをベースとすることができます。
 
 [GitHub](https://github.com/centrevillage/SproutExample)
 
 ### ファームウェア
 
+#### [firmware ver 2.0](https://drive.google.com/file/d/16vZ40cNdy22Fc4jyhvY9BkWEhvdq3BGR/view?usp=sharing)
+  - Repeater
+  - Sampler
+
 #### [Default Firmware ver 1.0](https://drive.google.com/file/d/1ieSIDEI8rmLNCJHGMKsoPpIpWr2KBZUO/view?usp=sharing)
   - Tape Echo
   - Modern Delay
   - FDN Reverb
-
-### ベータ版ファームウェア
-
-#### [firmware ver 2.0 beta](https://drive.google.com/file/d/16JEsHgtLZTo1sdYhFNE860P8yHnGZ8L0/view?usp=sharing)
-  - Repeater 
-  - Sampler
-
-[マニュアル](https://docs.google.com/document/d/1apVUUiGIaIQViQSAks7RVHKDTl2Ry1V78VCpQpplp_M/edit?usp=sharing)
 
 ## English
 
@@ -64,22 +67,24 @@ The preset effects available on Sprout are as follows:
 - Modern Delay (up to 10 seconds, with pitch shift and reverse capabilities)
 - FDN Reverb (with pitch shift functionality)
 
-[Manual](https://docs.google.com/document/d/1saTCVzIiCV5gRt6G-XFpH8VGN_nTZLHlNMYOncqhDbk/edit?usp=sharing)
+The following effects have been added in version 2.0:
+
+- Repeater (Beat-synced looper effect)
+- Sampler (A sampler that can play and record samples from an SD/MMC card)
+
+[Manual](https://docs.google.com/document/d/142V0yAuUvugsJmAiCbDv9kSxcT6qSRdWkPANhdt3ZkA/edit?usp=sharing)
+
+If you want to develop your own custom effects, you can use the following GitHub projects as a starting point:
 
 [GitHub](https://github.com/centrevillage/SproutExample)
 
 ### Firmware
 
+#### [firmware ver 2.0](https://drive.google.com/file/d/16vZ40cNdy22Fc4jyhvY9BkWEhvdq3BGR/view?usp=sharing)
+  - Repeater 
+  - Sampler
+
 #### [Default Firmware ver 1.0](https://drive.google.com/file/d/1ieSIDEI8rmLNCJHGMKsoPpIpWr2KBZUO/view?usp=sharing)
   - Tape Echo
   - Modern Delay
   - FDN Reverb
-
-### Beta Testing Firmware
-
-#### [firmware ver 2.0 beta](https://drive.google.com/file/d/16JEsHgtLZTo1sdYhFNE860P8yHnGZ8L0/view?usp=sharing)
-  - Repeater 
-  - Sampler
-
-[Manual](https://docs.google.com/document/d/142V0yAuUvugsJmAiCbDv9kSxcT6qSRdWkPANhdt3ZkA/edit?usp=sharing)
-
