@@ -11,7 +11,7 @@ hp: 6
 deep: 26
 date: 2026-03-20
 active: true
-publish: false
+publish: true
 ---
 
 # Phase Locked Loop Oscillator
