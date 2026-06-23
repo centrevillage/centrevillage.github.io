@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LilaC Repeater ver 1.0 マニュアル</title>
+<style>
+:root {
+  --fg: #1c2430; --muted: #61707f; --bg: #ffffff; --soft: #f4f6f9;
+  --line: #d9e0e8; --accent: #3b6ea5; --accent-soft: #eaf1f8;
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0; color: var(--fg); background: #eef1f5;
+  font-family: "Hiragino Kaku Gothic ProN","Hiragino Sans","Yu Gothic","YuGothic",
+               "Noto Sans JP","Meiryo",sans-serif;
+  line-height: 1.8; font-size: 16px;
+}
+.page {
+  max-width: 880px; margin: 0 auto; background: var(--bg);
+  padding: 48px 56px 96px; box-shadow: 0 1px 24px rgba(20,30,45,.08);
+}
+.doc-header { text-align: center; border-bottom: 2px solid var(--line); padding-bottom: 28px; margin-bottom: 8px; }
+.title-image { max-width: 100%; height: auto; margin: 0 auto 18px; display: block; }
+.doc-title { font-size: 2.0rem; line-height: 1.4; margin: .2em 0; border: 0; padding: 0; }
+.doc-author { color: var(--muted); font-size: .92rem; margin-bottom: 18px; }
+
+h1, h2, h3 { line-height: 1.45; scroll-margin-top: 12px; }
+h1 { font-size: 1.6rem; margin: 2.2em 0 .8em; padding-bottom: .3em; border-bottom: 2px solid var(--accent); }
+h2 { font-size: 1.28rem; margin: 1.9em 0 .6em; padding-left: .55em; border-left: 5px solid var(--accent); }
+h3 { font-size: 1.08rem; margin: 1.5em 0 .5em; color: #2c3947; }
+
+p { margin: .7em 0; }
+a { color: var(--accent); }
+hr { border: 0; border-top: 1px solid var(--line); margin: 1.8em 0; }
+strong { font-weight: 700; }
+code {
+  font-family: "SFMono-Regular",Menlo,Consolas,"Courier New",monospace;
+  font-size: .88em; background: var(--soft); border: 1px solid var(--line);
+  border-radius: 4px; padding: .08em .38em;
+}
+pre {
+  background: var(--soft); border: 1px solid var(--line); border-radius: 6px;
+  padding: 14px 16px; margin: 1.1em 0; overflow-x: auto;
+  line-height: 1.55; font-size: .85rem;
+}
+pre code {
+  background: none; border: 0; padding: 0; border-radius: 0;
+  font-size: inherit; white-space: pre;
+}
+
+ul, ol { margin: .6em 0; padding-left: 1.7em; }
+li { margin: .25em 0; }
+li > ul, li > ol { margin: .25em 0; }
+
+table { border-collapse: collapse; width: 100%; margin: 1.2em 0; font-size: .95rem; }
+th, td { border: 1px solid var(--line); padding: .5em .7em; vertical-align: top; }
+th { background: var(--accent-soft); font-weight: 700; text-align: left; }
+tbody tr:nth-child(even) { background: var(--soft); }
+
+figure { margin: 1.4em auto; max-width: 560px; text-align: center; }
+figure img {
+  max-width: 100%; height: auto; border: 1px solid var(--line);
+  border-radius: 6px; background: #0a0e18;
+}
+.img-placeholder {
+  max-width: 560px; margin: 1.4em auto; padding: 26px 18px; text-align: center;
+  color: var(--muted); background: repeating-linear-gradient(135deg,#f7f9fb,#f7f9fb 10px,#eef2f6 10px,#eef2f6 20px);
+  border: 2px dashed var(--line); border-radius: 8px; font-size: .9rem;
+}
+.img-placeholder-tag {
+  display: inline-block; margin-right: .6em; padding: .1em .55em; font-size: .72rem;
+  font-weight: 700; color: #fff; background: var(--muted); border-radius: 4px; vertical-align: middle;
+}
+
+.toc {
+  background: var(--soft); border: 1px solid var(--line); border-radius: 8px;
+  padding: 18px 24px; margin: 28px 0 8px; font-size: .93rem;
+}
+.toc-title { font-weight: 700; font-size: 1.02rem; margin-bottom: .5em; }
+.toc ul { list-style: none; margin: .2em 0; padding-left: 1.1em; }
+.toc > ul { padding-left: 0; }
+.toc li { margin: .2em 0; }
+.toc a { text-decoration: none; }
+.toc a:hover { text-decoration: underline; }
+
+@media (max-width: 700px) {
+  .page { padding: 28px 18px 64px; }
+  body { font-size: 15px; }
+}
+@media print {
+  body { background: #fff; }
+  .page { box-shadow: none; max-width: none; padding: 0; }
+  a { color: var(--fg); }
+  h1, h2, h3 { page-break-after: avoid; }
+  figure, .img-placeholder, table, tr, pre { page-break-inside: avoid; }
+  .toc { page-break-after: always; }
+}
+</style>
+</head>
+<body>
+<main class="page">
+<header class="doc-header"><h1 class="doc-title">LilaC Repeater ver 1.0 マニュアル</h1><div class="doc-author">by centrevillage</div><img class="title-image" src="img/LilaCRepeater.png" alt=""></header>
+<nav class="toc"><div class="toc-title">目次</div><ul><li><a href="#sec-1">0. はじめに</a></li><li><a href="#sec-2">1. 概要</a></li><li><a href="#sec-3">2. ハードウェア</a><ul><li><a href="#sec-4">2-1. フロント</a></li><li><a href="#sec-5">2-2. バック</a></li></ul></li><li><a href="#sec-6">3. クイックスタート</a><ul><li><a href="#sec-7">3-1. 最初のループを録音する</a></li><li><a href="#sec-8">3-2. 他のトラックを録音する</a></li><li><a href="#sec-9">3-3. オーバーダブで重ね録り</a></li><li><a href="#sec-10">3-4. やり直す</a></li></ul></li><li><a href="#sec-11">4. 機能コンセプト</a><ul><li><a href="#sec-12">4-1. トラック</a></li><li><a href="#sec-13">4-2. ステップ</a></li><li><a href="#sec-14">4-3. ベーステンポ</a></li><li><a href="#sec-15">4-4. 録音ターゲットと編集ターゲット</a></li><li><a href="#sec-16">4-5. 再生レベル/再生方向/再生速度/PAN/再生ウィンドウ</a></li><li><a href="#sec-17">4-6. ループセット</a></li><li><a href="#sec-18">4-7. DRY/FDBKと録音レベルの関係</a></li><li><a href="#sec-19">4-8. クロック同期</a></li><li><a href="#sec-20">4-9. 自動バックアップ</a></li></ul></li><li><a href="#sec-21">5. UIコンセプト</a><ul><li><a href="#sec-22">5-1. ボタン</a></li><li><a href="#sec-23">5-2. レベルフェーダ</a></li><li><a href="#sec-24">5-3. トランスポート入出力(CLK/RST/REC IN, CLK OUT)</a></li><li><a href="#sec-25">5-4. 画面構成</a></li></ul></li><li><a href="#sec-26">6. モード共通操作</a><ul><li><a href="#sec-27">6-1. 録音と再生</a><ul><li><a href="#sec-28">6-1-1. 録音</a></li><li><a href="#sec-29">6-1-2. 再生/停止</a></li><li><a href="#sec-30">6-1-3. オートストップ録音</a></li></ul></li><li><a href="#sec-31">6-2. オーバーダブ</a><ul><li><a href="#sec-32">6-2-1. オーバーダブ開始/停止</a></li><li><a href="#sec-33">6-2-2. オートストップオーバーダブ</a></li></ul></li><li><a href="#sec-34">6-3. Undo/クリア操作</a><ul><li><a href="#sec-35">6-3-1. トラック録音のUndo/Redo</a></li><li><a href="#sec-36">6-3-2. トラックのクリア</a></li><li><a href="#sec-37">6-3-3. ループセットのクリア</a></li></ul></li><li><a href="#sec-38">6-4. リセット操作</a></li><li><a href="#sec-39">6-5. 各モードへの遷移</a></li></ul></li><li><a href="#sec-40">7. 各モード詳細</a><ul><li><a href="#sec-41">7-1. 通常モード</a></li><li><a href="#sec-42">7-2. トラック編集モード</a></li><li><a href="#sec-43">7-3. ループセット選択モード</a></li><li><a href="#sec-44">7-4. システム設定モード</a></li></ul></li><li><a href="#sec-45">8. クロック同期とMIDI</a><ul><li><a href="#sec-46">8-1. クロックソースと自動切替</a></li><li><a href="#sec-47">8-2. CLK入力/出力とリセット (CLK IN / CLK OUT / RST)</a></li><li><a href="#sec-48">8-3. MIDI同期</a><ul><li><a href="#sec-49">8-3-1. MIDI受信 (RX)</a></li><li><a href="#sec-50">8-3-2. MIDI送信 (TX)</a></li><li><a href="#sec-51">8-3-3. MIDI Sync設定</a></li></ul></li></ul></li><li><a href="#sec-52">9. SDカード保存</a><ul><li><a href="#sec-53">9-1. 動作確認済みのSDカード一覧</a></li><li><a href="#sec-54">9-2. SDカード保存内容</a></li></ul></li><li><a href="#sec-55">10. サンプルインポート</a><ul><li><a href="#sec-56">10-1. 取り込みの手順</a></li><li><a href="#sec-57">10-2. import.csv の書式</a></li><li><a href="#sec-58">10-3. テンポの指定 (steps / beats / bpm)</a></li><li><a href="#sec-59">10-4. current と undo (ループバリエーション)</a></li><li><a href="#sec-60">10-5. 対応フォーマットと制限</a></li><li><a href="#sec-61">10-6. 結果の確認</a></li></ul></li><li><a href="#sec-62">11. UARTチェイン</a><ul><li><a href="#sec-63">11-1. 接続</a></li><li><a href="#sec-64">11-2. 中継される内容</a></li><li><a href="#sec-65">11-3. 使い方の例</a></li></ul></li><li><a href="#sec-66">Appendix A. ファームウェアアップデート</a></li><li><a href="#sec-67">Appendix B. チートシート</a><ul><li><a href="#sec-68">ボタン操作(モード共通)</a></li><li><a href="#sec-69">モード別の T1-T4(単独押し)</a></li><li><a href="#sec-70">アナログ(ノブ/フェーダ)</a></li><li><a href="#sec-71">外部入出力</a></li></ul></li><li><a href="#sec-72">Appendix C. 画面上のステータス通知</a><ul><li><a href="#sec-73">C-1. ステータスバッジ</a></li><li><a href="#sec-74">C-2. トースト通知</a></li></ul></li><li><a href="#sec-75">Appendix D. モード別禁止操作一覧</a><ul><li><a href="#sec-76">(A) モード固有の禁止操作</a></li><li><a href="#sec-77">(B) 状態による操作ブロック(全モード共通)</a></li><li><a href="#sec-78">補足</a></li></ul></li><li><a href="#sec-79">Appendix E. トラブルシューティング</a><ul><li><a href="#sec-80">E-1. NO SD/MMC</a></li><li><a href="#sec-81">E-2. DATA BROKEN</a></li><li><a href="#sec-82">E-3. 書き込み中の電源断</a></li><li><a href="#sec-83">E-4. SAVE ERROR</a></li><li><a href="#sec-84">E-5. REC STOPPED（Memory is full!）</a></li><li><a href="#sec-85">E-6. 「◯◯ BLOCKED」と表示される</a></li><li><a href="#sec-86">E-7. 起動に時間がかかる / フリーズしているように見える</a></li><li><a href="#sec-87">E-8. サンプルインポートが反映されない</a></li></ul></li><li><a href="#sec-88">Appendix F. SDカードのファイル構成</a></li><li><a href="#sec-89">保証</a></li><li><a href="#sec-90">連絡先</a></li></ul></nav>
+<article class="content">
+<h1 id="sec-1">0. はじめに</h1>
+<p>モジュラーシンセの世界に、ギターペダルのように直感的に使えるサンプリングルーパーがないのが、個人的に長らくの不満でした。<br>
+また、あったとしても、少ないトラック数であったり、SDカードへの保存ができなかったり、結局私の理想をかなえるものはありませんでした。<br>
+本機は開発者である私自身の理想のサンプリングルーパーとして設計されています。<br>
+あなたにとってもそうであれば、これほど喜ばしいことはありません。</p>
+<h1 id="sec-2">1. 概要</h1>
+<p>LilaC Repeater は4トラックのステレオサンプリングルーパーです。<br>
+各トラックは独立した録音長と再生速度、再生方向を持ち、同期再生が可能です。<br>
+録音内容はSDカードに自動保存され、いつでもループセットとして読み出すことができます。</p>
+<p>外部クロックとして、クロックパルス入力とMIDIクロック入力(別売のMIDI CoM+利用時)に対応し、録音後も常に外部クロックに同期して再生速度を可変できます。<br>
+さらに、再生速度を変えた状態でのオーバーダブも可能です。<br>
+再生速度を変えながら録音を重ねていくことで、ただのループではない、より実験的なパフォーマンスが可能です。<br>
+また、再生位置と外部/内部クロックの位相はPLL制御によって常に同期されるので、長時間ループを再生してもサンプルとクロックの位相がズレることがありません。</p>
+<p>ハードウェア仕様:</p>
+<ul><li>オーディオ<ul><li>96kHz/24bit ステレオ入出力 (内部処理: 96kHz/32bit float, サンプル保存: 48kHz/32bit float)</li><li>入出力レイテンシ <strong>1ms 未満</strong></li></ul></li><li>ディスプレイ<ul><li>White OLED 128x64</li></ul></li><li>入出力<ul><li>ステレオ入力</li><li>ステレオ出力</li><li>クロック入力</li><li>リセット入力</li><li>録音トリガー入力</li><li>クロック出力</li><li>MIDI拡張端子/UARTチェイン端子</li></ul></li></ul>
+<p>機能一覧:</p>
+<ul><li>4ステレオトラック同時再生</li><li>トラック個別の再生方向、再生速度、パンニング、再生ウィンドウ(ループ範囲)設定</li><li>クロック同期録音/再生</li><li>可変速度オーバーダビング</li><li>オートストップ録音</li><li>オーバーダブレベル設定(FDBK)</li><li>Dry(入力音)と各トラックのレベルフェーダ</li><li>録音サンプルの一段階Undo/Redo</li><li>SDカードへの自動保存</li><li>最大128個のループセット管理</li></ul>
+<h1 id="sec-3">2. ハードウェア</h1>
+<h2 id="sec-4">2-1. フロント</h2>
+<figure><img src="img/front_annotation.png" alt="front_annotation" loading="lazy"></figure>
+<table>
+<thead>
+<tr><th style="text-align:center">番号</th><th style="text-align:left">名前</th><th style="text-align:left">説明</th></tr>
+</thead>
+<tbody>
+<tr><td style="text-align:center">1</td><td style="text-align:left">L入力</td><td style="text-align:left">オーディオのL ch入力。</td></tr>
+<tr><td style="text-align:center">2</td><td style="text-align:left">R入力</td><td style="text-align:left">オーディオのR ch入力。未接続時はL ch入力が内部結線。</td></tr>
+<tr><td style="text-align:center">3</td><td style="text-align:left">CLK出力</td><td style="text-align:left">同期クロックパルス出力(0/5V)。</td></tr>
+<tr><td style="text-align:center">4</td><td style="text-align:left">L出力</td><td style="text-align:left">オーディオのL ch出力。</td></tr>
+<tr><td style="text-align:center">5</td><td style="text-align:left">R出力</td><td style="text-align:left">オーディオのR ch出力。</td></tr>
+<tr><td style="text-align:center">6</td><td style="text-align:left">REC入力</td><td style="text-align:left">録音トリガー入力。トリガーパルス入力時、録音および録音終了をトリガーする。</td></tr>
+<tr><td style="text-align:center">7</td><td style="text-align:left">CLK入力</td><td style="text-align:left">同期クロックパルス入力。</td></tr>
+<tr><td style="text-align:center">8</td><td style="text-align:left">RST入力</td><td style="text-align:left">再生位置のリセットパルス入力。</td></tr>
+<tr><td style="text-align:center">9</td><td style="text-align:left">OLEDディスプレイ</td><td style="text-align:left">128x64の白OLEDディスプレイ。各種情報表示を行う。</td></tr>
+<tr><td style="text-align:center">10</td><td style="text-align:left">FDBKフェーダ</td><td style="text-align:left">オーバーダブ時の過去録音サンプルのミックス率を設定する。</td></tr>
+<tr><td style="text-align:center">11</td><td style="text-align:left">SPEEDフェーダ</td><td style="text-align:left">再生スピードを60-240BPMの間で設定する。外部同期時は無効化。</td></tr>
+<tr><td style="text-align:center">12</td><td style="text-align:left">DRYフェーダ</td><td style="text-align:left">入力オーディオ兼録音入力のレベルを設定する。</td></tr>
+<tr><td style="text-align:center">13</td><td style="text-align:left">T1フェーダ</td><td style="text-align:left">トラック1の再生レベルを設定する。</td></tr>
+<tr><td style="text-align:center">14</td><td style="text-align:left">T2フェーダ</td><td style="text-align:left">トラック2の再生レベルを設定する。</td></tr>
+<tr><td style="text-align:center">15</td><td style="text-align:left">T3フェーダ</td><td style="text-align:left">トラック3の再生レベルを設定する。</td></tr>
+<tr><td style="text-align:center">16</td><td style="text-align:left">T4フェーダ</td><td style="text-align:left">トラック4の再生レベルを設定する。</td></tr>
+<tr><td style="text-align:center">17</td><td style="text-align:left">T1ボタン</td><td style="text-align:left">トラック1の録音ターゲット指定や、モードごとの操作を行う。</td></tr>
+<tr><td style="text-align:center">18</td><td style="text-align:left">T2ボタン</td><td style="text-align:left">トラック2の録音ターゲット指定や、モードごとの操作を行う。</td></tr>
+<tr><td style="text-align:center">19</td><td style="text-align:left">T3ボタン</td><td style="text-align:left">トラック3の録音ターゲット指定や、モードごとの操作を行う。</td></tr>
+<tr><td style="text-align:center">20</td><td style="text-align:left">T4ボタン</td><td style="text-align:left">トラック4の録音ターゲット指定や、モードごとの操作を行う。</td></tr>
+<tr><td style="text-align:center">21</td><td style="text-align:left">FUNCボタン</td><td style="text-align:left">他のボタンと組み合わせてサブ機能を実行する。ダブルタップで通常モード復帰。</td></tr>
+<tr><td style="text-align:center">22</td><td style="text-align:left">LOOPボタン</td><td style="text-align:left">ループセット選択画面に遷移する。</td></tr>
+<tr><td style="text-align:center">23</td><td style="text-align:left">CLEARボタン</td><td style="text-align:left">他のボタンと組み合わせてトラック個別やループセット全体のクリア操作を行う。</td></tr>
+<tr><td style="text-align:center">24</td><td style="text-align:left">RECボタン</td><td style="text-align:left">録音/オーバーダブの開始/停止。</td></tr>
+<tr><td style="text-align:center">25</td><td style="text-align:left">STARTボタン</td><td style="text-align:left">全トラック再生開始/停止。</td></tr>
+</tbody>
+</table>
+<h2 id="sec-5">2-2. バック</h2>
+<p>! <strong>注意: 電源および拡張コネクタの極性に注意してください。ケーブルの赤いラインとシルクスクリーンの白い線の方向を一致させてください。極性を間違えると故障の原因になります。</strong></p>
+<figure><img src="img/back_annotation.png" alt="back_annotation" loading="lazy"></figure>
+<table>
+<thead>
+<tr><th style="text-align:center">番号</th><th style="text-align:left">名前</th><th style="text-align:left">説明</th></tr>
+</thead>
+<tbody>
+<tr><td style="text-align:center">1</td><td style="text-align:left">USBコネクタ(on Daisy Seed DFM2)</td><td style="text-align:left">ファームウェアアップデートに利用できるUSBコネクタ。</td></tr>
+<tr><td style="text-align:center">2</td><td style="text-align:left">マイクロSDカードスロット</td><td style="text-align:left">ファームウェアアップデートやサンプルインポート、ループセット保存に使うSDカード用スロット。出荷時はSDカードを挿入済み。</td></tr>
+<tr><td style="text-align:center">3</td><td style="text-align:left">電源コネクタ</td><td style="text-align:left">10pinの電源コネクタ。白いシルクの方向とケーブルの赤いラインの方向を合わせる。</td></tr>
+<tr><td style="text-align:center">4</td><td style="text-align:left">MIDI EXPAND/SLAVEコネクタ</td><td style="text-align:left">6pinのコネクタ。MIDI拡張モジュールの接続、またはUARTチェインの入力(上流からの受信)に使う。白いシルクの方向とケーブルの赤いラインの方向を合わせる。</td></tr>
+<tr><td style="text-align:center">5</td><td style="text-align:left">MASTERコネクタ</td><td style="text-align:left">6pinのコネクタ。UARTチェインの出力(下流への送信)に使う。白いシルクの方向とケーブルの赤いラインの方向を合わせる。</td></tr>
+</tbody>
+</table>
+<h1 id="sec-6">3. クイックスタート</h1>
+<figure><img src="img/01_normal_empty.png" alt="01_normal_empty" loading="lazy"></figure>
+<p>起動直後は通常モードになっています。<br>
+T1ボタンが赤く点灯し、通常モード画面のトラック1が反転表示されていることを確認してください。<br>
+L/R入力に音の出るモジュールの出力を繋いで、画面の左端のINの文字の上にレベルバーが表示されることを確認します。<br>
+L/R出力をミキサーか、外部出力インタフェースモジュールに繋ぎます。<br>
+外部クロックに同期したい場合は、CLK入力にクロックを入力します。</p>
+<h2 id="sec-7">3-1. 最初のループを録音する</h2>
+<p>まず、DRYフェーダで入力レベルを調整します。<br>
+次にRECボタンを押すと録音開始します。<br>
+このとき、RECボタンが赤く点灯し、録音時ポップアップが表示されます。</p>
+<figure><img src="img/08_recording_popup.png" alt="08_recording_popup" loading="lazy"></figure>
+<p>RECボタンをもう一度押すと録音停止し、自動的に再生状態になります。<br>
+このとき、STARTボタンが緑色に点灯します。<br>
+T1フェーダを操作すると、ループ再生のボリュームを調整できます。</p>
+<h2 id="sec-8">3-2. 他のトラックを録音する</h2>
+<p>T2ボタンを押すと、T1ボタンが消灯し、T2ボタンが赤く点灯します。<br>
+これで録音ターゲットがトラック2に変更されました。</p>
+<p>RECボタンを押すとトラック2へ録音開始し、もう一度押すと録音を終了します。<br>
+T2フェーダを操作すると、ループ再生のボリュームを調整できます。</p>
+<h2 id="sec-9">3-3. オーバーダブで重ね録り</h2>
+<p>さらにトラック1か2を録音ターゲットにした状態で、RECボタンを押すと、オーバーダブが開始されます。<br>
+このときオーバーダブのポップアップ表示が行われます。</p>
+<figure><img src="img/09_overdubbing_popup.png" alt="09_overdubbing_popup" loading="lazy"></figure>
+<p>オーバーダブ時の過去録音のレベルはFDBKフェーダで調整することができます。<br>
+オーバーダブ継続中は、先頭からループしてオーバーダブを続けます(*1)。<br>
+再度RECボタンを押すとオーバーダブを停止します。</p>
+<hr>
+<p>*1 FDBKを少し下げた状態でオーバーダブし続けることで、ディレイエフェクトのように徐々に過去の音を減衰させる効果が得られます。</p>
+<h2 id="sec-10">3-4. やり直す</h2>
+<p>本機はトラック単位の一段階Undoに対応しています。<br>
+録音済みのトラックのT1-T4ボタンを押して、録音ターゲットに設定後、FUNC+CLEARボタンを押すことで前回の録音/オーバーダブ状態に戻すことができます。<br>
+再度FUNC+CLEARを押すとRedoが行われ、最新の録音/オーバーダブ状態に戻ります。</p>
+<p>トラックの録音自体をやり直したい場合は、CLEARボタンを押しながらT1-T4ボタンを押すと、対応するトラックの録音がクリアされます。<br>
+クリア直後は、FUNC+CLEARで最新の録音/オーバーダブ状態に戻ることも可能です。</p>
+<p>全てのトラックをクリアしたい場合は、CLEARボタンを押しながらLOOPボタンを押してください。<br>
+確認ポップアップが表示されるので、T3ボタンを押せば全トラックの録音が消去されます。<br>
+クリアをやめたい場合はT4ボタンを押すとキャンセルできます。</p>
+<figure><img src="img/07_confirm_clear_loop.png" alt="07_confirm_clear_loop" loading="lazy"></figure>
+<h1 id="sec-11">4. 機能コンセプト</h1>
+<h2 id="sec-12">4-1. トラック</h2>
+<p>4つのトラックが存在し、各トラックは以下の情報を持ちます:</p>
+<ul><li>録音済みサンプル</li><li>Undoバッファ</li><li>ベーステンポ(録音時のテンポ情報)</li><li>録音ステップ数</li><li>再生方向(順方向/逆方向)</li><li>再生スピード(x0.5/x1/x2)</li><li>パンニング</li><li>再生ウィンドウ(ループ範囲。録音サンプルのうち実際にループ再生する開始位置と範囲。サンプル自体は変更しません)</li><li>再生レベル(SDカード保存対象外、各トラックフェーダからリアルタイムに反映)</li></ul>
+<p>一般的なマルチトラックルーパとは異なり、ステップ数や再生方向などの情報もトラック別に保持するため、ポリリズム的なパフォーマンスが可能です。</p>
+<h2 id="sec-13">4-2. ステップ</h2>
+<p>4ppqn (拍ごとに4つ)のクロック単位をステップと呼びます。<br>
+再生/録音/ループセット切り替え/Undoなどは、このステップが進むタイミングで行われます。</p>
+<h2 id="sec-14">4-3. ベーステンポ</h2>
+<p>トラックを録音した時のテンポ(BPM)です。<br>
+ループ録音後にテンポを変更すると、サンプル再生スピードがベーステンポと再生テンポの速度差で補正されます。<br>
+例えば、80BPMで録音後にテンポを160BPMにすると、サンプル再生スピードは2倍になります。</p>
+<h2 id="sec-15">4-4. 録音ターゲットと編集ターゲット</h2>
+<p>トラックの選択状態には、「録音ターゲット」と「編集ターゲット」の2種類が存在します。<br>
+「録音ターゲット」は通常モードで選択でき、録音対象のトラックの指定、Undo対象トラックの指定に使われます。<br>
+一方、「編集ターゲット」はトラック編集モードにおける、編集対象となるトラックの指定に使われます。<br>
+また、トラック編集モードに入っている間は、Undo対象トラックは「録音ターゲット」ではなく「編集ターゲット」になります。<br>
+(「7-2. トラック編集モード」参照)</p>
+<h2 id="sec-16">4-5. 再生レベル/再生方向/再生速度/PAN/再生ウィンドウ</h2>
+<p>各トラックの再生情報です。<br>
+再生レベル以外はSDカードに自動保存されます。<br>
+再生ウィンドウ(ループ範囲)は、録音サンプルのうち実際にループ再生する範囲を指定する設定で、トラック編集モードで編集できます(「7-2. トラック編集モード」参照)。</p>
+<h2 id="sec-17">4-6. ループセット</h2>
+<p>全4トラックの録音状態(Undoバッファ含む)と再生情報は、ループセットという単位で扱われます。<br>
+ループセットを切り替えることで、全トラックのループを一括で切り替えることができます。</p>
+<h2 id="sec-18">4-7. DRY/FDBKと録音レベルの関係</h2>
+<p>DRYレベルは入力レベルだけでなく、録音レベルとしても機能します。<br>
+また、FDBKレベルは初回録音では機能せず、オーバーダブ時に前回録音の減衰率として機能します。</p>
+<h2 id="sec-19">4-8. クロック同期</h2>
+<p>内部クロックによる同期の他に、クロック入力とMIDI入力による同期に対応しています。<br>
+ただし、MIDI入力による同期には別売のMIDI拡張モジュール(MIDI CoM+)が必要です。<br>
+(「8. クロック同期とMIDI」参照)</p>
+<h2 id="sec-20">4-9. 自動バックアップ</h2>
+<p>ループセットへの変更は、Undoバッファも含め、SDカードに自動的に保存されます。<br>
+次回起動時には、SDカードから、最後に選択されたループセットの情報が自動的に読み込まれます。<br>
+(「9. SDカード保存」参照)</p>
+<h1 id="sec-21">5. UIコンセプト</h1>
+<h2 id="sec-22">5-1. ボタン</h2>
+<p>T1、T2、T3、T4ボタンはモードごとに機能が切り替わります。<br>
+FUNC、LOOP、CLEAR、REC、STARTボタンは各モード共通の操作ですが、モードによっては操作禁止となるものがあります。<br>
+(「7. 各モード詳細」参照)</p>
+<h2 id="sec-23">5-2. レベルフェーダ</h2>
+<p>FDBK、SPEED、DRY、T1、T2、T3、T4すべてのフェーダがモード共通で利用できます。<br>
+ただし、外部同期時はSPEEDフェーダは無効化されます。</p>
+<p>再生中は、SPEEDフェーダのLEDが拍の周期で明滅します。拍頭で最も明るく光り、拍の終わりに向かって徐々に暗くなる動きで、現在のテンポと拍のタイミングが目で分かり、録音を始める拍位置の手がかりになります。この明滅は内部クロック・外部同期のどちらでも拍位相に同期します(外部同期でSPEEDフェーダ自体が無効でも明滅は行われます)。停止中はLEDが点灯したままになります。</p>
+<h2 id="sec-24">5-3. トランスポート入出力(CLK/RST/REC IN, CLK OUT)</h2>
+<p>CLKは外部クロック同期用、RSTは再生位置リセットです。<br>
+RECは録音トリガーで、RECボタン押下と同じ機能を持っています。<br>
+内部同期でも外部同期でも、再生中はCLK出力からクロックパルスが出力されます。<br>
+停止中はクロックパルスの出力も停止します。</p>
+<h2 id="sec-25">5-4. 画面構成</h2>
+<p>どのモードでも、共通で右上にステータスバッジの表示が行われます。<br>
+(「Appendix C」参照)</p>
+<figure><img src="img/10_normal_with_sd_card_write_status.png" alt="10_normal_with_sd_card_write_status" loading="lazy"></figure>
+<p>また、録音中などには専用のポップアップが表示されます。</p>
+<figure><img src="img/08_recording_popup.png" alt="08_recording_popup" loading="lazy"></figure>
+<p>何かエラーが発生した時や、特別な情報通知では情報や警告のポップアップが表示されます。</p>
+<figure><img src="img/06_alert.png" alt="06_alert" loading="lazy"></figure>
+<p>詳細は、「6. モード共通操作」や「7. 各モード詳細」を参照してください。</p>
+<h1 id="sec-26">6. モード共通操作</h1>
+<h2 id="sec-27">6-1. 録音と再生</h2>
+<figure><img src="img/08_recording_popup.png" alt="08_recording_popup" loading="lazy"></figure>
+<h3 id="sec-28">6-1-1. 録音</h3>
+<p>録音は、選択中の録音ターゲット(通常モードでT1-T4ボタンにより指定)に対して行われます。<br>
+RECボタンを押すと録音が開始し、もう一度押すと録音停止します。REC入力にトリガーパルスを入力しても同じ動作です。</p>
+<p>録音中はRECボタンが赤く点灯し、録音ポップアップが表示されます。<br>
+ポップアップにはトラック番号(REC TRKn)、録音長を示す拍マーク、録音済みステップ数、メモリ使用率(RAMアイコン+%)が表示されます。ステップ数とメモリ使用率は下段に左右に並んで表示され、録音中はステップ数がリアルタイムにカウントアップします。<br>
+録音レベルはDRYフェーダで設定します(「4-7. DRY/FDBKと録音レベルの関係」参照)。</p>
+<p>録音を停止すると、自動的に再生状態に移行します(STARTボタンが緑色に点灯)。</p>
+<p>また、録音中にRECボタンでなく、STARTボタンを押すと、その場で録音を停止し、同じトラックのオーバーダブへ移行します。</p>
+<p>再生中・クロック動作中に録音を開始した場合、録音開始のタイミングはLoop Sync設定に従って揃えられます(Loop Syncは録音/オーバーダブの開始などをクロックに合わせるための設定です。「7-4. システム設定モード」参照)。録音停止は即座に行われます。</p>
+<p>なお、すでに録音済みのトラックを録音ターゲットにした状態でRECを押すと、録音ではなくオーバーダブが開始されます(「6-2. オーバーダブ」参照)。</p>
+<hr>
+<p>* 起動直後やループセット切り替え直後は、Undo用データの読み込み中("SYNCING")に録音開始が一時的に保留されることがあります。表示が消えてから操作してください。</p>
+<h3 id="sec-29">6-1-2. 再生/停止</h3>
+<p>STARTボタンを押すと、全トラックの再生を開始/停止します。再生中はSTARTボタンが緑色に点灯します。<br>
+再生中はCLK出力から同期クロックパルスが出力され、停止すると出力も止まります(「5-3. トランスポート入出力」参照)。</p>
+<p>各トラックは個別の録音長・再生方向・再生速度を持つため、再生中はそれぞれの長さでループします(「4-1. トラック」参照)。</p>
+<p>内部クロック同期時は、STARTを押した瞬間がクロックの起点になります。<br>
+外部クロック同期時は、再生開始が次のステップ境界に揃えられます。</p>
+<h3 id="sec-30">6-1-3. オートストップ録音</h3>
+<p>通常の録音は手動で停止しますが、FUNC+RECで録音を開始すると、あらかじめ決めたステップ数に達した時点で自動的に録音停止します。</p>
+<p>停止するステップ数は、システム設定の「Auto Stop」で1〜128ステップの範囲で設定できます(初期値64ステップ=16拍、最大128ステップ=32拍。「7-4. システム設定モード」参照)。<br>
+録音中ポップアップには、自動停止する位置が縦棒で表示されます。</p>
+<p>すでに通常RECで録音しているときにFUNC+RECを押すと、その時点以降の区切りのよいタイミングで録音停止が予約されます。<br>
+停止するタイミングはLoop Sync設定に従います(「7-4. システム設定モード」参照)。</p>
+<h2 id="sec-31">6-2. オーバーダブ</h2>
+<figure><img src="img/09_overdubbing_popup.png" alt="09_overdubbing_popup" loading="lazy"></figure>
+<h3 id="sec-32">6-2-1. オーバーダブ開始/停止</h3>
+<p>録音済みのトラックを録音ターゲットにした状態でRECボタンを押すと、オーバーダブが開始されます。<br>
+オーバーダブ中はRECボタンが赤く点灯し、オーバーダブポップアップ(OVERDUB TRKn)が表示されます。<br>
+ポップアップ下段には、オーバーダブ済みステップ数とループ長が「録音済み/全体」の形式(例: 123/256)で表示され、ループを一周するとその値で固定されます。</p>
+<p>オーバーダブ中は、過去の録音を再生しながら入力音を重ねて録音し、ループ末尾に達すると先頭に戻ってオーバーダブを継続します。再生ウィンドウ(ループ範囲)を設定している場合、オーバーダブはウィンドウ内のみに行われます(「7-2. トラック編集モード」参照)。<br>
+過去録音のミックス率(減衰率)はFDBKフェーダで設定します(「4-7. DRY/FDBKと録音レベルの関係」参照)。FDBKを下げた状態で重ね続けると、ディレイのように過去の音が徐々に減衰します。</p>
+<p>再度RECボタンを押すとオーバーダブを停止します。停止は即座に行われます。<br>
+また、録音中にSTARTボタンを押した場合も、録音を停止してそのままオーバーダブに移行します(「6-1-2. 再生/停止」参照)。</p>
+<h3 id="sec-33">6-2-2. オートストップオーバーダブ</h3>
+<p>FUNC+RECで録音済みトラックのオーバーダブを開始すると、ループ一周分のオーバーダブを行った時点で自動的に停止します(再生ウィンドウを設定している場合は、ウィンドウ一周分で停止します)。</p>
+<p>通常RECで開始したオーバーダブの途中でFUNC+RECを押した場合は、次の16ステップ(4拍)ごとの区切り、またはループ一周のいずれか早いタイミングで停止します。</p>
+<h2 id="sec-34">6-3. Undo/クリア操作</h2>
+<h3 id="sec-35">6-3-1. トラック録音のUndo/Redo</h3>
+<p>本機はトラック単位で一段階のUndo/Redoに対応しています。<br>
+FUNC+CLEARボタンを押すと、対象トラックを前回の録音/オーバーダブ状態に戻します(Undo)。もう一度FUNC+CLEARを押すと、最新の状態に戻ります(Redo)。</p>
+<p>Undoの対象トラックは、通常モードでは録音ターゲット、トラック編集モードでは編集ターゲットになります(「4-4. 録音ターゲットと編集ターゲット」参照)。</p>
+<p>再生中のUndo/Redoはステップ境界に揃えて適用され、停止中は即座に適用されます。</p>
+<p>次の状態ではUndoは行えず、警告が表示されます:</p>
+<ul><li>録音/オーバーダブ中("UNDO BLOCKED")</li><li>Undo用データの同期中("SYNCING")</li><li>ループセット選択モード中("UNDO BLOCKED"。選択専用のため)</li></ul>
+<p>表示が消えてから操作してください(「Appendix D」「Appendix E-6」参照)。</p>
+<h3 id="sec-36">6-3-2. トラックのクリア</h3>
+<p>CLEARボタンを押しながらT1-T4ボタンを押すと、対応するトラックの録音が即座にクリアされます。<br>
+クリアが実行されると、画面中央に "CLEAR TRKn"(nはトラック番号)が約1秒間表示されます(「Appendix C-2」参照)。<br>
+クリア直後は、そのトラックを録音ターゲット(トラック編集モードでは編集ターゲット)にした状態でFUNC+CLEARを押すと、クリア前の録音状態に戻すことができます(「6-3-1」参照)。</p>
+<p>なお、Undo用データの同期中は"SYNCING"が表示され、クリアが一時的に保留されます。<br>
+ループセット選択モードではトラックの個別クリアはできません("CLEAR BLOCKED / loop select"。「Appendix D」参照)。</p>
+<h3 id="sec-37">6-3-3. ループセットのクリア</h3>
+<figure><img src="img/07_confirm_clear_loop.png" alt="07_confirm_clear_loop" loading="lazy"></figure>
+<p>CLEARボタンを押しながらLOOPボタンを押すと、現在のループセットの全トラック(Undoデータを含む)を一括でクリアします。<br>
+誤操作防止のため確認ポップアップ("CLEAR LOOP?")が表示されます。T3ボタンを押すと実行、T4ボタンを押すとキャンセルされます。</p>
+<p>この操作はトラックの個別クリアと異なり、Undoで元に戻すことはできません。SDカード上の保存データも削除され、ループセットは未録音(NEW)の状態に戻ります。</p>
+<p>次の場合はクリアできず、対応する警告が表示されます:</p>
+<ul><li>SDカードが使えない("CLEAR BLOCKED / No SD")</li><li>録音/オーバーダブ中("CLEAR BLOCKED / Recording...")</li><li>Undoデータの同期中("SYNCING")</li><li>保存/読み込み/スキャンなどの処理中("CLEAR BLOCKED / Busy...")</li><li>ループセット選択モード中("CLEAR BLOCKED / loop select")</li></ul>
+<p>(「Appendix D」参照)</p>
+<h2 id="sec-38">6-4. リセット操作</h2>
+<p>再生位置をループ先頭に戻す操作です。<br>
+FUNC+STARTボタンを押すと、全トラックの再生位置がループ先頭にリセットされます。RST入力にトリガーを入力しても同じ動作です。</p>
+<p>リセットは再生中のステップ境界に揃えて適用されます。<br>
+RST入力をゲートとしてHIGHに保持し続けている間は、再生位置が先頭に固定されます(「5-3. トランスポート入出力」参照)。</p>
+<p>また、MIDI START受信時にも、再生位置のリセットと再生開始が行われます(「8. クロック同期とMIDI」参照)。</p>
+<h2 id="sec-39">6-5. 各モードへの遷移</h2>
+<p>起動直後は通常モードになっています。<br>
+以下の操作で他のモードに移動できます。</p>
+<table>
+<thead>
+<tr><th>操作</th><th>遷移先のモード</th></tr>
+</thead>
+<tbody>
+<tr><td>FUNC+T1/T2/T3/T4</td><td>押したトラックボタン(T1-4)に対応するトラックを編集ターゲットにして、トラック編集モードに遷移。</td></tr>
+<tr><td>FUNCx2 (ダブルタップ)</td><td>通常モード</td></tr>
+<tr><td>LOOP</td><td>ループセット選択モード</td></tr>
+<tr><td>FUNC+LOOP</td><td>システム設定モード</td></tr>
+</tbody>
+</table>
+<p>* 「A+B」の記述は「Aボタンを押しながらBボタンを押す」の意味</p>
+<p>また通常モード以外は、そのモードに遷移したときと同じ操作を繰り返すことで通常モードに戻ります。</p>
+<p>通常モード復帰操作:</p>
+<ul><li>トラック編集モード: FUNC+編集ターゲットトラックのT1-4ボタン</li><li>ループセット選択モード: LOOPボタンを再度押す</li><li>システム設定モード: FUNC+LOOPボタンを再度押す</li><li>全モード共通: FUNCボタンをダブルタップ</li></ul>
+<h1 id="sec-40">7. 各モード詳細</h1>
+<p>各モードは、共通操作(「6. モード共通操作」)に加えて、そのモード固有のT1-T4ボタンの機能と画面表示を持ちます。<br>
+モード間の遷移操作は「6-5. 各モードへの遷移」を参照してください。</p>
+<h2 id="sec-41">7-1. 通常モード</h2>
+<figure><img src="img/02_normal_recorded.png" alt="02_normal_recorded" loading="lazy"></figure>
+<p>起動直後のモードで、録音ターゲットの選択を行う基本画面です。</p>
+<p>T1-T4ボタンを単独で押すと、録音ターゲットを対応するトラックに切り替えます。選択中のトラックはボタンが赤く点灯し、画面上でも対応するトラック列が反転表示されます(録音/オーバーダブ中はターゲットの切り替えはできません)。</p>
+<p>録音(REC)、再生(START)、オーバーダブ、オートストップ、Undo/クリア、リセットといった共通操作はすべてこのモードで利用できます(「6. モード共通操作」参照)。</p>
+<p>画面構成:</p>
+<ul><li>ヘッダ(最上段): テンポ表示(ベーステンポ&gt;再生テンポのBPM)、メモリ使用率(水タンクアイコン+%)、右上の処理中バッジ</li><li>左端: 入力レベルメータ(L/R、"IN"表示)</li><li>トラック列(4列): 各トラックの再生レベルメータ(L/R)、再生位置/状態(録音中は"REC"、再生中はステップ番号、逆再生時は"&lt;"付き)、ループ長と再生位置を示すプログレスバー(再生ウィンドウ設定時は、再生位置がウィンドウ内の実位置に表示されます)</li><li>フッタ: 操作ヒント("T1-4: SELECT REC TARGET")</li></ul>
+<p>LEDの点灯:</p>
+<ul><li>T1-T4: 録音ターゲットのトラックが点灯</li><li>REC: 録音ターゲットが録音/オーバーダブ中に点灯</li><li>START: 再生中に点灯</li></ul>
+<h2 id="sec-42">7-2. トラック編集モード</h2>
+<figure><img src="img/03_track_edit.png" alt="03_track_edit" loading="lazy"></figure>
+<p>FUNC+T1-T4で対応するトラックを編集ターゲットにして遷移します。トラックごとの再生パラメータ(再生方向・再生速度・パンニング・再生ウィンドウ)を編集するモードです。これらの設定はSDカードに自動保存されます(「4-5. 再生レベル/再生方向/再生速度/PAN/再生ウィンドウ」参照)。</p>
+<p>T1-T4ボタンの機能:</p>
+<ul><li>T1/T2: 編集する項目を選択(←/→。再生方向→再生速度→パン→ウィンドウ開始→ウィンドウ長の順に移動)</li><li>T3/T4: 値の変更(−/+。押し続けると連続変化。パン・再生ウィンドウの項目では押し続けるとさらに速く変化します)</li><li>T3とT4を同時に押すと、選択中の項目を初期値に戻します(パン=センター(C)/ウィンドウ開始=0/ウィンドウ長=全体)</li></ul>
+<p>編集できる項目:</p>
+<ul><li>再生方向: 順方向(FWD、右向き三角)/逆方向(REV、左向き三角)</li><li>再生速度: x0.5 / x1.0 / x2.0</li><li>パン: C(センター)/ L1〜L100 / R1〜R100</li><li>再生ウィンドウ(ループ範囲): 録音サンプルのうち実際にループ再生する範囲。中段のステップタイムラインで、左の数値=ウィンドウ開始ステップ、右の数値=ウィンドウ長(ステップ数)を編集します。ウィンドウは録音末尾を跨いで巻き戻ることもできます(例: 開始1・長さ16のとき、末尾→先頭→開始位置と回り込んでループ)。録音済みかつ録音/オーバーダブ中でないトラックでのみ編集できます。</li></ul>
+<p>画面構成:</p>
+<ul><li>上段: 録音サンプルの波形サムネイルと再生位置マーカー。再生ウィンドウ(ループ範囲)を設定している場合、範囲外の部分が反転表示されます</li><li>中段: ステップタイムライン(左=ウィンドウ開始ステップ、中央=現在のステップ(ウィンドウ内相対)、右=ウィンドウ長)。ウィンドウ開始/長を選択中は、その数値が反転表示されます</li><li>パラメータ行: 再生方向(三角)/ 再生速度 / パン。選択中の項目は反転表示</li><li>下段: トラック音量(VOL:NN%、表示のみ。各トラックフェーダで変化)</li><li>フッタ: ←/→/−/+ のアイコン</li></ul>
+<p>LEDの点灯:</p>
+<ul><li>編集ターゲットのトラックが点滅</li><li>録音ターゲット(編集ターゲットと別の場合)は点灯</li></ul>
+<p>このモードでも録音・再生などの共通操作は利用できますが、録音対象はあくまで録音ターゲットです(編集ターゲットとは別に管理されます。「4-4. 録音ターゲットと編集ターゲット」参照)。<br>
+なお、トラック編集モードに入っている間は、Undo(FUNC+CLEAR)の対象トラックも編集ターゲットになります。</p>
+<p>再生方向・再生速度・再生ウィンドウの変更は、再生中は次のステップ境界で反映されます。パンは即座に反映されます。</p>
+<h2 id="sec-43">7-3. ループセット選択モード</h2>
+<figure><img src="img/04_loop_select.png" alt="04_loop_select" loading="lazy"></figure>
+<p>LOOPボタンで遷移します。アクティブなループセット(1〜128)を切り替えるモードです。<br>
+録音・クリア・Undoなどの編集操作はできません(「Appendix D」参照)。<br>
+ループセットの切り替えには、まずLOAD操作で対象のループセットを読み込む必要があります。<br>
+読み込み完了後にT3ボタンを押すとループセットの切り替えが実行されます。</p>
+<p>T1-T4ボタンの機能:</p>
+<ul><li>T1/T2: 対象ループセット番号を選択(−/+。1〜128をループ)</li><li>T3: 対象ループセットの状態に応じて動作が変わります(下記)</li><li>T4: 未使用</li></ul>
+<p>T3ボタンの動作(画面下とフッタのラベルに表示されます):</p>
+<ul><li><strong>LOAD</strong>: 録音済みの別ループセットを選んだとき。SDカードからの読み込みを開始します(プログレスバー表示)。読み込みが完了すると表示が「CHNG」に変わります。</li><li><strong>CHNG</strong>: 読み込み完了後にもう一度T3を押すと、ループセットを切り替えます。</li><li><strong>NEW</strong>: 未録音(空き)のループセットを選んだとき。新規ループセットとして即座に切り替えます。</li><li><strong>--</strong>: 現在のループセットを選んでいるとき(切り替え対象なし)。</li></ul>
+<p>切り替えのタイミングは、停止中は即座に、再生中はLoop Sync設定に従ってクロックの区切りに揃えられます。切り替えが完了すると自動的に通常モードへ戻ります。</p>
+<p>画面構成:</p>
+<ul><li>タイトル: "LOOP SELECT"</li><li>中央: 現在のループセット番号 &gt; 対象ループセット番号(対象は反転枠で表示)</li><li>状態表示: 読み込み進捗バー / "PRESS 3 TO CHANGE!" / 切り替え中アニメーション / "SAVING..."(保存待ち)</li><li>フッタ: ↑/↓(T1/T2)、T3ラベル(LOAD/NEW/CHNG/--、CHNGは点滅)</li></ul>
+<p>このモードでは、再生/停止(START)、再生位置リセット(FUNC+START)、トラック編集モードへの遷移(FUNC+Tn)は可能です。<br>
+読み込み中や切り替え確定後は、操作が制限されます(「Appendix D」参照)。<br>
+なお、読み込んだループセットに破損トラックが含まれていた場合は "DATA BROKEN" の警告が表示されます(「Appendix E-2」参照)。</p>
+<h2 id="sec-44">7-4. システム設定モード</h2>
+<figure><img src="img/05_system.png" alt="05_system" loading="lazy"></figure>
+<p>FUNC+LOOPで遷移します。本機全体の動作設定を行うモードです。設定はSDカードに自動保存され、次回起動時にも引き継がれます(「9. SDカード保存」参照)。</p>
+<p>T1-T4ボタンの機能:</p>
+<ul><li>T1/T2: カーソル移動(↑/↓)</li><li>T3/T4: 値の変更(−/+)。Auto Stop項目のみ、押し続けると連続変化し、さらに押し続けると変化が速くなります。Auto Stop項目でT3とT4を同時に押すと、中央値(64ステップ)に戻ります</li></ul>
+<p>設定項目:</p>
+<table>
+<thead>
+<tr><th>項目</th><th>値</th><th>説明</th></tr>
+</thead>
+<tbody>
+<tr><td>Loop Sync</td><td>EACHSTEP / ANY END / T1 END</td><td>再生中に予約される操作(録音/オーバーダブの開始、Undo、ループセット切り替えなど)を、どのタイミングでクロックに合わせて実行するかを決めます。EACHSTEP=各ステップ(最小単位)、ANY END=いずれかのトラックのループ末尾、T1 END=トラック1のループ末尾。初期値はEACHSTEP。</td></tr>
+<tr><td>Auto Stop</td><td>1〜128ステップ</td><td>オートストップ録音(FUNC+REC)で自動停止するステップ数。初期値は64ステップ(=16拍)。T3/T4を押し続けると連続変化(さらに押し続けると加速)、T3+T4同時押しで中央値(64ステップ)に戻ります。(「6-1-3. オートストップ録音」参照)</td></tr>
+<tr><td>Smooth</td><td>ON / OFF</td><td>ループの継ぎ目や録音/オーバーダブ停止時に短いクロスフェードをかけ、クリックノイズを抑える設定。初期値はON。</td></tr>
+<tr><td>MIDI Sync</td><td>TX RX / TX / RX / --</td><td>MIDIクロックの送信(TX)/受信(RX)の有効・無効。別売のMIDI拡張モジュールが必要です。初期値はTX RX。(「8. クロック同期とMIDI」参照)</td></tr>
+<tr><td>Send MIDI CLK</td><td>PLAY / ALWAYS</td><td>MIDIクロックを送信するタイミング。PLAY=再生中のみ送信(初期値)、ALWAYS=停止中も含め常時送信。外部機器を常に本機のテンポへ追従させたいときはALWAYS。(「8-3-2. MIDI送信」参照)</td></tr>
+<tr><td>Screen Off</td><td>10 min / 30 min / 60 min / NEVER</td><td>無操作時にOLEDディスプレイを自動的に消灯するまでの時間。NEVERで消灯しません。初期値は30 min。</td></tr>
+</tbody>
+</table>
+<p>画面構成:</p>
+<ul><li>タイトル: "SYSTEM SETTING"</li><li>設定項目(ラベル+現在値)を一覧表示。選択中の行は反転表示</li><li>フッタ: ↑/↓/−/+ のアイコン</li></ul>
+<h1 id="sec-45">8. クロック同期とMIDI</h1>
+<p>LilaC Repeater は、内部クロックのほか、CLK入力(クロックパルス)とMIDIクロック(別売のMIDI拡張モジュール利用時)による外部同期に対応します。<br>
+録音/再生のステップは常にクロックに同期し、再生位置とクロックの位相はPLL制御によって保たれるため、長時間ループを再生してもサンプルとクロックの位相がズレません。</p>
+<h2 id="sec-46">8-1. クロックソースと自動切替</h2>
+<p>クロックソースには「内部」「CLK入力(外部クロックパルス)」「MIDIクロック」の3種類があります。<br>
+ソースの切り替えは自動で行われます。</p>
+<ul><li>起動直後は内部クロックです。テンポはSPEEDフェーダで60〜240BPMの範囲で設定します。</li><li>CLK入力にクロックパルスが入力されると、CLK入力同期に切り替わります。</li><li>MIDIクロック(またはMIDI START)を受信すると、MIDI同期に切り替わります。</li><li>外部クロックが一定時間途切れると(直近の間隔の約4倍、最短約2秒)、最後に検出したテンポを保持したまま内部クロックに戻ります。</li><li>再生を停止すると、クロックソースは内部に戻ります(外部マスターが動作していれば、次のクロック/パルスで再び外部同期に切り替わります)。</li></ul>
+<p>外部同期中はSPEEDフェーダは無効になります(「5-2. レベルフェーダ」参照)。</p>
+<h2 id="sec-47">8-2. CLK入力/出力とリセット (CLK IN / CLK OUT / RST)</h2>
+<p>クロックパルスによる同期・出力です。本機ではステップ(4ppqn = 1拍あたり4パルス)を基準にやり取りします(「4-2. ステップ」参照)。</p>
+<ul><li><strong>CLK入力</strong>: ステップ単位(4ppqn)のクロックパルスを入力します。入力されたパルスの間隔からテンポを測定し、同期します。</li><li><strong>CLK出力</strong>: 再生中、ステップごとに約5msのクロックパルス(4ppqn)を出力します。内部同期・外部同期のいずれでも出力され、停止中は出力されません。</li><li><strong>RST入力</strong>: 再生位置をループ先頭に戻します。ゲートをHIGHに保持し続けている間は先頭に固定されます(「6-4. リセット操作」参照)。</li></ul>
+<h2 id="sec-48">8-3. MIDI同期</h2>
+<p>別売のMIDI拡張モジュール(MIDI CoM+)を利用すると、MIDI IN/OUTを使ったクロック・トランスポート同期が可能になります。<br>
+MIDIクロックは標準の24ppqnに対応します。</p>
+<figure><img src="img/lr_midi_expand.png" alt="lr_midi_expand" loading="lazy"></figure>
+<p>MIDI拡張モジュールは、背面の <strong>MIDI EXPAND/SLAVEコネクタ</strong> に接続してください(「2-2. バック」参照)。</p>
+<p>! <strong>注意: MIDI拡張モジュールをMASTERコネクタに接続しないでください。</strong></p>
+<h3 id="sec-49">8-3-1. MIDI受信 (RX)</h3>
+<p>外部MIDIマスターから以下のメッセージを受信して同期します(MIDI Sync設定でRXが有効な場合)。</p>
+<table>
+<thead>
+<tr><th>メッセージ</th><th>動作</th></tr>
+</thead>
+<tbody>
+<tr><td>MIDIクロック (24ppqn)</td><td>MIDI同期に切り替え、テンポと位相に同期します。</td></tr>
+<tr><td>Start</td><td>再生位置を先頭に戻して再生を開始します。</td></tr>
+<tr><td>Continue</td><td>再生を開始します。本機では再生位置を先頭に戻して開始するため、Startと同じ動作になります。</td></tr>
+<tr><td>Stop</td><td>再生を停止します。</td></tr>
+<tr><td>Song Position Pointer (位置0)</td><td>再生位置を先頭に戻します。</td></tr>
+</tbody>
+</table>
+<h3 id="sec-50">8-3-2. MIDI送信 (TX)</h3>
+<p>本機のクロック・トランスポートを外部MIDI機器へ送信します(MIDI Sync設定でTXが有効な場合)。</p>
+<table>
+<thead>
+<tr><th>メッセージ</th><th>送信タイミング</th></tr>
+</thead>
+<tbody>
+<tr><td>MIDIクロック (24ppqn)</td><td>システム設定「Send MIDI CLK」に従う。PLAY=再生中のみ(初期値)、ALWAYS=停止中も含め常時。いずれも内部/外部どちらのクロックでも送信します。</td></tr>
+<tr><td>Start</td><td>再生を開始したとき</td></tr>
+<tr><td>Stop</td><td>再生を停止したとき</td></tr>
+</tbody>
+</table>
+<p><strong>Send MIDI CLK (PLAY / ALWAYS)</strong> … MIDIクロックを送信するタイミングを切り替えます。</p>
+<ul><li><strong>PLAY</strong> (初期値): 再生中のみクロックを送信し、停止中は送信しません。停止すると同期先の外部シーケンサなども止まります。</li><li><strong>ALWAYS</strong>: 停止中も含めてクロックを送信し続けます。外部のドラムマシンやアルペジエータを、本機が停止していても常に本機のテンポへ追従させたいときに使います(再生開始/停止のStart/Stop自体は従来どおり送信されます)。</li></ul>
+<p>この設定はMIDI送信(MIDI OUT)と、UARTチェインで下流のLilaC Repeaterへ送るクロックの両方に適用されます(「11. UARTチェイン」参照)。</p>
+<h3 id="sec-51">8-3-3. MIDI Sync設定</h3>
+<p>システム設定の「MIDI Sync」で、送受信の有効・無効を切り替えます(「7-4. システム設定モード」参照)。</p>
+<table>
+<thead>
+<tr><th>設定値</th><th>動作</th></tr>
+</thead>
+<tbody>
+<tr><td>TX RX</td><td>送信・受信ともに有効(初期値)。</td></tr>
+<tr><td>TX</td><td>送信のみ。外部機器を本機に同期させたいとき。</td></tr>
+<tr><td>RX</td><td>受信のみ。本機を外部マスターに同期させたいとき。</td></tr>
+<tr><td>--</td><td>MIDI同期を無効化。内部クロックまたはCLK入力で動作します。</td></tr>
+</tbody>
+</table>
+<p>本機が同期に使うMIDIクロック・トランスポート(Start/Stop/Continue)はMIDIチャンネルを持たないシステムリアルタイムメッセージのため、MIDIチャンネルの設定は不要です。</p>
+<p>なお、MIDI拡張モジュールで受信したメッセージはUARTチェインの下流へそのまま転送され、複数のLilaC Repeaterを同期させることができます(「11. UARTチェイン」参照)。</p>
+<h1 id="sec-52">9. SDカード保存</h1>
+<p>LilaC Repeater は録音したループを自動的にマイクロSDカードへ保存します。SDカードはループセットの保存・読み込みのほか、システム設定の保存、サンプルインポート(セクション10)、ファームウェアアップデート(Appendix A)にも使用します。</p>
+<ul><li>対応カード: microSD / microSDHC。<strong>FAT32 でフォーマット</strong>された32GB以下のカード。</li><li>保存は録音停止後に自動かつバックグラウンドで行われます。保存中はヘッダに保存インジケータが表示されます。</li><li>SDカードが挿入されていない、または認識できない場合は "NO SD/MMC" が表示され、保存機能は無効になります(Appendix E-1)。</li><li>保存・読み込みの詳細なファイル構成は Appendix F を参照してください。</li></ul>
+<h2 id="sec-53">9-1. 動作確認済みのSDカード一覧</h2>
+<p>以下は動作確認済みのSDカードです。記載のないカードでも多くは動作しますが、相性問題が出る場合は下記のカードをお試しください。</p>
+<table>
+<thead>
+<tr><th>メーカー</th><th>型番</th><th>容量</th><th>備考</th></tr>
+</thead>
+<tbody>
+<tr><td>Gigastone</td><td>microSDHC U1 C10 UHS-I Full HD Video</td><td>32GB</td><td>ver1.0出荷時SD</td></tr>
+</tbody>
+</table>
+<h2 id="sec-54">9-2. SDカード保存内容</h2>
+<p>SDカードには <code>LILACREP</code> フォルダが作成され、以下が保存されます。</p>
+<ul><li><strong>ループセット</strong>: 各ループセット(1-128)のトラックが WAV ファイル＋メタ情報として保存されます。<ul><li>WAV は 48kHz / ステレオ / 32bit float 形式で、PC上でも再生・確認できます。録音時のテンポを示すBPM情報(ACIDチャンク)も埋め込まれ、対応するDAWで読み取れます(テンポ不明の場合は埋め込まれません)。</li><li>各トラックは2世代(A/B)のペアで保存されます。これにより、直前のテイク(Undo の戻り先)も電源を切ったあとまで保持されます。</li><li>メタ情報にはベーステンポ・ステップ数・再生方向 / 速度・パン・再生ウィンドウ(ループ範囲)などが含まれます。</li></ul></li><li><strong>システム設定</strong>: Loop Sync / Auto Stop / Smooth / MIDI Sync / Screen Off などの設定。</li><li><strong>アクティブループセット番号</strong>: 次回起動時に読み込むループセット。</li></ul>
+<p>保存は変更のあったトラックのみが対象で、録音・オーバーダブのたびに自動でバックアップされます(セクション4-9)。</p>
+<h1 id="sec-55">10. サンプルインポート</h1>
+<p>PCなどで用意したWAVファイルを、SDカード経由でループセットの任意のトラックに取り込む機能です。本体側にファイル選択画面は持たず、SDカードのルートに置いた設定ファイル <code>import.csv</code> に取り込み内容を記述し、<strong>起動時にまとめて処理</strong>します。</p>
+<h2 id="sec-56">10-1. 取り込みの手順</h2>
+<ol><li>ラックの電源を落とし、SDカードを抜いてPCで開きます。</li><li>SDカードのルートに <code>samples</code> フォルダを作成し、取り込みたいWAVファイルを置きます。</li><li>SDカードのルートに <code>import.csv</code> を作成し、取り込み内容を記述します(書式は10-2)。</li><li>SDカードを本体に戻して電源を入れます。起動時に画面へ "IMPORTING" と対象ファイル名が表示され、取り込みが実行されます。</li><li>完了すると <code>import.csv</code> は <code>_import.csv</code> にリネームされ、各行の処理結果が最終列に追記されます。</li></ol>
+<p><code>import.csv</code> は処理後にリネームされるため、次回以降の起動で同じ取り込みが繰り返されることはありません。取り込んだ音は通常録音したループと同じように扱われ、保存・Undo・編集ができます。</p>
+<h2 id="sec-57">10-2. import.csv の書式</h2>
+<p>1行目はヘッダ行(列名)で、2行目以降が取り込み1件ずつです。列は名前で対応するため<strong>順序は自由</strong>で、不要な列は省略できます。</p>
+<table>
+<thead>
+<tr><th>列</th><th>内容</th></tr>
+</thead>
+<tbody>
+<tr><td>file</td><td><code>samples</code> フォルダ内のWAVファイル名</td></tr>
+<tr><td>loopset</td><td>取り込み先のループセット番号 (1〜128)</td></tr>
+<tr><td>track</td><td>取り込み先のトラック番号 (1〜4)</td></tr>
+<tr><td>slot</td><td><code>current</code>(通常) または <code>undo</code>。省略時は <code>current</code></td></tr>
+<tr><td>bpm</td><td>テンポ(BPM)で指定する場合に記述</td></tr>
+<tr><td>beats</td><td>拍数で指定する場合に記述。bpmより優先</td></tr>
+<tr><td>steps</td><td>ステップ数で指定する場合に記述。beats・bpmより優先(変拍子向け)</td></tr>
+</tbody>
+</table>
+<p>記述例:</p>
+<pre><code>file,loopset,track,slot,bpm,beats,steps
+drums.wav,1,1,current,,4,
+pad.wav,1,1,undo,,8,
+bassline.wav,2,3,current,120,,
+oddbar.wav,3,1,current,,,14</code></pre>
+<p>(1行目: <code>drums.wav</code> をループセット1・トラック1へ「4拍」として取り込み。2行目: <code>pad.wav</code> を同じトラックのUndo側へ「8拍」で。3行目: <code>bassline.wav</code> をループセット2・トラック3へ120BPMで取り込み。4行目: <code>oddbar.wav</code> をループセット3・トラック1へ「14ステップ」として取り込み = 7/8拍子1小節)</p>
+<h2 id="sec-58">10-3. テンポの指定 (steps / beats / bpm)</h2>
+<p>取り込んだループにも正しいベーステンポを設定する必要があるため、<code>steps</code>(ステップ数)・<code>beats</code>(拍数)・<code>bpm</code>のいずれかを必ず指定します。複数ある場合の優先順位は <strong>steps &gt; beats &gt; bpm</strong> です。</p>
+<ul><li><strong>steps(ステップ数)</strong>: そのファイルが何ステップ(16分音符単位)かを直接指定します。<code>beats</code>は4ステップ単位(1拍=4ステップ)でしか表せませんが、<code>steps</code>なら4の倍数でないステップ数も指定でき、<strong>変拍子(7/8、5/4 など)のループ</strong>を正しく取り込めます。<code>beats</code>同様、ファイルの長さをそのままループ長とし、長さとステップ数からベーステンポが決まります。</li><li><strong>beats(拍数)</strong>: そのファイルが音楽的に何拍かを指定します。ファイルの長さをそのままループ長とし、長さと拍数からベーステンポが決まります。長さが正確なループ素材に向いています(<code>recorded_steps = beats × 4</code>)。</li><li><strong>bpm</strong>: テンポを直接指定します。指定BPMの拍グリッドに合わせてループ長を整え、WAVがグリッドより長ければ末尾をカット、短ければ無音を足します(いずれも継ぎ目のクリックを防ぐ短いフェードが掛かります)。テンポは分かるが長さがぴったりでない素材に向いています。</li></ul>
+<p>&gt; ステップあたりのサンプル数が少なすぎる(目安: 64サンプル未満)指定はテンポが過密として <code>ERROR</code> になります。短いWAVに大きなステップ数を指定しないでください。</p>
+<h2 id="sec-59">10-4. current と undo (ループバリエーション)</h2>
+<p><code>slot</code>列で、そのトラックの取り込み先を選べます。</p>
+<ul><li><strong>current</strong>: 通常の取り込み先です。そのトラックに既存のテイクがある場合、既存テイクはUndo側へ退避され、取り込んだ音が再生されます(Undoで元に戻せます)。</li><li><strong>undo</strong>: Undo操作で呼び出せる「裏」のテイクとして取り込みます。同じトラックに <code>current</code> と <code>undo</code> の2つを取り込むと、<strong>Undoボタンで2つのループを切り替えられる</strong>ため、ループのバリエーションとして活用できます。</li></ul>
+<h2 id="sec-60">10-5. 対応フォーマットと制限</h2>
+<ul><li>サンプリングレート: 44.1kHz / 48kHz / 96kHz (内部の48kHzへ自動変換します)</li><li>ビット数: 16 / 24 / 32bit 整数、または 32bit 浮動小数点</li><li>チャンネル: モノラル / ステレオ (モノラルは左右へ複製します)</li><li>1トラックの長さの上限は約20秒です。これを超えるファイルは取り込まれません。</li><li>ファイル名は半角英数字(ASCII)を推奨します。8文字を超える長い名前も使用できます。</li></ul>
+<h2 id="sec-61">10-6. 結果の確認</h2>
+<p>取り込みが完了すると、画面に "IMPORTED!" と成功・失敗の合計件数("OK: n" / "Fail: n")が約2秒間表示されます。<br>
+各行ごとの結果は、取り込み後の <code>_import.csv</code> の各行末尾(result列)に記録されます。成功は <code>OK</code>、失敗は理由付きの <code>ERROR: ...</code> です。エラーがあった場合は、SDカードルートの <code>lr_log.txt</code> にも記録が追記されます。失敗した行はスキップされ、他の行や既存のループには影響しません。</p>
+<h1 id="sec-62">11. UARTチェイン</h1>
+<p>複数のLilaC Repeaterを接続し、クロックとトランスポート(再生/停止など)を共有して同期させる機能です。<br>
+背面のUARTコネクタを数珠つなぎにすることで、先頭(マスター)ユニットのクロック/トランスポートを後続のユニットへ次々と伝えます。<br>
+マスターのクロックは、外部から受け取ったMIDIクロックだけでなく、ユニット自身の内部クロック(SPEEDフェーダのテンポ)やCLK入力/トリガー同期でもかまいません。つまり、MIDI拡張モジュールを付けていないユニットでも、内部テンポでチェインのマスターになれます。</p>
+<figure><img src="img/lr_uart_chain.png" alt="lr_uart_chain" loading="lazy"></figure>
+<h2 id="sec-63">11-1. 接続</h2>
+<p>接続は上流→下流の一方向です。</p>
+<ul><li>上流ユニットの <strong>MASTERコネクタ</strong>(背面#5)を、下流ユニットの <strong>MIDI EXPAND/SLAVEコネクタ</strong>(背面#4)に接続します。</li><li>これを繰り返して数珠つなぎにします(ユニットA #5 → ユニットB #4、ユニットB #5 → ユニットC #4 …)。</li><li>先頭ユニットの入力(MIDI EXPAND/SLAVEコネクタ)には、MIDI拡張モジュール(MIDI CoM+)を接続して外部MIDIクロックを供給することも可能です(「8-3. MIDI同期」参照)。</li></ul>
+<p>! <strong>注意: コネクタの極性に注意してください。ケーブルの赤いラインとシルクスクリーンの白い線の方向を一致させてください(「2-2. バック」参照)。</strong></p>
+<h2 id="sec-64">11-2. 中継される内容</h2>
+<ul><li>SLAVEコネクタで受信したメッセージは、SysExを除いてそのままMASTERコネクタへ転送されます。MIDIクロック・Start/Stop/Continue・Song Positionなどが下流へ伝わります。</li><li>この転送は、各ユニットのMIDI Sync設定に関わらず常に行われます。一方、転送されたクロックに各ユニットが実際に同期するかどうかは、そのユニットのMIDI Sync設定(RXが有効か)に従います(「8-3-3. MIDI Sync設定」参照)。</li><li>受信メッセージの転送に加えて、各ユニットは<strong>自身が生成するクロック・トランスポート</strong>(内部クロック/CLK入力/トリガー同期で動作しているときのMIDIクロックとStart/Stop)もMASTERコネクタへ送出します。これにより、外部MIDIを入力していないユニットでもマスターとして下流を駆動できます。送出のタイミングはシステム設定「Send MIDI CLK」(PLAY=再生中のみ/ALWAYS=停止中も常時)に従います(「8-3-2. MIDI送信」参照)。</li><li>現状はチェインは下流方向の一方向ですが、将来的には双方向通信可能な拡張モジュールが接続可能になるかもしれません。</li></ul>
+<h2 id="sec-65">11-3. 使い方の例</h2>
+<p><strong>例1: 外部MIDIをマスターにする</strong> — 先頭ユニットにMIDI拡張モジュールを取り付け、外部シーケンサやDAWのMIDIクロックを入力すると、そのクロックとトランスポートがチェイン上のすべてのユニットへ伝わり、全ユニットが同じテンポ・タイミングで同期します。</p>
+<p><strong>例2: 先頭ユニットの内部クロックをマスターにする</strong> — 先頭ユニットにMIDI拡張モジュールを付けず、内部クロック(SPEEDフェーダのテンポ)で動かします。先頭ユニットがマスターとなり、その再生開始/停止とテンポがチェイン全体へ伝わります。先頭ユニットを停止中もチェインへクロックを流したい場合は、先頭ユニットの「Send MIDI CLK」をALWAYSにします。</p>
+<p>いずれの場合も、下流ユニットのMIDI SyncはRXが有効(TX RX または RX)になっている必要があります(「7-4. システム設定モード」参照)。</p>
+<h1 id="sec-66">Appendix A. ファームウェアアップデート</h1>
+<p>マイクロSDカードにファームウェアのファイルを配置することにより、簡単にアップデートができます。</p>
+<p>手順:</p>
+<ol><li>ラックの電源を落とします。</li><li>LilaC Repeaterモジュールをラックから外し、SDカードを抜き取ります。</li><li>SDカードリーダーを使い、PC上でSDカードを開きます。</li><li>ファームウェアのバイナリファイル ("lr_v1_0.bin"など) をSDカードのルートディレクトリに配置します。</li><li>LilaC RepeaterモジュールにSDカードを挿入し、ラックにマウントします。</li><li>電源を入れると、自動的にファームウェアアップデート処理が実行され、しばらく経つと通常起動します。</li></ol>
+<p>以上でファームウェアアップデートは完了します。<br>
+しかし、SDカードルート上にファームウェアのバイナリファイルが残っているままだと、起動のたびにファームウェアアップデートが実行されてしまうので、正常にアップデートが行えたらSDカード上のバイナリファイルは削除することをお勧めします。</p>
+<h1 id="sec-67">Appendix B. チートシート</h1>
+<h2 id="sec-68">ボタン操作(モード共通)</h2>
+<table>
+<thead>
+<tr><th>操作</th><th>機能</th></tr>
+</thead>
+<tbody>
+<tr><td>REC</td><td>録音 開始/停止(録音済みトラックではオーバーダブ)</td></tr>
+<tr><td>FUNC+REC</td><td>オートストップ録音(指定ステップ数または一周で自動停止)</td></tr>
+<tr><td>START</td><td>全トラック 再生/停止(録音中はオーバーダブへ移行)</td></tr>
+<tr><td>FUNC+START</td><td>再生位置を先頭へリセット</td></tr>
+<tr><td>LOOP</td><td>ループセット選択モード ⇔ 通常モード</td></tr>
+<tr><td>FUNC+LOOP</td><td>システム設定モード ⇔ 通常モード</td></tr>
+<tr><td>FUNC+Tn</td><td>トラックn のトラック編集モード(同じトラックで再押し=戻る)</td></tr>
+<tr><td>FUNC+CLEAR</td><td>Undo(再度押すと Redo)</td></tr>
+<tr><td>CLEAR+Tn</td><td>トラックn をクリア(即時。FUNC+CLEAR で戻せる)</td></tr>
+<tr><td>CLEAR+LOOP</td><td>アクティブループセットを全クリア(確認あり・Undo不可)</td></tr>
+<tr><td>FUNC ダブルタップ</td><td>通常モードへ戻る</td></tr>
+<tr><td>CLEAR(単独)</td><td>無効(誤操作防止)</td></tr>
+</tbody>
+</table>
+<h2 id="sec-69">モード別の T1-T4(単独押し)</h2>
+<table>
+<thead>
+<tr><th>モード</th><th>T1 / T2</th><th>T3 / T4</th></tr>
+</thead>
+<tbody>
+<tr><td>通常</td><td>録音ターゲット選択(T1-T4)</td><td>録音ターゲット選択(T1-T4)</td></tr>
+<tr><td>トラック編集</td><td>項目移動(←/→)</td><td>値変更(−/+、長押しで連続。パン・再生ウィンドウは加速あり)。T3+T4=選択中項目を初期値へ(パン=C/ウィンドウ開始=0/ウィンドウ長=全体)</td></tr>
+<tr><td>ループセット選択</td><td>対象ループセット選択(−/+)</td><td>T3=LOAD→CHNG(空き番号は NEW) / T4=未使用</td></tr>
+<tr><td>システム設定</td><td>カーソル移動(↑/↓)</td><td>値変更(−/+。Auto Stop は長押しで連続・加速)。Auto Stop で T3+T4=中央(64)</td></tr>
+</tbody>
+</table>
+<h2 id="sec-70">アナログ(ノブ/フェーダ)</h2>
+<table>
+<thead>
+<tr><th>操作子</th><th>機能</th></tr>
+</thead>
+<tbody>
+<tr><td>SPEED</td><td>テンポ 60-240 BPM(内部クロック。外部同期時は無効)。再生中はLEDが拍周期で明滅(拍頭で最大→拍末で最小)</td></tr>
+<tr><td>FDBK</td><td>オーバーダブの feedback 量</td></tr>
+<tr><td>DRY</td><td>入力/録音レベル</td></tr>
+<tr><td>T1-T4</td><td>各トラックの再生音量</td></tr>
+</tbody>
+</table>
+<h2 id="sec-71">外部入出力</h2>
+<table>
+<thead>
+<tr><th>端子</th><th>機能</th></tr>
+</thead>
+<tbody>
+<tr><td>REC入力</td><td>録音トグル(RECボタンと同じ)</td></tr>
+<tr><td>RST入力</td><td>再生位置リセット(ゲートHIGH中は先頭固定)</td></tr>
+<tr><td>CLK入力</td><td>外部クロック同期(エッジ入力で自動切替)</td></tr>
+<tr><td>CLK出力</td><td>ステップクロック出力(再生中)</td></tr>
+<tr><td>MIDI(別売 MIDI CoM+)</td><td>クロック同期 / Start・Stop・Continue・Song Position</td></tr>
+</tbody>
+</table>
+<p>操作の制限(モード別の禁止操作)は Appendix D を参照してください。</p>
+<h1 id="sec-72">Appendix C. 画面上のステータス通知</h1>
+<p>操作フィードバックや処理状態を知らせる、画面上の小さな通知表示です。モードに依存せず共通で表示されます。</p>
+<h2 id="sec-73">C-1. ステータスバッジ</h2>
+<p>画面右上(ヘッダ右端)に、処理中であることを示す小さなアイコンが表示されます。</p>
+<figure><img src="img/11_status_badge_sd_write.png" alt="11_status_badge_sd_write" loading="lazy"></figure>
+<figure><img src="img/12_status_badge_sync.png" alt="12_status_badge_sync" loading="lazy"></figure>
+<table>
+<thead>
+<tr><th>アイコン</th><th>意味</th></tr>
+</thead>
+<tbody>
+<tr><td>SDカード型アイコン</td><td>SDカードへの保存中。<strong>表示中は電源を切らないでください</strong>(書き込み中の電源断については「Appendix E-3」参照)。</td></tr>
+<tr><td>下向き矢印アイコン</td><td>Undo用データの読み込み中("undo data loading")。消えるまでUndo操作などが一時的に保留されます(「6-3-1. トラック録音のUndo/Redo」「Appendix E-6」参照)。</td></tr>
+</tbody>
+</table>
+<h2 id="sec-74">C-2. トースト通知</h2>
+<p>再生/停止やUndo、トラックのクリア操作時に、画面中央へ約1秒間、操作内容が小さく表示されます(トースト)。操作が受け付けられたことの確認表示です。</p>
+<table>
+<thead>
+<tr><th>表示</th><th>タイミング</th></tr>
+</thead>
+<tbody>
+<tr><td>START</td><td>再生を開始したとき</td></tr>
+<tr><td>STOP</td><td>再生を停止したとき</td></tr>
+<tr><td>UNDO</td><td>Undo/Redoが適用されたとき(操作がブロックされた場合は表示されません)</td></tr>
+<tr><td>CLEAR TRKn</td><td>CLEAR+T1〜T4でトラックを個別クリアしたとき(nはトラック番号1〜4。同期中などでクリアが保留された場合は表示されません)</td></tr>
+</tbody>
+</table>
+<figure><img src="img/13_display_toast.png" alt="13_display_toast" loading="lazy"></figure>
+<h1 id="sec-75">Appendix D. モード別禁止操作一覧</h1>
+<p>操作のブロックには、(A) 特定のモードでのみ禁止されるものと、(B) 状態に応じて全モード共通で禁止されるものがあります。警告ポップアップは数秒で自動的に消えます。</p>
+<h2 id="sec-76">(A) モード固有の禁止操作</h2>
+<p><strong>通常モード / トラック編集モード / システム設定モード</strong>: モード固有の禁止操作はありません((B)の共通ブロックのみ)。なお T1-T4 の役割はモードで異なります(通常=録音ターゲット選択、トラック編集・システム設定=カーソル/値変更)。</p>
+<p><strong>ループセット選択モード</strong>: 取り違えや読み込み・切替との競合を防ぐため、一部の操作が制限されます。</p>
+<table>
+<thead>
+<tr><th>操作</th><th>挙動</th><th>画面表示</th></tr>
+</thead>
+<tbody>
+<tr><td>REC(録音) / 外部RECトリガー</td><td>禁止</td><td>"REC BLOCKED"(読み込み中は "LOADING")</td></tr>
+<tr><td>CLEAR+Tn(トラック個別クリア)</td><td>禁止</td><td>"CLEAR BLOCKED / loop select"</td></tr>
+<tr><td>FUNC+CLEAR(Undo)</td><td>禁止</td><td>"UNDO BLOCKED"</td></tr>
+<tr><td>CLEAR+LOOP(ループセット全クリア)</td><td>禁止</td><td>"CLEAR BLOCKED / loop select"</td></tr>
+<tr><td>T4</td><td>未使用(無反応)</td><td>—</td></tr>
+<tr><td>読み込み中(T3でLOAD実行中)の操作全般</td><td>FUNC+START 以外は受け付けない</td><td>"LOADING / Please wait..."</td></tr>
+<tr><td>切替確定後(T3でCHNG/NEW後・適用待ち)の T1/T2/T3</td><td>無反応(対象ループセットを固定)。LOOP または FUNC で抜けると取り消し</td><td>—</td></tr>
+</tbody>
+</table>
+<p>ループセット選択モードは「選択専用」です。録音・クリア・Undo などの編集操作はできません(再生/停止(START)とトラック編集モードへの遷移(FUNC+Tn)は可能です)。</p>
+<h2 id="sec-77">(B) 状態による操作ブロック(全モード共通)</h2>
+<table>
+<thead>
+<tr><th>操作</th><th>ブロックされる条件</th><th>画面表示</th></tr>
+</thead>
+<tbody>
+<tr><td>LOOP(ループセット選択へ入る)</td><td>SDが使えない</td><td>"LOOP BLOCKED / No SD"</td></tr>
+<tr><td>〃</td><td>録音/オーバーダブ中</td><td>"LOOP BLOCKED / Recording..."</td></tr>
+<tr><td>CLEAR+LOOP(ループセット全クリア)</td><td>SDが使えない</td><td>"CLEAR BLOCKED / No SD"</td></tr>
+<tr><td>〃</td><td>録音/オーバーダブ中</td><td>"CLEAR BLOCKED / Recording..."</td></tr>
+<tr><td>〃</td><td>Undoデータの同期中</td><td>"SYNCING / undo data loading..."</td></tr>
+<tr><td>〃</td><td>保存/読み込み/スキャン中</td><td>"CLEAR BLOCKED / Busy..."</td></tr>
+<tr><td>外部RECトリガー</td><td>確認ポップアップ中・起動時のループ読み込み中</td><td>(無反応)</td></tr>
+</tbody>
+</table>
+<h2 id="sec-78">補足</h2>
+<ul><li><strong>solo CLEAR は全モードで無反応</strong>です(誤操作防止。CLEAR は他ボタンと組み合わせて使います)。</li><li><strong>確認ポップアップ表示中</strong>は、T3(OK) / T4(CANCEL) 以外のボタンを受け付けません。</li><li><strong>FUNC+LOOP(システム設定へ)は録音中でも可能</strong>です(録音中にブロックされるのは solo LOOP のループセット選択への遷移のみ)。</li></ul>
+<h1 id="sec-79">Appendix E. トラブルシューティング</h1>
+<p>画面に表示される主な警告と対処方法です。警告ポップアップは数秒で自動的に消えます。</p>
+<h2 id="sec-80">E-1. NO SD/MMC</h2>
+<p>起動時に "NO SD/MMC"("Disabled: save,load,loop")と表示される状態です。SDカードが使えないため、保存・読み込み・ループセット操作が無効になります。</p>
+<ul><li>原因: SDカードが挿入されていない・正しく挿さっていない、フォーマットが非対応、またはカードの故障。</li><li>対処:<ol><li>電源を切り、SDカードがスロットに正しく挿さっているか確認します。</li><li>PCでカードを開き、<strong>FAT32</strong>(32GB以下)でフォーマットされているか確認します。</li><li>改善しない場合は、動作確認済みのSDカード(9-1)に交換してください。</li></ol></li><li>この状態でも録音・再生はできますが(RAM上)、電源を切ると録音内容は保存されず失われます。</li></ul>
+<h2 id="sec-81">E-2. DATA BROKEN</h2>
+<p>ループセットの読み込み時に "DATA BROKEN" と表示される状態です。保存データの一部が壊れていることを示します。</p>
+<ul><li>原因: 保存中の電源断や、SDカードの不良・抜き差しによるファイル破損。</li><li>挙動: 壊れたトラックは空の状態で読み込まれます("loaded empty")。壊れていないトラックや他のループセットはそのまま使えます。</li><li>対処:<ol><li>該当トラックを録音し直すと、新しいデータで上書き保存され回復します。</li><li>繰り返し発生する場合はカードの不良が疑われるため、別のカードに交換してください。</li></ol></li><li>本機は各トラックを2世代(A/B)で保存しており、片方が壊れてももう片方から復旧します。両方が壊れた場合のみ空読み込みになります。</li></ul>
+<h2 id="sec-82">E-3. 書き込み中の電源断</h2>
+<p>SDカードへの保存中(ヘッダの保存インジケータ表示中)に電源を切ると、書き込みが中断されることがあります。</p>
+<ul><li>本機は「新しいファイルを書き終えてから安全に切り替える」方式で保存するため、書き込み途中で電源が切れても<strong>以前の録音は保たれます</strong>(中途半端なファイルは次回起動時に無視されます)。</li><li>ただし、保存中だった最新の録音は失われることがあります。</li><li>対処: 録音停止直後は保存中のことが多いため、<strong>保存インジケータが消えてから</strong>電源を切ることを推奨します。</li></ul>
+<h2 id="sec-83">E-4. SAVE ERROR</h2>
+<p>保存時に "SAVE ERROR"("SD write failed")と表示される状態です。SDカードへの書き込みに失敗しています。</p>
+<ul><li>原因: SDカードの書き込み禁止(ロック)、空き容量不足、カードの不良・接触不良。</li><li>対処: カードのロック、空き容量、挿し込みを確認します。改善しない場合は別のカードに交換してください。</li></ul>
+<h2 id="sec-84">E-5. REC STOPPED（Memory is full!）</h2>
+<p>録音中に "REC STOPPED / Memory is full!" と表示され、録音が自動停止する状態です。</p>
+<ul><li>原因: トラックの録音可能な長さの上限(約20秒)に達したため、その時点で録音を自動停止します。</li><li>これはある意味正常な挙動です。録音された長さが望ましくない場合は、より短い長さで録り直してください。</li></ul>
+<h2 id="sec-85">E-6. 「◯◯ BLOCKED」と表示される</h2>
+<p>"REC BLOCKED" / "LOAD BLOCKED" / "LOOP BLOCKED" / "UNDO BLOCKED" / "CLEAR BLOCKED" などは、その操作が<strong>今は行えない</strong>ことを知らせる通知です(誤操作・競合の防止)。故障ではありません。</p>
+<ul><li>録音中、保存・読み込み中(Busy)、SD利用不可などの条件が解消されると操作できます。</li><li>起動直後やループセット切替の直後は、Undo用データの読み込み("SYNCING / undo data loading")のため、数秒間 Undo できないことがあります。表示が消えてから操作してください。</li><li>どの操作がどのモードで禁止されるかは Appendix D を参照してください。</li></ul>
+<h2 id="sec-86">E-7. 起動に時間がかかる / フリーズしているように見える</h2>
+<ul><li>サンプルインポートの実行中は、起動時に "IMPORTING" 表示で時間がかかることがあります(大きなファイルや高いサンプリングレートのファイルほど時間がかかります)。</li><li>故障ではありません。表示が消えて通常起動するまでお待ちください(処理中に電源を切らないでください)。</li></ul>
+<h2 id="sec-87">E-8. サンプルインポートが反映されない</h2>
+<p><code>import.csv</code> を置いて起動したのに取り込まれない場合は、次を確認してください。</p>
+<ul><li>起動後にSDカードを開き、<code>import.csv</code> が <code>_import.csv</code> にリネームされているか確認します。各行の最終列(result)に <code>OK</code> または <code>ERROR: ...</code> が記録されています。</li><li>エラーの理由はルートの <code>lr_log.txt</code> にも記録されます。</li><li>よくある原因: WAVが <code>samples/</code> フォルダ内に無い、対応外のフォーマット/サンプリングレート、<code>steps</code>・<code>beats</code>・<code>bpm</code> のいずれも未指定、ステップ数に対しWAVが短すぎる(過密)、ループ長の上限(約20秒)超過、ファイル名に非対応文字。</li><li>詳細はセクション10を参照してください。</li></ul>
+<h1 id="sec-88">Appendix F. SDカードのファイル構成</h1>
+<p>SDカードのルートと、本体が管理する <code>LILACREP</code> フォルダの構成は以下のとおりです。</p>
+<pre><code>SDカードのルート/
+├── LILACREP/                   本体が自動管理(手動で編集・削除しない)
+│   ├── CONFIG.INI              システム設定
+│   ├── STATE.INI               最後に選択していたループセット番号
+│   └── LOOPS/
+│       ├── 1/                  ループセット1
+│       │   ├── T1A.WAV  T1B.WAV   トラック1 (A/B 2世代ペア)
+│       │   ├── T2A.WAV  T2B.WAV   トラック2
+│       │   ├── T3A.WAV  T3B.WAV   トラック3
+│       │   └── T4A.WAV  T4B.WAV   トラック4
+│       ├── 2/                  ループセット2
+│       │   └── ...
+│       └── 128/                (録音したループセットの番号のみ作成)
+│
+├── samples/                    サンプルインポート元 (ユーザーが配置)
+│   ├── drums.wav
+│   └── ...
+├── import.csv                  インポート指示 (処理後 _import.csv にリネーム)
+├── _import.csv                 インポート結果の記録
+├── lr_log.txt                  インポートのエラーログ
+└── lr_v1_0.bin                 ファームウェア更新ファイル (更新後は削除推奨)</code></pre>
+<p><code>LILACREP</code> フォルダ(本体が管理):</p>
+<ul><li>本体が録音と設定の保存に使う領域です。中身を手動で編集・削除すると保存データが壊れる場合があるため、通常は触らないでください。</li><li><strong>CONFIG.INI</strong>: システム設定(Loop Sync / Auto Stop / Smooth / MIDI Sync / Screen Off)。</li><li><strong>STATE.INI</strong>: 最後に選択していたループセット番号。次回起動時にこのループセットを読み込みます。</li><li><strong>LOOPS/{番号}/</strong>: ループセット(1-128)ごとのフォルダ。録音したループセットの番号のフォルダだけが作成されます。</li><li><strong>T{n}A.WAV / T{n}B.WAV</strong>: トラック n(1-4)の録音データ。A/B は2世代のペアで、世代の新しい方が現在のテイク、古い方が Undo の戻り先です(9-2 参照)。48kHz / ステレオ / 32bit float の WAV 形式で、PC でも再生できます(編集・上書きは避けてください)。録音時のテンポを示す BPM 情報(ACID チャンク)も埋め込まれているため、対応する DAW で読み取れます。</li></ul>
+<p>ルート直下のファイル:</p>
+<ul><li><strong>samples/</strong>: サンプルインポートで取り込む WAV を置くフォルダ(セクション10)。</li><li><strong>import.csv / _import.csv / lr_log.txt</strong>: サンプルインポートの指示・結果・エラーログ(セクション10)。</li><li><strong>lr_v1_0.bin</strong> など: ファームウェアアップデート用のバイナリ(Appendix A)。アップデート後は削除を推奨します。</li></ul>
+<h1 id="sec-89">保証</h1>
+<p>購入より1年間、ユーザーの意図的な改造/破壊による故障、不注意による落下などによる故障あるいは電源等コネクタの間違った接続による故障を除き、基本無償にて修理を行います。<br>
+(ただしモジュール発送時の送料はご負担いただくことがあります)</p>
+<p>修理依頼時は購入店のレシート、もしくは購入時の明細などを証明書類としてご提出ください。</p>
+<h1 id="sec-90">連絡先</h1>
+<p>mail: centrevillage@gmail.com<br>
+site: https://centrevillage.net</p>
+</article>
+</main>
+</body>
+</html>
