@@ -56,4 +56,4 @@ publish: false
 - SDカードへの自動保存
 - 最大128個のループセット管理
 
-[マニュアル](/manual/LilaCRepeater/LilacRepeater_ver1_0_JP.html)
+[マニュアル](/manual/LilaCRepeater/LilaCRepeater_ver1_0_JP.html)
