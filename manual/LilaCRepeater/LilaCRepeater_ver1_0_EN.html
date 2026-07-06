@@ -1,0 +1,955 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LilaC Repeater ver 1.0 Manual</title>
+<style>
+:root {
+  --fg: #1c2430; --muted: #61707f; --bg: #ffffff; --soft: #f4f6f9;
+  --line: #d9e0e8; --accent: #3b6ea5; --accent-soft: #eaf1f8;
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0; color: var(--fg); background: #eef1f5;
+  font-family: "Hiragino Kaku Gothic ProN","Hiragino Sans","Yu Gothic","YuGothic",
+               "Noto Sans JP","Meiryo",sans-serif;
+  line-height: 1.8; font-size: 16px;
+}
+.page {
+  max-width: 880px; margin: 0 auto; background: var(--bg);
+  padding: 48px 56px 96px; box-shadow: 0 1px 24px rgba(20,30,45,.08);
+}
+.doc-header { text-align: center; border-bottom: 2px solid var(--line); padding-bottom: 28px; margin-bottom: 8px; }
+.title-image { max-width: 100%; height: auto; margin: 0 auto 18px; display: block; }
+.doc-title { font-size: 2.0rem; line-height: 1.4; margin: .2em 0; border: 0; padding: 0; }
+.doc-author { color: var(--muted); font-size: .92rem; margin-bottom: 18px; }
+
+h1, h2, h3 { line-height: 1.45; scroll-margin-top: 12px; }
+h1 { font-size: 1.6rem; margin: 2.2em 0 .8em; padding-bottom: .3em; border-bottom: 2px solid var(--accent); }
+h2 { font-size: 1.28rem; margin: 1.9em 0 .6em; padding-left: .55em; border-left: 5px solid var(--accent); }
+h3 { font-size: 1.08rem; margin: 1.5em 0 .5em; color: #2c3947; }
+
+p { margin: .7em 0; }
+a { color: var(--accent); }
+hr { border: 0; border-top: 1px solid var(--line); margin: 1.8em 0; }
+strong { font-weight: 700; }
+code {
+  font-family: "SFMono-Regular",Menlo,Consolas,"Courier New",monospace;
+  font-size: .88em; background: var(--soft); border: 1px solid var(--line);
+  border-radius: 4px; padding: .08em .38em;
+}
+pre {
+  background: var(--soft); border: 1px solid var(--line); border-radius: 6px;
+  padding: 14px 16px; margin: 1.1em 0; overflow-x: auto;
+  line-height: 1.55; font-size: .85rem;
+}
+pre code {
+  background: none; border: 0; padding: 0; border-radius: 0;
+  font-size: inherit; white-space: pre;
+}
+
+ul, ol { margin: .6em 0; padding-left: 1.7em; }
+li { margin: .25em 0; }
+li > ul, li > ol { margin: .25em 0; }
+
+table { border-collapse: collapse; width: 100%; margin: 1.2em 0; font-size: .95rem; }
+th, td { border: 1px solid var(--line); padding: .5em .7em; vertical-align: top; }
+th { background: var(--accent-soft); font-weight: 700; text-align: left; }
+tbody tr:nth-child(even) { background: var(--soft); }
+
+figure { margin: 1.4em auto; max-width: 560px; text-align: center; }
+figure img {
+  max-width: 100%; height: auto; border: 1px solid var(--line);
+  border-radius: 6px; background: #0a0e18;
+}
+.img-placeholder {
+  max-width: 560px; margin: 1.4em auto; padding: 26px 18px; text-align: center;
+  color: var(--muted); background: repeating-linear-gradient(135deg,#f7f9fb,#f7f9fb 10px,#eef2f6 10px,#eef2f6 20px);
+  border: 2px dashed var(--line); border-radius: 8px; font-size: .9rem;
+}
+.img-placeholder-tag {
+  display: inline-block; margin-right: .6em; padding: .1em .55em; font-size: .72rem;
+  font-weight: 700; color: #fff; background: var(--muted); border-radius: 4px; vertical-align: middle;
+}
+
+.toc {
+  background: var(--soft); border: 1px solid var(--line); border-radius: 8px;
+  padding: 18px 24px; margin: 28px 0 8px; font-size: .93rem;
+}
+.toc-title { font-weight: 700; font-size: 1.02rem; margin-bottom: .5em; }
+.toc ul { list-style: none; margin: .2em 0; padding-left: 1.1em; }
+.toc > ul { padding-left: 0; }
+.toc li { margin: .2em 0; }
+.toc a { text-decoration: none; }
+.toc a:hover { text-decoration: underline; }
+
+@media (max-width: 700px) {
+  .page { padding: 28px 18px 64px; }
+  body { font-size: 15px; }
+}
+/* Wide screens: two-column split — a persistent (sticky) table of contents on
+   the left (~1/3), the article on the right (~2/3); the title/header spans the
+   full width on top. Scoped to `screen` so print (below) and narrow screens
+   keep the single-column flow with the TOC inserted after the title. */
+@media screen and (min-width: 1100px) {
+  .page {
+    max-width: 1280px;
+    display: grid;
+    grid-template-columns: minmax(240px, 1fr) minmax(0, 2fr);
+    grid-template-areas: "header header" "toc content";
+    column-gap: 48px;
+    align-items: start;
+  }
+  .doc-header { grid-area: header; }
+  .toc {
+    grid-area: toc;
+    position: sticky; top: 24px;
+    max-height: calc(100vh - 48px); overflow-y: auto;
+    margin: 28px 0 0;
+  }
+  .content { grid-area: content; min-width: 0; }
+}
+@media print {
+  body { background: #fff; }
+  .page { box-shadow: none; max-width: none; padding: 0; }
+  a { color: var(--fg); }
+  h1, h2, h3 { page-break-after: avoid; }
+  figure, .img-placeholder, table, tr, pre { page-break-inside: avoid; }
+  .toc { page-break-after: always; }
+}
+</style>
+</head>
+<body>
+<main class="page">
+<header class="doc-header"><h1 class="doc-title">LilaC Repeater ver 1.0 Manual</h1><div class="doc-author">by centrevillage</div><img class="title-image" src="img/LilaCRepeater.png" alt=""></header>
+<nav class="toc"><div class="toc-title">Contents</div><ul><li><a href="#sec-1">0. Introduction</a></li><li><a href="#sec-2">1. Overview</a></li><li><a href="#sec-3">2. Hardware</a><ul><li><a href="#sec-4">2-1. Front</a></li><li><a href="#sec-5">2-2. Back</a></li></ul></li><li><a href="#sec-6">3. Quick Start</a><ul><li><a href="#sec-7">3-1. Recording Your First Loop</a></li><li><a href="#sec-8">3-2. Recording Other Tracks</a></li><li><a href="#sec-9">3-3. Layering with Overdub</a></li><li><a href="#sec-10">3-4. Undoing</a></li></ul></li><li><a href="#sec-11">4. Feature Concepts</a><ul><li><a href="#sec-12">4-1. Tracks</a></li><li><a href="#sec-13">4-2. Steps</a></li><li><a href="#sec-14">4-3. Base Tempo</a></li><li><a href="#sec-15">4-4. Recording Target and Edit Target</a></li><li><a href="#sec-16">4-5. Playback Level / Direction / Speed / PAN / Loop Range</a></li><li><a href="#sec-17">4-6. Loopsets</a></li><li><a href="#sec-18">4-7. Relationship Between DRY/FDBK and Recording Level</a></li><li><a href="#sec-19">4-8. Clock Sync</a></li><li><a href="#sec-20">4-9. Automatic Backup</a></li></ul></li><li><a href="#sec-21">5. UI Concepts</a><ul><li><a href="#sec-22">5-1. Buttons</a></li><li><a href="#sec-23">5-2. Level Faders</a></li><li><a href="#sec-24">5-3. Transport I/O (CLK/RST/REC IN, CLK OUT)</a></li><li><a href="#sec-25">5-4. Screen Layout</a></li></ul></li><li><a href="#sec-26">6. Common Operations</a><ul><li><a href="#sec-27">6-1. Recording and Playback</a><ul><li><a href="#sec-28">6-1-1. Recording</a></li><li><a href="#sec-29">6-1-2. Play/Stop</a></li><li><a href="#sec-30">6-1-3. Auto-Stop Recording</a></li></ul></li><li><a href="#sec-31">6-2. Overdub</a><ul><li><a href="#sec-32">6-2-1. Starting/Stopping Overdub</a></li><li><a href="#sec-33">6-2-2. Auto-Stop Overdub</a></li></ul></li><li><a href="#sec-34">6-3. Undo/Clear Operations</a><ul><li><a href="#sec-35">6-3-1. Undo/Redo of Track Recording</a></li><li><a href="#sec-36">6-3-2. Clearing a Track</a></li><li><a href="#sec-37">6-3-3. Clearing a Loopset</a></li></ul></li><li><a href="#sec-38">6-4. Reset Operation</a></li><li><a href="#sec-39">6-5. Transitions Between Modes</a></li></ul></li><li><a href="#sec-40">7. Mode Details</a><ul><li><a href="#sec-41">7-1. Normal Mode</a></li><li><a href="#sec-42">7-2. Track Edit Mode</a></li><li><a href="#sec-43">7-3. Loopset Select Mode</a></li><li><a href="#sec-44">7-4. System Settings Mode</a></li></ul></li><li><a href="#sec-45">8. Clock Sync and MIDI</a><ul><li><a href="#sec-46">8-1. Clock Sources and Automatic Switching</a></li><li><a href="#sec-47">8-2. CLK In/Out and Reset (CLK IN / CLK OUT / RST)</a></li><li><a href="#sec-48">8-3. MIDI Sync</a><ul><li><a href="#sec-49">8-3-1. MIDI Reception (RX)</a></li><li><a href="#sec-50">8-3-2. MIDI Transmission (TX)</a></li><li><a href="#sec-51">8-3-3. MIDI Sync Setting</a></li></ul></li><li><a href="#sec-52">8-4. MIDI Remote Control</a></li><li><a href="#sec-53">8-5. Step Operation by MIDI Notes (Step Jump / Stutter)</a><ul><li><a href="#sec-54">8-5-1. Step Jump (ONE / LOOP)</a></li><li><a href="#sec-55">8-5-2. Stutter (STUT)</a></li><li><a href="#sec-56">8-5-3. Common Notes</a></li></ul></li><li><a href="#sec-57">8-6. MIDI Control Change (CC) Control</a></li><li><a href="#sec-58">8-7. Loopset Switching via MIDI Program Change</a></li></ul></li><li><a href="#sec-59">9. SD Card Storage</a><ul><li><a href="#sec-60">9-1. List of Verified SD Cards</a></li><li><a href="#sec-61">9-2. SD Card Save Contents</a></li></ul></li><li><a href="#sec-62">10. Sample Import</a><ul><li><a href="#sec-63">10-1. Import Procedure</a></li><li><a href="#sec-64">10-2. import.csv Format</a></li><li><a href="#sec-65">10-3. Specifying the Tempo (steps / beats / bpm)</a></li><li><a href="#sec-66">10-4. current and undo (Loop Variations)</a></li><li><a href="#sec-67">10-5. Supported Formats and Limits</a></li><li><a href="#sec-68">10-6. Checking the Results</a></li></ul></li><li><a href="#sec-69">11. UART Chain</a><ul><li><a href="#sec-70">11-1. Connection</a></li><li><a href="#sec-71">11-2. What Is Relayed</a></li><li><a href="#sec-72">11-3. Usage Examples</a></li></ul></li><li><a href="#sec-73">Appendix A. Firmware Update</a></li><li><a href="#sec-74">Appendix B. Cheat Sheet</a><ul><li><a href="#sec-75">Button Operations (Common Across Modes)</a></li><li><a href="#sec-76">T1-T4 per Mode (Single Press)</a></li><li><a href="#sec-77">Analog (Knobs/Faders)</a></li><li><a href="#sec-78">External I/O</a></li></ul></li><li><a href="#sec-79">Appendix C. On-Screen Status Notifications</a><ul><li><a href="#sec-80">C-1. Status Badges</a></li><li><a href="#sec-81">C-2. Toast Notifications</a></li></ul></li><li><a href="#sec-82">Appendix D. List of Prohibited Operations by Mode</a><ul><li><a href="#sec-83">(A) Mode-Specific Prohibited Operations</a></li><li><a href="#sec-84">(B) State-Based Operation Blocks (Common Across Modes)</a></li><li><a href="#sec-85">Notes</a></li></ul></li><li><a href="#sec-86">Appendix E. Troubleshooting</a><ul><li><a href="#sec-87">E-1. NO SD/MMC</a></li><li><a href="#sec-88">E-2. DATA BROKEN</a></li><li><a href="#sec-89">E-3. Power Loss During Writing</a></li><li><a href="#sec-90">E-4. SAVE ERROR</a></li><li><a href="#sec-91">E-5. REC STOPPED (Memory is full!)</a></li><li><a href="#sec-92">E-6. "... BLOCKED" Is Shown</a></li><li><a href="#sec-93">E-7. Startup Takes a Long Time / Appears Frozen</a></li><li><a href="#sec-94">E-8. Sample Import Is Not Applied</a></li></ul></li><li><a href="#sec-95">Appendix F. SD Card File Structure</a></li><li><a href="#sec-96">Appendix G. MIDI Implementation</a><ul><li><a href="#sec-97">G-1. MIDI Implementation Chart</a></li><li><a href="#sec-98">G-2. Control Change (CC) Assignment</a></li><li><a href="#sec-99">G-3. Note Assignment (Remote Control / Step Operation)</a></li></ul></li><li><a href="#sec-100">Warranty</a></li><li><a href="#sec-101">Contact</a></li></ul></nav>
+<article class="content">
+<h1 id="sec-1">0. Introduction</h1>
+<p>For a long time, it bothered me personally that the modular synth world had no sampling looper as intuitive to use as a guitar pedal.<br>
+And even the ones that existed fell short of my ideal — too few tracks, no way to save to an SD card, and so on.<br>
+This unit was designed to be the sampling looper I, its developer, always wanted.<br>
+I hope it becomes yours as well.</p>
+<h1 id="sec-2">1. Overview</h1>
+<p>LilaC Repeater is a 4-track stereo sampling looper.<br>
+Each track has its own independent recording length, playback speed, and playback direction, and all tracks can play back in sync.<br>
+Recordings are automatically saved to the SD card and can be recalled as a loopset at any time.</p>
+<p>For external clocking, it supports clock pulse input and MIDI clock input (when using the optional MIDI CoM+), and even after recording you can continuously vary the playback speed in sync with the external clock.<br>
+You can also overdub with the playback speed altered.<br>
+By layering recordings at different playback speeds, you can go beyond simple loops into more experimental performance.<br>
+And because the playback position and the external/internal clock phase are always kept in sync by PLL control, the sample and clock never drift out of phase, no matter how long the loop plays.</p>
+<p>Hardware specifications:</p>
+<ul><li>Audio<ul><li>96kHz/24bit stereo I/O (sample storage: 48kHz/32bit float)</li><li>Input/output latency <strong>under 1ms</strong></li></ul></li><li>Storage<ul><li>RAM: up to approx. 20 seconds of stereo sample recording per track</li><li>SD card: stores all tracks' samples in any of 128 presets (loopsets)</li></ul></li><li>Display<ul><li>White OLED 128x64</li></ul></li><li>I/O<ul><li>Stereo input</li><li>Stereo output</li><li>Clock input</li><li>Reset input</li><li>Record trigger input</li><li>Clock output</li><li>MIDI expansion / UART chain connector</li></ul></li></ul>
+<p>Feature list:</p>
+<ul><li>4 stereo tracks playing simultaneously</li><li>Per-track playback direction, speed, panning, and loop range settings</li><li>Clock-synced recording/playback</li><li>Variable-speed overdubbing</li><li>Auto-stop recording</li><li>Overdub level setting (FDBK)</li><li>Level faders for Dry (input) and each track</li><li>One-level Undo/Redo of recorded samples</li><li>Automatic saving to the SD card</li><li>Remote control via external MIDI (requires <strong>MIDI CoM+</strong>)</li></ul>
+<h1 id="sec-3">2. Hardware</h1>
+<h2 id="sec-4">2-1. Front</h2>
+<figure><img src="img/front_annotation.png" alt="front_annotation" loading="lazy"></figure>
+<table>
+<thead>
+<tr><th style="text-align:center">No.</th><th style="text-align:left">Name</th><th style="text-align:left">Description</th></tr>
+</thead>
+<tbody>
+<tr><td style="text-align:center">1</td><td style="text-align:left">L Input</td><td style="text-align:left">Audio L-channel input.</td></tr>
+<tr><td style="text-align:center">2</td><td style="text-align:left">R Input</td><td style="text-align:left">Audio R-channel input. When nothing is plugged in here, the L-channel input signal is used for the R channel (internally normalled).</td></tr>
+<tr><td style="text-align:center">3</td><td style="text-align:left">CLK Output</td><td style="text-align:left">Sync clock pulse output (0/5V).</td></tr>
+<tr><td style="text-align:center">4</td><td style="text-align:left">L Output</td><td style="text-align:left">Audio L-channel output.</td></tr>
+<tr><td style="text-align:center">5</td><td style="text-align:left">R Output</td><td style="text-align:left">Audio R-channel output.</td></tr>
+<tr><td style="text-align:center">6</td><td style="text-align:left">REC Input</td><td style="text-align:left">Record trigger input. A trigger pulse triggers recording start and stop.</td></tr>
+<tr><td style="text-align:center">7</td><td style="text-align:left">CLK Input</td><td style="text-align:left">Sync clock pulse input.</td></tr>
+<tr><td style="text-align:center">8</td><td style="text-align:left">RST Input</td><td style="text-align:left">Playback-position reset pulse input.</td></tr>
+<tr><td style="text-align:center">9</td><td style="text-align:left">OLED Display</td><td style="text-align:left">128x64 white OLED display. Shows various information.</td></tr>
+<tr><td style="text-align:center">10</td><td style="text-align:left">FDBK Fader</td><td style="text-align:left">Sets the mix ratio of the previously recorded sample during overdub.</td></tr>
+<tr><td style="text-align:center">11</td><td style="text-align:left">SPEED Fader</td><td style="text-align:left">Sets the playback speed between 60-240 BPM. Disabled during external sync.</td></tr>
+<tr><td style="text-align:center">12</td><td style="text-align:left">DRY Fader</td><td style="text-align:left">Sets the level of the input audio, which also serves as the recording input.</td></tr>
+<tr><td style="text-align:center">13</td><td style="text-align:left">T1 Fader</td><td style="text-align:left">Sets the playback level of track 1.</td></tr>
+<tr><td style="text-align:center">14</td><td style="text-align:left">T2 Fader</td><td style="text-align:left">Sets the playback level of track 2.</td></tr>
+<tr><td style="text-align:center">15</td><td style="text-align:left">T3 Fader</td><td style="text-align:left">Sets the playback level of track 3.</td></tr>
+<tr><td style="text-align:center">16</td><td style="text-align:left">T4 Fader</td><td style="text-align:left">Sets the playback level of track 4.</td></tr>
+<tr><td style="text-align:center">17</td><td style="text-align:left">T1 Button</td><td style="text-align:left">Selects track 1 as the recording target, and performs mode-specific operations.</td></tr>
+<tr><td style="text-align:center">18</td><td style="text-align:left">T2 Button</td><td style="text-align:left">Selects track 2 as the recording target, and performs mode-specific operations.</td></tr>
+<tr><td style="text-align:center">19</td><td style="text-align:left">T3 Button</td><td style="text-align:left">Selects track 3 as the recording target, and performs mode-specific operations.</td></tr>
+<tr><td style="text-align:center">20</td><td style="text-align:left">T4 Button</td><td style="text-align:left">Selects track 4 as the recording target, and performs mode-specific operations.</td></tr>
+<tr><td style="text-align:center">21</td><td style="text-align:left">FUNC Button</td><td style="text-align:left">Combined with other buttons to run sub-functions. Double-tap to return to Normal mode. The gold text below a button (SYSTEM / UNDO / AUTO) indicates that button's sub-function when pressed together with FUNC.</td></tr>
+<tr><td style="text-align:center">22</td><td style="text-align:left">LOOP Button</td><td style="text-align:left">Enters the loopset select screen.</td></tr>
+<tr><td style="text-align:center">23</td><td style="text-align:left">CLEAR Button</td><td style="text-align:left">Combined with other buttons to clear individual tracks or an entire loopset.</td></tr>
+<tr><td style="text-align:center">24</td><td style="text-align:left">REC Button</td><td style="text-align:left">Starts/stops recording/overdub.</td></tr>
+<tr><td style="text-align:center">25</td><td style="text-align:left">START Button</td><td style="text-align:left">Starts/stops playback of all tracks.</td></tr>
+</tbody>
+</table>
+<h2 id="sec-5">2-2. Back</h2>
+<p>! <strong>Caution: Observe the polarity of the power and expansion connectors. Align the red stripe of the cable with the white line on the silkscreen. Reversing the polarity may cause damage.</strong></p>
+<figure><img src="img/back_annotation.png" alt="back_annotation" loading="lazy"></figure>
+<table>
+<thead>
+<tr><th style="text-align:center">No.</th><th style="text-align:left">Name</th><th style="text-align:left">Description</th></tr>
+</thead>
+<tbody>
+<tr><td style="text-align:center">1</td><td style="text-align:left">USB connector (on Daisy Seed DFM2)</td><td style="text-align:left">USB connector usable for firmware updates.</td></tr>
+<tr><td style="text-align:center">2</td><td style="text-align:left">microSD card slot</td><td style="text-align:left">Slot for the SD card used for firmware updates, sample import, and loopset storage. An SD card comes pre-inserted from the factory.</td></tr>
+<tr><td style="text-align:center">3</td><td style="text-align:left">Power connector</td><td style="text-align:left">10-pin power connector. Align the white line on the silkscreen with the red stripe of the cable.</td></tr>
+<tr><td style="text-align:center">4</td><td style="text-align:left">MIDI EXPAND/SLAVE connector</td><td style="text-align:left">6-pin connector. Used to connect the MIDI expansion module, or as the UART chain input (receiving from upstream). Align the white line on the silkscreen with the red stripe of the cable.</td></tr>
+<tr><td style="text-align:center">5</td><td style="text-align:left">MASTER connector</td><td style="text-align:left">6-pin connector. Used as the UART chain output (sending downstream). Align the white line on the silkscreen with the red stripe of the cable.</td></tr>
+</tbody>
+</table>
+<h1 id="sec-6">3. Quick Start</h1>
+<figure><img src="img/01_normal_empty.png" alt="01_normal_empty" loading="lazy"></figure>
+<p>When you power on, the title screen (splash screen) and version number are shown for about 2 seconds, followed by an animation (about 3 seconds) in which the screen breaks into petals that drift away in the wind, after which the unit enters Normal mode (SD card loading and so on continues in the background during this time).<br>
+Immediately after startup you are in Normal mode.<br>
+Confirm that the T1 button is lit red and that track 1 is highlighted (inverted) on the Normal mode screen.<br>
+Connect the output of a sound-producing module to the L/R inputs, raise the DRY fader a little, and confirm that a level bar appears above the "IN" text at the left edge of the screen (the IN meter shows the level after the DRY fader).<br>
+Connect the L/R outputs to a mixer or an external output interface module.<br>
+If you want to sync to an external clock, feed a clock into the CLK input.</p>
+<h2 id="sec-7">3-1. Recording Your First Loop</h2>
+<p>First, adjust the input level with the DRY fader.<br>
+Next, press the REC button to start recording.<br>
+At this point the REC button lights red and the recording popup appears.</p>
+<figure><img src="img/08_recording_popup.png" alt="08_recording_popup" loading="lazy"></figure>
+<p>If this popup gets in the way, a single press of the FUNC button closes it (recording continues).</p>
+<p>Press the REC button again to stop recording; the unit automatically enters playback.<br>
+At this point the START button lights green.<br>
+Move the T1 fader to adjust the loop playback volume.</p>
+<h2 id="sec-8">3-2. Recording Other Tracks</h2>
+<p>Press the T2 button: the T1 button goes dark and the T2 button lights red.<br>
+The recording target is now changed to track 2.</p>
+<p>Press the REC button to start recording to track 2, and press again to stop.<br>
+Move the T2 fader to adjust the loop playback volume.</p>
+<h2 id="sec-9">3-3. Layering with Overdub</h2>
+<p>With track 1 or 2 still set as the recording target, pressing the REC button starts an overdub.<br>
+At this point the overdub popup is shown.</p>
+<figure><img src="img/09_overdubbing_popup.png" alt="09_overdubbing_popup" loading="lazy"></figure>
+<p>The level of the previous recording during overdub can be adjusted with the FDBK fader.<br>
+While overdubbing, the loop wraps back to its beginning and overdubbing continues (*1).<br>
+Press the REC button again to stop the overdub.</p>
+<hr>
+<p>*1 By continuing to overdub with FDBK lowered a little, you get an effect like a delay, where past sounds gradually fade away.</p>
+<h2 id="sec-10">3-4. Undoing</h2>
+<p>This unit supports per-track, one-level Undo.<br>
+Press the T1-T4 button of a recorded track to set it as the recording target, then press FUNC+CLEAR to return to the previous recording/overdub state.<br>
+Pressing FUNC+CLEAR again performs a Redo, returning to the latest recording/overdub state.</p>
+<p>If you want to start a track's recording over from scratch, hold the CLEAR button and press a T1-T4 button to clear the recording of the corresponding track.<br>
+Immediately after clearing, you can still use FUNC+CLEAR to return to the latest recording/overdub state.</p>
+<p>To clear all tracks, hold the CLEAR button and press the LOOP button.<br>
+A confirmation popup appears; press the T3 button to erase the recordings of all tracks.<br>
+To cancel, press the T4 button.</p>
+<figure><img src="img/07_confirm_clear_loop.png" alt="07_confirm_clear_loop" loading="lazy"></figure>
+<h1 id="sec-11">4. Feature Concepts</h1>
+<h2 id="sec-12">4-1. Tracks</h2>
+<p>There are four tracks, each holding the following information:</p>
+<ul><li>Recorded sample</li><li>Undo buffer</li><li>Base tempo (the tempo at recording time)</li><li>Number of recorded steps</li><li>Playback direction (forward/reverse)</li><li>Playback speed (x0.5/x1/x2)</li><li>Panning</li><li>Loop range (the start position and range within the recorded sample that actually loops; the sample itself is not changed)</li><li>Playback level (not saved to the SD card; reflected in real time from each track fader)</li></ul>
+<p>Unlike a typical multi-track looper, information such as step count and playback direction is held per track, enabling polyrhythmic performance.</p>
+<h2 id="sec-13">4-2. Steps</h2>
+<p>A clock unit of 4 ppqn (four per beat) is called a step.<br>
+Playback, recording, loopset switching, Undo, and so on occur when a step advances.</p>
+<h2 id="sec-14">4-3. Base Tempo</h2>
+<p>This is the tempo (BPM) at which a track was recorded.<br>
+If you change the tempo after recording a loop, the sample playback speed is corrected by the speed difference between the base tempo and the playback tempo.<br>
+For example, if you record at 80 BPM and then set the tempo to 160 BPM, the sample playback speed doubles.</p>
+<h2 id="sec-15">4-4. Recording Target and Edit Target</h2>
+<p>A track's selection state has two kinds: the "recording target" and the "edit target".<br>
+The "recording target" is selected in Normal mode and is used to specify the track to record to and the track to Undo.<br>
+The "edit target", on the other hand, specifies the track to be edited in Track Edit mode.<br>
+Also, while in Track Edit mode, the Undo target track is the "edit target" rather than the "recording target".<br>
+(See <a href="#sec-42">Section 7-2</a>.)</p>
+<h2 id="sec-16">4-5. Playback Level / Direction / Speed / PAN / Loop Range</h2>
+<p>These are per-track playback settings.<br>
+Everything except the playback level is automatically saved to the SD card.<br>
+The loop range specifies the portion of the recorded sample that actually loops, and is edited in Track Edit mode (see <a href="#sec-42">Section 7-2</a>).</p>
+<h2 id="sec-17">4-6. Loopsets</h2>
+<p>The recording state of all four tracks (including the Undo buffer) together with their playback settings is handled as a unit called a loopset. Loopsets are numbered 1 to 128.<br>
+Switching loopsets lets you swap all tracks' loops at once (LOOP button; see <a href="#sec-43">Section 7-3</a>).</p>
+<p>Furthermore, on this unit you can also <strong>switch individual tracks to a different loopset independently</strong> (LOOP+T1-4). This lets you, for example, swap out only track 1 for a different phrase.</p>
+<ul><li><strong>Base loopset</strong>: the common number when all tracks share the same loopset number. It is shown in the center of the Normal mode header (waveform icon + number). The LOOP single-press loopset selection switches this base (= all tracks) together.</li><li><strong>Track loopset</strong>: the loopset each track individually belongs to. When you use LOOP+T1-4 to switch only the target track to another loopset, only that track ends up with a different number from the others.</li></ul>
+<p>When even one track has a different number, there is no single number common to all tracks, so the header shows "--". The current loopset number of each track is always shown at the top of each track's column in Normal mode (page 1) (see <a href="#sec-41">Section 7-1</a>). Even if the track numbers become mixed, pressing LOOP once again to align all tracks to the same number lets you handle them together as before.</p>
+<p>The per-track loopset settings are saved to the SD card and restored on the next startup.</p>
+<h2 id="sec-18">4-7. Relationship Between DRY/FDBK and Recording Level</h2>
+<p>The DRY level functions not only as the input level but also as the recording level.<br>
+The FDBK level has no effect on the first recording; during overdub it controls how much the previous recording is attenuated.</p>
+<h2 id="sec-19">4-8. Clock Sync</h2>
+<p>In addition to sync via the internal clock, the unit supports sync via clock input and MIDI input.<br>
+However, sync via MIDI input requires the optional MIDI expansion module (MIDI CoM+).<br>
+(See <a href="#sec-45">Section 8</a>.)</p>
+<h2 id="sec-20">4-9. Automatic Backup</h2>
+<p>Changes to a loopset, including the Undo buffer, are automatically saved to the SD card.<br>
+On the next startup, the information of the last selected loopset is automatically loaded from the SD card.<br>
+(See <a href="#sec-59">Section 9</a>.)</p>
+<h1 id="sec-21">5. UI Concepts</h1>
+<h2 id="sec-22">5-1. Buttons</h2>
+<p>The T1, T2, T3, and T4 buttons change function per mode.<br>
+The FUNC, LOOP, CLEAR, REC, and START buttons are common across modes, though some may be disabled depending on the mode.<br>
+(See <a href="#sec-40">Section 7</a>.)</p>
+<h2 id="sec-23">5-2. Level Faders</h2>
+<p>All faders — FDBK, SPEED, DRY, T1, T2, T3, T4 — are available in every mode.<br>
+However, the SPEED fader is disabled during external sync.</p>
+<p>During playback, the SPEED fader's LED pulses in time with the beat — brightest at the start of each beat, dimming toward the end of the beat — so the current tempo and beat timing are visible at a glance, a cue for the beat position at which to start recording. This pulsing is synced to the beat phase for both internal clock and external sync (it occurs even when external sync disables the SPEED fader itself). While stopped, the LED stays lit.</p>
+<h2 id="sec-24">5-3. Transport I/O (CLK/RST/REC IN, CLK OUT)</h2>
+<p>CLK is for external clock sync, RST is for playback-position reset.<br>
+REC is a record trigger with the same function as pressing the REC button.<br>
+Whether internally or externally synced, a clock pulse is output from the CLK output during playback.<br>
+When stopped, the clock pulse output also stops.</p>
+<p>If you turn on "CLK IN Start" in the system settings, playback starts automatically when the CLK input starts receiving an external clock (the first pulse after the clock has been absent for 2 seconds or more). If you stop manually while the clock continues, playback does not resume on its own (default OFF; see <a href="#sec-44">Section 7-4</a>).</p>
+<h2 id="sec-25">5-4. Screen Layout</h2>
+<p>In every mode, a status badge is shown at the top right.<br>
+(See <a href="#sec-79">Appendix C</a>.)</p>
+<figure><img src="img/10_normal_with_sd_card_write_status.png" alt="10_normal_with_sd_card_write_status" loading="lazy"></figure>
+<p>Also, during recording and similar states, a dedicated popup is shown.</p>
+<figure><img src="img/08_recording_popup.png" alt="08_recording_popup" loading="lazy"></figure>
+<p>A single press of the FUNC button while this popup is shown closes it so you can check the screen (recording/overdub itself continues). Once closed, it stays closed until the next recording/overdub starts.</p>
+<p>When an error occurs, or for special notifications, an information or warning popup is shown.</p>
+<figure><img src="img/06_alert.png" alt="06_alert" loading="lazy"></figure>
+<p>For details, see <a href="#sec-26">Section 6</a> and <a href="#sec-40">Section 7</a>.</p>
+<h1 id="sec-26">6. Common Operations</h1>
+<h2 id="sec-27">6-1. Recording and Playback</h2>
+<figure><img src="img/08_recording_popup.png" alt="08_recording_popup" loading="lazy"></figure>
+<h3 id="sec-28">6-1-1. Recording</h3>
+<p>Recording is performed on the currently selected recording target (specified with the T1-T4 buttons in Normal mode).<br>
+Press the REC button to start recording, and press again to stop. Feeding a trigger pulse into the REC input does the same.</p>
+<p>During recording, the REC button lights red and the recording popup is shown.<br>
+The popup shows the track number (REC TRKn), a beat mark indicating the recording length, the number of recorded steps, and memory usage (water-tank icon + %). The step count and memory usage are shown side by side on the lower row, and the step count counts up in real time during recording.<br>
+The recording level is set with the DRY fader (see <a href="#sec-18">Section 4-7</a>).</p>
+<p>When you stop recording, the unit automatically enters playback (the START button lights green).</p>
+<p>When you start recording (or overdub) from a stopped state, the entire transport begins playing at that moment. The target track is recorded/overdubbed, while other already-recorded tracks each start playing from their own beginning at the same time (the same behavior as pressing START). This lets you record on top of an existing loop, and after you stop recording, all tracks continue playing.</p>
+<p>Also, pressing the START button during recording stops recording on the spot and transitions straight into overdub of the same track.</p>
+<p>If you start recording during playback or while the clock is running, the recording start timing is aligned according to the Loop Sync setting (Loop Sync is a setting for aligning the start of recording/overdub and so on to the clock; see <a href="#sec-44">Section 7-4</a>). Stopping the recording, however, happens immediately.</p>
+<p>Note that if you press REC with an already-recorded track set as the recording target, overdub starts instead of recording (see <a href="#sec-31">Section 6-2</a>).</p>
+<hr>
+<p>* Immediately after startup or right after switching loopsets, recording may not be able to start because Undo data is still loading ("SYNCING"). Wait until the indication disappears before operating.</p>
+<h3 id="sec-29">6-1-2. Play/Stop</h3>
+<p>Press the START button to start/stop playback of all tracks. During playback, the START button lights green.<br>
+During playback, a sync clock pulse is output from the CLK output; it stops when playback stops (see <a href="#sec-24">Section 5-3</a>).</p>
+<p>Because each track has its own recording length, playback direction, and playback speed, each loops at its own length during playback (see <a href="#sec-12">Section 4-1</a>).</p>
+<p>With internal clock sync, the moment you press START becomes the clock's origin.<br>
+With external clock sync, playback start is aligned to the next step boundary.</p>
+<h3 id="sec-30">6-1-3. Auto-Stop Recording</h3>
+<p>Normal recording is stopped manually, but if you start recording with FUNC+REC, recording stops automatically once a predetermined number of steps is reached.</p>
+<p>The number of steps at which to stop can be set in the range of 1-128 steps in the system setting "Auto Stop" (default 64 steps = 16 beats, max 128 steps = 32 beats; see <a href="#sec-44">Section 7-4</a>).<br>
+The recording popup shows the auto-stop position as a vertical bar.</p>
+<p>If you press FUNC+REC while already recording with a normal REC, a recording stop is scheduled at the next clean boundary.<br>
+The stop timing is the next 16-step (4-beat) boundary when Loop Sync is EACHSTEP, or the boundary of that setting when it is set to ANY END / T1 END (see <a href="#sec-44">Section 7-4</a>).</p>
+<p>Here, "scheduled" means not executing the operation immediately on the spot, but waiting until the clock boundary determined by the Loop Sync setting before executing. This concept is common to starting recording/overdub during playback, Undo, loopset switching, and so on (in this manual we call it "scheduled" from here on).</p>
+<h2 id="sec-31">6-2. Overdub</h2>
+<figure><img src="img/09_overdubbing_popup.png" alt="09_overdubbing_popup" loading="lazy"></figure>
+<h3 id="sec-32">6-2-1. Starting/Stopping Overdub</h3>
+<p>Pressing the REC button with an already-recorded track set as the recording target starts an overdub.<br>
+During overdub, the REC button lights red and the overdub popup (OVERDUB TRKn) is shown.<br>
+The lower row of the popup shows the number of overdubbed steps and the loop length in the form "recorded/total" (e.g. 123/256); once the loop completes a full cycle, the count stays fixed at that value.</p>
+<p>During overdub, the past recording plays while the input sound is layered and recorded; when the end of the loop is reached, it returns to the beginning and continues overdubbing. If a loop range is set, overdub occurs only within the loop range (see <a href="#sec-42">Section 7-2</a>).<br>
+The mix ratio (decay ratio) of the past recording is set with the FDBK fader (see <a href="#sec-18">Section 4-7</a>). Continuing to layer with FDBK lowered, the older sound gradually fades away, like a delay.</p>
+<p>Press the REC button again to stop the overdub. The stop is immediate.<br>
+Also, pressing the START button during recording stops recording and transitions straight into overdub (see <a href="#sec-28">Section 6-1-1</a>).</p>
+<h3 id="sec-33">6-2-2. Auto-Stop Overdub</h3>
+<p>If you start overdubbing a recorded track with FUNC+REC, it stops automatically once one full loop cycle of overdub has been performed (or one full loop-range cycle if a loop range is set).</p>
+<p>If you press FUNC+REC during an overdub started with a normal REC, it stops at whichever comes first: the next 16-step (4-beat) boundary, or one full loop cycle.</p>
+<h2 id="sec-34">6-3. Undo/Clear Operations</h2>
+<h3 id="sec-35">6-3-1. Undo/Redo of Track Recording</h3>
+<p>This unit supports one-level Undo/Redo per track.<br>
+Pressing the FUNC+CLEAR button returns the target track to its previous recording/overdub state (Undo). Pressing FUNC+CLEAR again returns it to the latest state (Redo).</p>
+<p>The Undo target track is the recording target in Normal mode and the edit target in Track Edit mode (see <a href="#sec-15">Section 4-4</a>).</p>
+<p>Undo/Redo during playback takes effect on a step boundary; while stopped it is applied immediately.</p>
+<p>Undo cannot be performed in the following states, and a "UNDO BLOCKED" warning is shown:</p>
+<ul><li>During recording/overdub</li><li>While Undo data is syncing (while the loading badge is shown at the top right of the screen)</li><li>In Loopset Select mode (which is selection-only)</li></ul>
+<p>Wait until the indication disappears before operating (see <a href="#sec-82">Appendix D</a> and <a href="#sec-92">Appendix E-6</a>).</p>
+<h3 id="sec-36">6-3-2. Clearing a Track</h3>
+<p>Holding the CLEAR button and pressing a T1-T4 button immediately clears the recording of the corresponding track.<br>
+When a clear is performed, "CLEAR TRKn" (n is the track number) is shown in the center of the screen for about 1 second (see <a href="#sec-81">Appendix C-2</a>).<br>
+Immediately after clearing, you can restore that track to its pre-clear recording state by pressing FUNC+CLEAR with it set as the recording target (edit target in Track Edit mode) (see <a href="#sec-35">Section 6-3-1</a>).</p>
+<p>Note that while Undo data is syncing, "SYNCING" is shown and clearing cannot be performed (retry after syncing completes).<br>
+Individual track clearing is not possible in Loopset Select mode ("CLEAR BLOCKED / loop select"; see <a href="#sec-82">Appendix D</a>).</p>
+<h3 id="sec-37">6-3-3. Clearing a Loopset</h3>
+<figure><img src="img/07_confirm_clear_loop.png" alt="07_confirm_clear_loop" loading="lazy"></figure>
+<p>Holding the CLEAR button and pressing the LOOP button clears all tracks (including Undo data) at once. Each track empties <strong>the loopset it currently belongs to</strong>. Even if the tracks are set to different loopset numbers, each track is cleared while staying in its own loopset (see <a href="#sec-17">Section 4-6</a>).<br>
+To prevent mistakes, a confirmation popup ("CLEAR LOOP?") is shown. Press the T3 button to execute, or the T4 button to cancel. The middle of the popup shows the target: "loopset N" (N is the loopset number) when all tracks are on the same loopset, or "all tracks" when they are on different loopsets.</p>
+<p>Unlike individual track clearing, this operation cannot be undone. The saved data on the SD card is also deleted, and each track returns to the unrecorded (NEW) state.</p>
+<p>Clearing is not possible in the following cases, and the corresponding warning is shown:</p>
+<ul><li>The SD card is unavailable ("CLEAR BLOCKED / No SD")</li><li>During recording/overdub ("CLEAR BLOCKED / Recording...")</li><li>While Undo data is syncing ("SYNCING")</li><li>During a save/load/scan or similar process ("CLEAR BLOCKED / Busy...")</li><li>In Loopset Select mode ("CLEAR BLOCKED / loop select")</li></ul>
+<p>(See <a href="#sec-82">Appendix D</a>.)</p>
+<h2 id="sec-38">6-4. Reset Operation</h2>
+<p>This operation returns the playback position to the beginning of the loop.<br>
+Pressing the FUNC+START button resets the playback position of all tracks to the loop start. Feeding a trigger into the RST input does the same.</p>
+<p>The reset takes effect on a step boundary during playback.<br>
+While the RST input is held HIGH as a gate, the playback position is fixed at the beginning (see <a href="#sec-24">Section 5-3</a>).</p>
+<p>Also, when a MIDI START is received, the playback position is reset and playback starts (see <a href="#sec-45">Section 8</a>).</p>
+<h2 id="sec-39">6-5. Transitions Between Modes</h2>
+<p>Immediately after startup you are in Normal mode.<br>
+You can move to other modes with the following operations.</p>
+<table>
+<thead>
+<tr><th>Operation</th><th>Destination mode</th></tr>
+</thead>
+<tbody>
+<tr><td>FUNC+T1/T2/T3/T4</td><td>Sets the track corresponding to the pressed track button (T1-4) as the edit target and enters Track Edit mode.</td></tr>
+<tr><td>FUNCx2 (double tap)</td><td>Normal mode</td></tr>
+<tr><td>LOOP</td><td>Loopset Select mode (base = all tracks)</td></tr>
+<tr><td>LOOP+T1/T2/T3/T4</td><td>Enters Track Loopset Select mode for the pressed track (switching only that track; see <a href="#sec-43">Section 7-3</a>)</td></tr>
+<tr><td>FUNC+LOOP</td><td>System Settings mode</td></tr>
+</tbody>
+</table>
+<p>* The notation "A+B" means "hold button A and press button B".<br>
+* A single LOOP press is registered when the button is released, so if you keep holding LOOP and then press T1-4, it becomes Track Loopset Select.</p>
+<p>Also, for any mode other than Normal mode, repeating the same operation used to enter that mode returns you to Normal mode.</p>
+<p>Operations to return to Normal mode:</p>
+<ul><li>Track Edit mode: FUNC + the edit-target track's T1-4 button</li><li>Loopset Select mode (both base and track loopset): press the LOOP button again</li><li>System Settings mode: press the FUNC+LOOP button again</li><li>All modes: double-tap the FUNC button</li></ul>
+<h1 id="sec-40">7. Mode Details</h1>
+<p>In addition to the common operations (<a href="#sec-26">Section 6</a>), each mode has its own T1-T4 button functions and screen display.<br>
+For transitions between modes, see <a href="#sec-39">Section 6-5</a>.</p>
+<h2 id="sec-41">7-1. Normal Mode</h2>
+<figure><img src="img/02_normal_recorded.png" alt="02_normal_recorded" loading="lazy"></figure>
+<p>This is the mode you're in right after startup — the basic screen for selecting the recording target.</p>
+<p>Pressing a T1-T4 button by itself switches the recording target to the corresponding track. The selected track's button lights red, and the corresponding track column is highlighted (inverted) on the screen (the target cannot be switched during recording/overdub).</p>
+<p>All common operations — record (REC), play (START), overdub, auto-stop, Undo/clear, reset — are available in this mode (see <a href="#sec-26">Section 6</a>).</p>
+<p>Screen layout:</p>
+<ul><li>Header (top row): tempo display (base tempo &gt; playback tempo in BPM), the base loopset in the center (waveform icon + number; the common number when all tracks share the same loopset number, or "--" when the tracks are on different loopsets; see <a href="#sec-17">Section 4-6</a>), memory usage (water-tank icon + %), and the processing badge at the top right</li><li>Track loopset row (page 1): at the top of each track column, the loopset number that track currently belongs to (waveform icon + number) is always shown. Because of this row, the input/playback level meters and the step bars are one display row shorter in height</li><li>Left edge: input level meters (L/R, "IN" label). Shows the actual recorded/monitored level after the DRY fader</li><li>Track columns (4 columns): each track's playback level meters (L/R), playback position/state (during recording "REC", during playback the step number, with "&lt;" prefixed during reverse playback), and a progress bar based on the loop range. The bar length represents the loop range length (Loop Length), and the fill within the bar represents the playback position within the loop range. The step number is also relative to the start of the loop range (if no loop range is set, the entire recording is the loop range, and the display is for the whole recording as before). During step operation by MIDI notes (see <a href="#sec-53">Section 8-5</a>), the reference for these relative displays switches to the position being controlled (the jump destination or stutter range)</li><li>Footer: operation hint ("T1-4: SELECT REC TARGET")</li></ul>
+<p>Each level meter shows the volume actually output (monitored). The input meter is after the DRY fader; each track's meter is after the playback level fader and pan. So a track panned to one side moves only that side's bar. Also, to keep the bars from flickering, the meters fall back slightly more slowly as the sound fades.</p>
+<p>LED lighting:</p>
+<ul><li>T1-T4: the recording target track lights</li><li>REC: lights while the recording target is recording/overdubbing</li><li>START: lights during playback</li></ul>
+<h2 id="sec-42">7-2. Track Edit Mode</h2>
+<figure><img src="img/03_track_edit.png" alt="03_track_edit" loading="lazy"></figure>
+<p>Enter by setting a track as the edit target with FUNC+T1-T4. This mode edits per-track playback parameters (playback direction, playback speed, panning, loop range). These settings are automatically saved to the SD card (see <a href="#sec-16">Section 4-5</a>).</p>
+<p>T1-T4 button functions:</p>
+<ul><li>T1/T2: select the item to edit (←/→; moves in the order playback direction → playback speed → pan → step control → Loop Start → Loop Length)</li><li>T3/T4: change the value (−/+; holding changes it continuously. For the pan and loop range (Loop Start/Loop Length) items, keeping the button held speeds up the change even further)</li><li>Pressing T3 and T4 together resets the selected item to its default (pan = center (C) / Loop Start = 0 / Loop Length = full (entire loop); playback direction, playback speed, and step control have no reset action)</li></ul>
+<p>Items you can edit:</p>
+<ul><li>Playback direction: forward (FWD, right-pointing triangle) / reverse (REV, left-pointing triangle)</li><li>Playback speed: x0.5 / x1.0 / x2.0</li><li>Pan: C (center) / L1-L100 / R1-R100</li><li>Loop range: the portion of the recorded sample that actually loops. On the step timeline in the middle row, you edit the left value (= Loop Start, the start step) and the right value (= Loop Length, in steps). The loop range can also wrap around past the end of the recording (e.g. with Loop Start=1 and Loop Length=16, it loops end → beginning → start position). It can only be edited on tracks that are recorded and not currently recording/overdubbing.</li><li>Step control (STEP): one of four values — <strong>ONE</strong> / <strong>--</strong> / <strong>LOOP</strong> / <strong>STUT</strong> (default <strong>STUT</strong>). This item sets the behavior of the feature that lets notes from an external MIDI keyboard control the track's playback position (<strong>--</strong> means this feature is not used = disabled). For the specific behavior and use of each value, see <a href="#sec-53">Section 8-5</a>. Including the default STUT, none of the values do anything unless a MIDI channel is assigned to the track and the corresponding notes are received, so without MIDI it is no different from normal loop playback. It can only be changed on tracks that are recorded and not currently recording/overdubbing.</li></ul>
+<p>Screen layout:</p>
+<ul><li>Top row: a waveform thumbnail of the recorded sample and a playback-position marker. If a loop range is set, the out-of-range portion is shown inverted (during a step jump, the inverted range is based on the jump position)</li><li>Middle row: the step timeline (left = Loop Start (start step), center = current step (relative within the loop range), right = Loop Length). While Loop Start/Loop Length is selected, that value is shown inverted. During a step jump, "&gt;jump-destination step" is shown to the right of Loop Start on the left</li><li>Parameter row: playback direction (triangle) / playback speed / pan. The selected item is inverted</li><li>Bottom row: track volume on the left (VOL:NN%, display only; changes with each track fader), step control on the right (STEP:ONE/--/LOOP/STUT). While step control is selected, it is inverted</li><li>Footer: ←/→/−/+ icons</li></ul>
+<p>LED lighting:</p>
+<ul><li>The edit-target track blinks</li><li>The recording target (if different from the edit target) lights</li></ul>
+<p>Common operations such as record and play are also available in this mode, but recording still applies to the recording target (which is managed separately from the edit target; see <a href="#sec-15">Section 4-4</a>).<br>
+Note that while in Track Edit mode, the Undo (FUNC+CLEAR) target track is also the edit target.</p>
+<p>Changes to playback direction, playback speed, and loop range are reflected at the next step boundary during playback. Pan is reflected immediately.</p>
+<h2 id="sec-43">7-3. Loopset Select Mode</h2>
+<figure><img src="img/04_loop_select.png" alt="04_loop_select" loading="lazy"></figure>
+<p>This mode switches the loopset (1-128) of all tracks. Which tracks get switched (all tracks or just one) depends on how you enter the mode (see <a href="#sec-17">Section 4-6</a>):</p>
+<ul><li><strong>Base Loopset Select</strong>: enter with a single LOOP press. Switches all tracks to the same loopset simultaneously.</li><li><strong>Track Loopset Select</strong>: enter with LOOP+T1-4. Switches only the pressed track to a different loopset (other tracks unchanged).</li></ul>
+<p>Both share the same screen layout and operations; only the title and the range of the switch target differ. Editing operations such as record, clear, and Undo are not possible (see <a href="#sec-82">Appendix D</a>).<br>
+To switch a loopset, you must first load the target loopset with a LOAD operation.<br>
+Pressing the T3 button after loading completes executes the loopset switch.</p>
+<p>T1-T4 button functions:</p>
+<ul><li>T1/T2: select the target loopset number (−/+; wraps 1-128). Holding changes it continuously (auto-advance starts after about 0.5 seconds and speeds up as you keep holding)</li><li>T3: behavior changes depending on the state of the target loopset (below)</li><li>T4: unused</li></ul>
+<p>T3 button behavior (shown in the label at the bottom of the screen and in the footer):</p>
+<ul><li><strong>LOAD</strong>: when a recorded, different loopset is selected. Starts loading from the SD card (progress bar shown). When loading completes, the label changes to "CHNG".</li><li><strong>CHNG</strong>: pressing T3 again after loading completes switches the loopset.</li><li><strong>NEW</strong>: when an unrecorded (empty) loopset is selected. Switches to it immediately as a new loopset. In base select this is NEW when all tracks are empty; in track select it is NEW when <strong>that track is empty</strong>.</li><li><strong>--</strong>: when the current loopset is selected (nothing to switch to).</li></ul>
+<p>The switch timing is immediate while stopped, and aligned to a clock boundary according to the Loop Sync setting during playback. When the switch completes, you automatically return to Normal mode.</p>
+<p>Screen layout:</p>
+<ul><li>Title: "LOOP SELECT" for base select, "TRKn LOOP SELECT" (n is the target track number) for track select</li><li>Center: current loopset number &gt; target loopset number (the target is shown in an inverted frame). In base select, when the tracks are not all on the same loopset, the current number is shown as "--"</li><li>Status display: loading progress bar / "PRESS 3 TO CHANGE!" / switching animation / "SAVING..." (waiting for the save to finish)</li><li>Footer: ↑/↓ (T1/T2), T3 label (LOAD/NEW/CHNG/--, CHNG blinks)</li></ul>
+<p>Example screen for track loopset select (when the target is track 1):</p>
+<figure><img src="img/04b_track_loop_select.png" alt="04b_track_loop_select" loading="lazy"></figure>
+<p>In this mode, play/stop (START), playback-position reset (FUNC+START), and transition to Track Edit mode (FUNC+Tn) are possible.<br>
+Operations are restricted during loading or after a switch is confirmed (see <a href="#sec-82">Appendix D</a>).<br>
+Also, if a loaded loopset contains a broken track, a "DATA BROKEN" warning is shown (see <a href="#sec-88">Appendix E-2</a>).</p>
+<p>! <strong>Note:</strong> Moving to Track Loopset Select is not possible <strong>while the target track itself is recording/overdubbing</strong> ("LOOP BLOCKED / Recording..."). Even if another track (the recording target) is recording, Track Loopset Select for other, stopped tracks is possible. Base Loopset Select (single LOOP press) is, as before, not possible while the recording target is recording/overdubbing.</p>
+<p>! <strong>Note:</strong> If you entered Track Loopset Select while another track was still recording, you can stop that recording with the REC button (or external REC input/MIDI) (this does not affect the select operation). During this time, a single START press does nothing (to avoid accidentally turning the recording into an overdub; the Normal mode behavior of "START during recording transitions to overdub" does not happen in this mode).</p>
+<h2 id="sec-44">7-4. System Settings Mode</h2>
+<figure><img src="img/05_system.png" alt="05_system" loading="lazy"></figure>
+<p>Enter with FUNC+LOOP. This mode configures the unit's overall behavior. Settings are automatically saved to the SD card and carried over to the next startup (see <a href="#sec-59">Section 9</a>).</p>
+<p>Because there are many settings, the screen is split into two pages. The current page number is shown in the title as "SYSTEM SETTING (1/2)", and moving the cursor past the top/bottom of a page switches to the adjacent page.</p>
+<p>T1-T4 button functions:</p>
+<ul><li>T1/T2: move the cursor (↑/↓; crossing the edge of a page switches to the adjacent page)</li><li>T3/T4: change the value (−/+). The Auto Stop item changes continuously when held, speeding up the longer you hold (T3+T4 together returns it to the middle value of 64 steps). The MIDI channel items on page 2 also change continuously when held, but because their range is narrow they do not accelerate, and they stop at the end values ("--" or 16) without wrapping</li></ul>
+<p>Settings (page 1):</p>
+<table>
+<thead>
+<tr><th>Item</th><th>Values</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td>Loop Sync</td><td>EACHSTEP / ANY END / T1 END</td><td>Determines when operations scheduled during playback (starting recording/overdub, Undo, loopset switching, etc.) are executed in sync with the clock. EACHSTEP = each step (smallest unit), ANY END = the loop end of any track, T1 END = the loop end of track 1. Default is EACHSTEP.</td></tr>
+<tr><td>Auto Stop</td><td>1-128 steps</td><td>The number of steps at which auto-stop recording (FUNC+REC) stops automatically. Default is 64 steps (= 16 beats). Holding T3/T4 changes it continuously (and accelerates the longer you hold); T3+T4 together returns it to the middle value (64 steps). (See <a href="#sec-30">Section 6-1-3</a>.)</td></tr>
+<tr><td>Smooth</td><td>ON / OFF</td><td>Applies a short crossfade at loop seams and when recording/overdub stops, suppressing click noise. Default is ON.</td></tr>
+<tr><td>MIDI Sync</td><td>TX RX / TX / RX / --</td><td>Enable/disable MIDI clock transmission (TX) / reception (RX). Requires the optional MIDI expansion module. Default is TX RX. (See <a href="#sec-45">Section 8</a>.)</td></tr>
+<tr><td>Send MIDI CLK</td><td>PLAY / ALWAYS</td><td>When to send MIDI clock. PLAY = send only during playback (default), ALWAYS = send at all times including while stopped. Use ALWAYS when you always want external gear to follow this unit's tempo. (See <a href="#sec-50">Section 8-3-2</a>.)</td></tr>
+<tr><td>CLK IN Start</td><td>ON / OFF</td><td>Setting to start playback automatically when an external clock is received at the CLK input. ON = auto-play on clock reception, OFF = do not auto-play (default). Auto-play only works when reception begins after the clock has been absent for 2 seconds or more (it does not resume if you stop manually while the clock continues). Because the playback pitch can waver until the tempo settles right after the first clock reception, the default is OFF. MIDI clock is excluded (MIDI playback is controlled by transport messages; see <a href="#sec-49">Section 8-3-1</a>). (See <a href="#sec-24">Section 5-3</a>.)</td></tr>
+</tbody>
+</table>
+<p>Settings (page 2) — MIDI remote channel settings, and the screen auto-off setting (Screen Off). The channels specified in the channel settings are used in common for both note operations (Sections 8-4 and 8-5) and CC operations (<a href="#sec-57">Section 8-6</a>) (requires the optional MIDI expansion module).</p>
+<figure><img src="img/05b_system_page2.png" alt="05b_system_page2" loading="lazy"></figure>
+<table>
+<thead>
+<tr><th>Item</th><th>Values</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td>MIDI Global Ch</td><td>-- / 1-16</td><td>The MIDI channel that accepts MIDI remote control. Used for note-based record trigger, playback-position reset, and remote control of playback direction/speed (<a href="#sec-52">Section 8-4</a>), and for CC-based DRY/FDBK level control (CC#7/#8; <a href="#sec-57">Section 8-6</a>). <strong>--</strong> disables it (default); 1-16 receives on that channel.</td></tr>
+<tr><td>MIDI Track1 Ch - MIDI Track4 Ch</td><td>-- / 1-16</td><td>The MIDI channel that accepts MIDI operation for each track. Used for note-based step operation (jump/stutter; <a href="#sec-53">Section 8-5</a>) and for CC-based control of playback level/direction/pan/speed/loop range/step control (<a href="#sec-57">Section 8-6</a>). Set individually per track. <strong>--</strong> disables it (default). Operates independently of MIDI Global Ch.</td></tr>
+<tr><td>Screen Off</td><td>10 min / 30 min / 60 min / NEVER</td><td>The time until the OLED display automatically turns off when idle. With NEVER, the display stays on. Default is 30 min. A button or fader operation turns it back on (MIDI input does not count as activity — it neither resets the idle timer nor turns the display back on). (This setting is unrelated to MIDI, but is placed on the last row of page 2.)</td></tr>
+</tbody>
+</table>
+<p>Screen layout:</p>
+<ul><li>Title: "SYSTEM SETTING (page number/total pages)"</li><li>A list of settings (label + current value). The selected row is inverted</li><li>Footer: ↑/↓/−/+ icons</li></ul>
+<h1 id="sec-45">8. Clock Sync and MIDI</h1>
+<p>In addition to the internal clock, LilaC Repeater supports external sync via the CLK input (clock pulse) and MIDI clock (when using the optional MIDI expansion module).<br>
+Recording/playback steps are always synced to the clock, and because the phase of the playback position and the clock is maintained by PLL control, the sample and clock never drift out of phase no matter how long the loop plays.</p>
+<h2 id="sec-46">8-1. Clock Sources and Automatic Switching</h2>
+<p>There are three clock sources: "internal", "CLK input (external clock pulse)", and "MIDI clock".<br>
+Source switching happens automatically.</p>
+<ul><li>Right after startup, the clock is internal. The tempo is set with the SPEED fader in the range 60-240 BPM.</li><li>When a clock pulse is fed to the CLK input, it switches to CLK input sync.</li><li>When MIDI clock (or MIDI START) is received, it switches to MIDI sync. However, while CLK input sync is active, the CLK input takes priority; MIDI sync takes over after the CLK input is lost and the clock returns to internal.</li><li>When the external clock is absent for a certain time (about 4x the most recent interval, at least about 2 seconds), it returns to the internal clock while holding the last detected tempo. If the CLK input is lost before the tempo is confirmed (before the second pulse arrives), it returns to the internal clock at the previous tempo after about 1 second.</li><li>When you stop playback, the clock source returns to internal (if an external master is running, it switches back to external sync on the next clock/pulse).</li></ul>
+<p>During external sync, the SPEED fader is disabled (see <a href="#sec-23">Section 5-2</a>).</p>
+<h2 id="sec-47">8-2. CLK In/Out and Reset (CLK IN / CLK OUT / RST)</h2>
+<p>Sync and output via clock pulses. This unit sends and receives clock in steps (4 ppqn = 4 pulses per beat) (see <a href="#sec-13">Section 4-2</a>).</p>
+<ul><li><strong>CLK input</strong>: feed in clock pulses at step resolution (4 ppqn). The tempo is measured from the interval of the input pulses and synced. Supported tempo is <strong>20 BPM or higher</strong> (pulse interval within 0.75 seconds). External clock sync below 20 BPM is not supported. Pulses slower than this interval are not treated as tempo, and it returns to internal clock operation holding the previous tempo after about 1 second (only step-phase re-sync is performed per pulse).</li><li><strong>CLK output</strong>: during playback, outputs a clock pulse of about 5ms per step (4 ppqn). Pulses are output during both internal and external sync; nothing is output while stopped.</li><li><strong>RST input</strong>: returns the playback position to the loop start. Held fixed at the start while the gate is held HIGH (see <a href="#sec-38">Section 6-4</a>).</li></ul>
+<h2 id="sec-48">8-3. MIDI Sync</h2>
+<p>Using the optional MIDI expansion module (MIDI CoM+) enables clock and transport sync via MIDI IN/OUT.<br>
+MIDI clock supports the standard 24 ppqn.</p>
+<figure><img src="img/lr_midi_expand.png" alt="lr_midi_expand" loading="lazy"></figure>
+<p>Connect the MIDI expansion module to the <strong>MIDI EXPAND/SLAVE connector</strong> on the back (see <a href="#sec-5">Section 2-2</a>).</p>
+<p>! <strong>Caution: Do not connect the MIDI expansion module to the MASTER connector.</strong></p>
+<h3 id="sec-49">8-3-1. MIDI Reception (RX)</h3>
+<p>Receives the following messages from an external MIDI master to sync (when RX is enabled in the MIDI Sync setting).</p>
+<table>
+<thead>
+<tr><th>Message</th><th>Behavior</th></tr>
+</thead>
+<tbody>
+<tr><td>MIDI clock (24 ppqn)</td><td>Switch to MIDI sync and sync to tempo and phase.</td></tr>
+<tr><td>Start</td><td>Return the playback position to the beginning and start playback.</td></tr>
+<tr><td>Continue</td><td>Start playback. Because stopped tracks start playing from the beginning, this normally behaves the same as Start (unlike Start, it does not change the position of tracks already playing).</td></tr>
+<tr><td>Stop</td><td>Stop playback.</td></tr>
+<tr><td>Song Position Pointer (position 0)</td><td>Return the playback position to the beginning.</td></tr>
+</tbody>
+</table>
+<p>Note that playback also follows a very slow MIDI clock corresponding to below 20 BPM, but this is not reflected in the tempo handed over to the internal clock when the clock stops (it holds the last tempo detected at 20 BPM or above).</p>
+<h3 id="sec-50">8-3-2. MIDI Transmission (TX)</h3>
+<p>Transmits this unit's clock and transport to external MIDI gear (when TX is enabled in the MIDI Sync setting).</p>
+<table>
+<thead>
+<tr><th>Message</th><th>Transmit timing</th></tr>
+</thead>
+<tbody>
+<tr><td>MIDI clock (24 ppqn)</td><td>Follows the system setting "Send MIDI CLK". PLAY = only during playback (default), ALWAYS = at all times including while stopped. In either mode, clock is transmitted whether the clock source is internal or external.</td></tr>
+<tr><td>Start</td><td>When playback starts</td></tr>
+<tr><td>Stop</td><td>When playback stops</td></tr>
+<tr><td>Song Position (position 0)</td><td>When the playback position of all tracks is reset during playback (FUNC+START, RST input, MIDI remote B, etc.)</td></tr>
+</tbody>
+</table>
+<p><strong>Send MIDI CLK (PLAY / ALWAYS)</strong> … selects when MIDI clock is transmitted.</p>
+<ul><li><strong>PLAY</strong> (default): sends clock only during playback, and does not send while stopped. When stopped, external sequencers synced to it also stop.</li><li><strong>ALWAYS</strong>: keeps sending clock at all times including while stopped. Use when you want an external drum machine or arpeggiator to always follow this unit's tempo even while the unit is stopped (Start/Stop for playback start/stop themselves are still sent as before).</li></ul>
+<p>This setting applies both to MIDI transmission (MIDI OUT) and to the clock sent to a downstream LilaC Repeater over the UART chain (see <a href="#sec-69">Section 11</a>).</p>
+<h3 id="sec-51">8-3-3. MIDI Sync Setting</h3>
+<p>Switch transmission/reception enable/disable with the system setting "MIDI Sync" (see <a href="#sec-44">Section 7-4</a>).</p>
+<table>
+<thead>
+<tr><th>Value</th><th>Behavior</th></tr>
+</thead>
+<tbody>
+<tr><td>TX RX</td><td>Both transmission and reception enabled (default).</td></tr>
+<tr><td>TX</td><td>Transmission only. When you want to sync external gear to this unit.</td></tr>
+<tr><td>RX</td><td>Reception only. When you want to sync this unit to an external master.</td></tr>
+<tr><td>--</td><td>Disable MIDI sync. Operates on the internal clock or CLK input.</td></tr>
+</tbody>
+</table>
+<p>The MIDI clock and transport (Start/Stop/Continue) this unit uses for sync are system real-time messages that have no MIDI channel, so no MIDI channel setting is needed.</p>
+<p>Note that messages received by the MIDI expansion module are forwarded as-is to the UART chain downstream, allowing multiple LilaC Repeaters to be synced (see <a href="#sec-69">Section 11</a>).</p>
+<h2 id="sec-52">8-4. MIDI Remote Control</h2>
+<p>Connecting the optional MIDI expansion module and setting the system setting "MIDI Global Ch" (page 2) to 1-16 lets you remotely control this unit with note input from an external MIDI keyboard (see <a href="#sec-44">Section 7-4</a>). It is disabled when the setting is "--".</p>
+<p>The operation is determined by the remainder of the note number divided by 12 (<code>note number % 12</code>), so any octave of the keyboard performs the same function. White keys perform the operations, and black keys are modifiers that select the target track (valid only while held).</p>
+<table>
+<thead>
+<tr><th>Key</th><th>Function</th><th>Type</th></tr>
+</thead>
+<tbody>
+<tr><td>C</td><td>Set playback direction to reverse (REV)</td><td>Trigger (the moment pressed)</td></tr>
+<tr><td>D</td><td>Set playback direction to forward (FWD)</td><td>Trigger</td></tr>
+<tr><td>E</td><td>Playback speed x0.5</td><td>Trigger</td></tr>
+<tr><td>F</td><td>Playback speed x1.0</td><td>Trigger</td></tr>
+<tr><td>G</td><td>Playback speed x2.0</td><td>Trigger</td></tr>
+<tr><td>A</td><td>Record trigger (same as REC button/REC input)</td><td>Trigger</td></tr>
+<tr><td>B</td><td>Playback-position reset</td><td>Gate (while held, fixed to the beginning every step)</td></tr>
+<tr><td>C#</td><td>Target = all tracks</td><td>Modifier (while held)</td></tr>
+<tr><td>D# / F# / G# / A#</td><td>Target = track 1 / 2 / 3 / 4</td><td>Modifier (while held)</td></tr>
+</tbody>
+</table>
+<p>How the target track is determined:</p>
+<ul><li><strong>When no black key is held</strong>: C/D/E/F/G (direction/speed) apply to the operation target track (the edit target in Track Edit mode, otherwise the recording target).</li><li><strong>When a black key is held</strong>: C# = all tracks, D#/F#/G#/A# = the corresponding track. Pressing multiple black keys at once targets all of those tracks.</li><li><strong>A (record trigger)</strong> always acts on the recording target regardless of black keys (the same mode-dependent behavior as the REC input jack).</li><li><strong>B (playback-position reset)</strong> resets all tracks when no black key (or C#) is held, and only the specified track when a track-specifying black key (D#/F#/G#/A#) is held. While held, it is fixed to the beginning every step, and the reset is released when you let go (the same gate behavior as the RST input).</li></ul>
+<p>Notes:</p>
+<ul><li>This note operation works independently of the MIDI Sync (clock) setting. If MIDI Global Ch is set, it is active even when RX is disabled.</li><li>A note-on with velocity 0 is treated as a note-off.</li><li>Received notes are also forwarded to the UART chain downstream, so a downstream LilaC Repeater set to the same channel reacts at the same time (chain batch operation; see <a href="#sec-69">Section 11</a>).</li></ul>
+<h2 id="sec-53">8-5. Step Operation by MIDI Notes (Step Jump / Stutter)</h2>
+<p>A feature that treats an external MIDI keyboard's note number (0-127) as a step number and operates the target track's playback position according to the note. It works independently per track, letting you replay a phrase from partway through or perform in a chopping style. In Track Edit mode's "step control (STEP)", you choose, from the following, how the track responds when a note is received.</p>
+<ul><li><strong>ONE / LOOP (step jump)</strong>: the moment a note is received, jump the playback position to that step.</li><li><strong>STUT (stutter)</strong>: repeat the specified range only while the note is held. Releasing returns to the original flow.</li><li><strong>--</strong>: this feature is not used (no step operation).</li></ul>
+<p>For any value, the corresponding step is the remainder of the note number divided by the number of recorded steps (any octave of the keyboard produces the same step).</p>
+<p>How to use:</p>
+<ol><li>In the system settings, set the MIDI channel of the track to be operated in "MIDI Track1 Ch - MIDI Track4 Ch" (page 2) ("--" is disabled; see <a href="#sec-44">Section 7-4</a>).</li><li>In Track Edit mode, set the target track's "step control (STEP)" to one of ONE / LOOP / STUT (default is STUT; see <a href="#sec-42">Section 7-2</a>).</li><li>Sending a note on the set channel operates that track's playback position with the selected behavior.</li></ol>
+<h3 id="sec-54">8-5-1. Step Jump (ONE / LOOP)</h3>
+<p>The moment a note is received, jump the playback position to that step.</p>
+<ul><li>During a jump, Loop Start is ignored, and a range of Loop Length starting from the jump-destination step becomes the loop target (Loop Length is retained).</li><li><strong>ONE</strong>: after jumping, play only for the loop length, then that track alone stops automatically and waits for the next note input (immediately after switching from "--" to ONE, the track likewise stops and waits for a note).</li><li><strong>LOOP</strong>: continues loop playback from the jump position (right after switching from "--" to LOOP, it keeps playing normally and jumps at the moment a note is actually received).</li><li>The jump is reflected immediately the moment a note is received (it does not wait for a step boundary). The trigger is only a note-on (velocity &gt; 0).</li><li>During a jump, to avoid pitch wavering, phase correction to the clock (PLL) is temporarily disabled (the step display advances as usual).</li></ul>
+<h3 id="sec-55">8-5-2. Stutter (STUT)</h3>
+<p>A feature that repeatedly plays a short range including the step represented by the note only while the note is held (stutter/roll effect). You can chop and perform part of a phrase, or create a drum-roll-like effect. This STUT is the default, but nothing happens unless a MIDI channel is assigned to the track and a note is received (it stays in normal loop playback).</p>
+<ul><li><strong>Pressing one note</strong>: repeats just that one step.</li><li><strong>Pressing multiple notes at once</strong>: repeats a range from the lowest note's step to the highest note's step (the order pressed does not matter). Adding or removing notes while held changes the range on the spot.</li><li><strong>Releasing all notes</strong>: at the next step boundary, returns to the position where playback would have been had you done nothing, and continues normal playback.</li><li>Because the repeat aligns neatly to the step boundary, the performance is rhythmic and locked to the tempo. Unlike step jump (ONE/LOOP), phase correction (PLL) stays enabled in STUT.</li><li>Up to 8 notes at a time can be treated as a range. A track in reverse playback runs backward from the end of the range.</li></ul>
+<h3 id="sec-56">8-5-3. Common Notes</h3>
+<ul><li>Tracks currently recording/overdubbing are excluded from step operation. When recording/overdub starts, or an Undo, loopset switch, or SD card load occurs, the held-note state is cleared, and the unit responds again from the next note.</li><li>Setting step control back to <strong>--</strong> restores the original playback position at the next step boundary.</li><li>The step control value is automatically saved to the SD card. Clearing a track returns it to the default <strong>STUT</strong>.</li><li>Because it works independently of MIDI Global Ch (remote control, <a href="#sec-52">Section 8-4</a>), you can assign them to separate channels and use them together if needed (if set to the same channel, both features react). Received notes are also forwarded to the UART chain downstream.</li></ul>
+<h2 id="sec-57">8-6. MIDI Control Change (CC) Control</h2>
+<p>Connecting the optional MIDI expansion module lets you remotely control the DRY/FDBK levels and each track's playback parameters with control changes (CC) from external MIDI gear. The MIDI channels used for reception are the system settings <strong>MIDI Global Ch</strong> / <strong>MIDI Track1-4 Ch</strong> (page 2), common with note operations (Sections 8-4 and 8-5) (see <a href="#sec-44">Section 7-4</a>). Like notes, CC control works independently of the MIDI Sync (clock) setting and is ignored when the target channel is "--" (disabled).</p>
+<p><strong>CC accepted on the global channel (MIDI Global Ch)</strong> — overall-level operations.</p>
+<table>
+<thead>
+<tr><th>CC number</th><th>Function</th><th>Value mapping</th></tr>
+</thead>
+<tbody>
+<tr><td>CC#7 (Volume)</td><td>DRY level</td><td>0 (min) - 127 (max)</td></tr>
+<tr><td>CC#8 (Balance)</td><td>FDBK level</td><td>0 (min) - 127 (max)</td></tr>
+</tbody>
+</table>
+<p><strong>CC accepted on a track channel (MIDI Track1-4 Ch)</strong> — operations on that track's playback parameters (see <a href="#sec-16">Section 4-5</a> and <a href="#sec-42">Section 7-2</a>).</p>
+<table>
+<thead>
+<tr><th>CC number</th><th>Function</th><th>Value mapping</th></tr>
+</thead>
+<tbody>
+<tr><td>CC#7 (Volume)</td><td>Track playback level</td><td>0 (min) - 127 (max)</td></tr>
+<tr><td>CC#9</td><td>Playback direction</td><td>64 or higher = forward (FWD) / below 64 = reverse (REV)</td></tr>
+<tr><td>CC#10 (Pan)</td><td>Pan</td><td>0 = far left / 64 = center (C) / 127 = far right (standard MIDI pan)</td></tr>
+<tr><td>CC#12</td><td>Loop Start (loop range start)</td><td>value = start step (clamped to the number of recorded steps). Loop Length retained</td></tr>
+<tr><td>CC#13</td><td>Loop Length (loop range length)</td><td>value + 1 step (0 → 1 step). 127 = whole recording. Start position retained</td></tr>
+<tr><td>CC#14</td><td>Playback speed</td><td>below 43 = x0.5 / 86 or higher = x2.0 / otherwise = x1.0</td></tr>
+<tr><td>CC#15</td><td>Step control (STEP)</td><td>below 43 = ONE / 43-85 = -- (disabled) / 86-106 = LOOP / 107 or higher = STUT</td></tr>
+</tbody>
+</table>
+<p>Notes:</p>
+<ul><li><strong>Levels (CC#7/#8) and pan (CC#10) are smoothed</strong>, so even if the value changes in steps, it follows smoothly without noise (graininess).</li><li>Changes to playback direction (CC#9), playback speed (CC#14), and loop range (CC#12/#13) are reflected at the next step boundary during playback. Pan (CC#10) is reflected immediately (same as editing in Track Edit mode; see <a href="#sec-42">Section 7-2</a>).</li><li>Step control (CC#15) changes the same value as the STEP setting in Track Edit mode (<a href="#sec-42">Section 7-2</a>), and the behavior of each value is the same as in <a href="#sec-53">Section 8-5</a>. The side effects of switching (ONE = stop that track and wait for a note, -- = reset playback position, STUT = wait for the next note) also occur the same way. A switch or stepped controller is recommended over a continuously variable knob.</li><li>The values for playback direction, playback speed, pan, loop range, and step control are automatically saved to the SD card (playback level/DRY/FDBK are not saved; see <a href="#sec-16">Section 4-5</a> and <a href="#sec-18">Section 4-7</a>). For pan, even while smoothing, the target value is what gets saved.</li><li>These CC operations, like editing in Track Edit mode, are not subject to Undo.</li><li>The global channel and track channels are judged independently. If you set the same channel for both, CC#7 acts on both the DRY level and the track playback level.</li><li>Received CCs, like notes, are also forwarded to the UART chain downstream (see <a href="#sec-69">Section 11</a>).</li></ul>
+<h2 id="sec-58">8-7. Loopset Switching via MIDI Program Change</h2>
+<p>You can remotely switch loopsets with program changes from external MIDI gear. The program number (0-127) maps directly to the loopset (shown on the display as 1-128, i.e. program number + 1). The MIDI channels used for reception are the system settings <strong>MIDI Global Ch</strong> / <strong>MIDI Track1-4 Ch</strong>, common with note/CC operations (see <a href="#sec-44">Section 7-4</a>). It works independently of the MIDI Sync (clock) setting and is ignored when the target channel is "--" (disabled).</p>
+<p><strong>Which track switches is determined by the received MIDI channel.</strong></p>
+<ul><li><strong>Received on MIDI Global Ch</strong>: switches all tracks to the same number together (same as a single LOOP press). Even if the tracks are on different numbers, all tracks become aligned.</li><li><strong>Received on MIDI Track1-4 Ch</strong>: switches only that track (same as LOOP+Tn).</li><li>If you set the same channel for the global Ch and a track Ch, the track Ch takes priority (when multiple track Chs overlap, the lower-numbered track takes priority).</li></ul>
+<p>Flow of operation (same as the button-operated Loopset Select mode; see <a href="#sec-43">Section 7-3</a>):</p>
+<ul><li>The first program change <strong>moves to Loopset Select mode</strong> (you can move from any mode, including Track Edit mode). The screen display (waiting for LOAD/CHNG, etc.) is the same as with button operation.</li><li>When the destination <strong>has</strong> recorded data: the first one loads (<strong>LOAD</strong>), and a second one pointing at the same destination executes the switch (<strong>CHNG</strong>). If a program change with the same number is received during loading, the switch happens automatically once loading finishes.</li><li>When the destination is <strong>empty</strong>: the first one immediately switches to a new loopset (<strong>NEW</strong>).</li><li>When the program number is <strong>the same as the current one</strong>, nothing happens (it does not even change modes).</li><li>If you receive a program change on a <strong>different channel</strong> than the first (all-tracks vs. a specific track, or a different track), the switch is abandoned and you return to Normal mode.</li></ul>
+<p>Switching is not possible in the following cases:</p>
+<ul><li>You cannot move if the SD card is unavailable. Also, during recording/overdub you cannot move under the same conditions as button operation (global Ch: blocked based on the recording target, as with base selection; track Ch: blocked only while that track itself is recording). A warning is shown in either case.</li><li>Only one loopset switch can happen at a time (multiple tracks cannot be switched simultaneously).</li></ul>
+<p>Because program changes and buttons operate the same Loopset Select mode, whichever you use to move, you can freely combine it with the other method afterward.</p>
+<h1 id="sec-59">9. SD Card Storage</h1>
+<p>LilaC Repeater automatically saves recorded loops to a microSD card. The SD card is used for saving/loading loopsets, saving system settings, sample import (<a href="#sec-62">Section 10</a>), and firmware updates (<a href="#sec-73">Appendix A</a>).</p>
+<ul><li>Supported cards: microSD / microSDHC. Cards of 32GB or less <strong>formatted as FAT32</strong>.</li><li>Saving happens automatically and in the background after recording stops. A save indicator is shown in the header while saving.</li><li>If no SD card is inserted or it cannot be recognized, "NO SD/MMC" is shown and the save feature is disabled (<a href="#sec-87">Appendix E-1</a>).</li><li>For the detailed file structure of saving/loading, see <a href="#sec-95">Appendix F</a>.</li></ul>
+<h2 id="sec-60">9-1. List of Verified SD Cards</h2>
+<p>The following are verified SD cards. Many unlisted cards also work, but if you encounter compatibility issues, try the card below.</p>
+<table>
+<thead>
+<tr><th>Manufacturer</th><th>Model</th><th>Capacity</th><th>Notes</th></tr>
+</thead>
+<tbody>
+<tr><td>Gigastone</td><td>microSDHC U1 C10 UHS-I Full HD Video</td><td>32GB</td><td>Factory SD for ver1.0</td></tr>
+</tbody>
+</table>
+<h2 id="sec-61">9-2. SD Card Save Contents</h2>
+<p>A <code>LILACREP</code> folder is created on the SD card, storing the following.</p>
+<ul><li><strong>Loopsets</strong>: the tracks of each loopset (1-128) are saved as WAV files plus metadata.<ul><li>The WAV is 48kHz / stereo / 32bit float format and can be played/checked on a PC as well. BPM information (ACID chunk) indicating the recording tempo is also embedded, readable by compatible DAWs (not embedded if the tempo is unknown).</li><li>Each track is saved as a two-generation pair (A/B). This retains the immediately previous take (the take that Undo returns to) even after power-off.</li><li>The metadata includes base tempo, step count, playback direction/speed, pan, loop range, and so on.</li></ul></li><li><strong>System settings</strong>: all settings of Loop Sync / Auto Stop / Smooth / MIDI Sync / Send MIDI CLK / CLK IN Start / MIDI channel settings / Screen Off.</li><li><strong>Each track's loopset number</strong>: the loopset number each track loads on the next startup.</li></ul>
+<p>Only tracks that have changed are saved; they are backed up automatically each time you record or overdub (<a href="#sec-20">Section 4-9</a>).</p>
+<h1 id="sec-62">10. Sample Import</h1>
+<p>A feature to import WAV files prepared on a PC or other device into any track of a loopset via the SD card. The unit itself has no file-selection screen; you describe the import contents in a config file <code>import.csv</code> placed at the root of the SD card, and it is <strong>processed all at once at startup</strong>.</p>
+<h2 id="sec-63">10-1. Import Procedure</h2>
+<ol><li>Power off the rack, remove the SD card, and open it on a PC.</li><li>Create a <code>samples</code> folder at the root of the SD card and place the WAV files you want to import there.</li><li>Create <code>import.csv</code> at the root of the SD card and describe the import contents (format in <a href="#sec-64">Section 10-2</a>).</li><li>Return the SD card to the unit and power on. At startup, "IMPORTING" and the target file names are shown on screen, and the import runs.</li><li>When complete, <code>import.csv</code> is renamed to <code>_import.csv</code>, and the processing result of each row is appended in the last column.</li></ol>
+<p>Because <code>import.csv</code> is renamed after processing, the same import will not repeat on subsequent startups. Imported sounds are treated the same as normally recorded loops and support saving, Undo, and editing.</p>
+<h2 id="sec-64">10-2. import.csv Format</h2>
+<p>The first row is the header row (column names); each row from the second onward describes one import. Columns are matched by name, so the <strong>order is free</strong> and unneeded columns can be omitted.</p>
+<table>
+<thead>
+<tr><th>Column</th><th>Content</th></tr>
+</thead>
+<tbody>
+<tr><td>file</td><td>The WAV file name in the <code>samples</code> folder</td></tr>
+<tr><td>loopset</td><td>The destination loopset number (1-128)</td></tr>
+<tr><td>track</td><td>The destination track number (1-4)</td></tr>
+<tr><td>slot</td><td><code>current</code> (normal) or <code>undo</code>. Defaults to <code>current</code> if omitted</td></tr>
+<tr><td>bpm</td><td>Fill in to specify by tempo (BPM)</td></tr>
+<tr><td>beats</td><td>Fill in to specify by number of beats. Takes priority over bpm</td></tr>
+<tr><td>steps</td><td>Fill in to specify by number of steps. Takes priority over beats and bpm (for odd meters)</td></tr>
+</tbody>
+</table>
+<p>Example:</p>
+<pre><code>file,loopset,track,slot,bpm,beats,steps
+drums.wav,1,1,current,,4,
+pad.wav,1,1,undo,,8,
+bassline.wav,2,3,current,120,,
+oddbar.wav,3,1,current,,,14</code></pre>
+<p>(Row 1: import <code>drums.wav</code> into loopset 1, track 1 as "4 beats". Row 2: <code>pad.wav</code> into the Undo side of the same track as "8 beats". Row 3: <code>bassline.wav</code> into loopset 2, track 3 at 120 BPM. Row 4: <code>oddbar.wav</code> into loopset 3, track 1 as "14 steps" = one bar of 7/8.)</p>
+<h2 id="sec-65">10-3. Specifying the Tempo (steps / beats / bpm)</h2>
+<p>Because an imported loop also needs the correct base tempo set, you must specify one of <code>steps</code> (number of steps), <code>beats</code> (number of beats), or <code>bpm</code>. When multiple are present, the priority is <strong>steps &gt; beats &gt; bpm</strong>.</p>
+<ul><li><strong>steps (number of steps)</strong>: directly specifies how many steps (in sixteenth-note units) the file is. <code>beats</code> can only express lengths in 4-step units (1 beat = 4 steps), but <code>steps</code> lets you specify step counts that are not multiples of 4, correctly importing <strong>odd-meter loops (7/8, 5/4, etc.)</strong>. Like <code>beats</code>, it uses the file length as the loop length as-is, and the base tempo is determined from the length and the step count.</li><li><strong>beats (number of beats)</strong>: specifies how many beats the file is musically. It uses the file length as the loop length as-is, and the base tempo is determined from the length and the number of beats. Suited to loop material with an accurate length (<code>recorded_steps = beats × 4</code>).</li><li><strong>bpm</strong>: specifies the tempo directly. The loop length is fitted (adjusted) to the beat grid of the specified BPM; if the WAV is longer than the grid, the end is cut, and if shorter, silence is added (a short fade is applied in both cases to prevent seam clicks). Suited to material whose tempo is known but whose length is not exact.</li></ul>
+<p>&gt; A specification that leaves too few samples per step (roughly fewer than 64) is rejected with <code>ERROR</code> because the tempo is too dense. Do not specify a large step count for a short WAV.</p>
+<h2 id="sec-66">10-4. current and undo (Loop Variations)</h2>
+<p>With the <code>slot</code> column, you can select the import destination for that track.</p>
+<ul><li><strong>current</strong>: the normal import destination. If the track has an existing take, the existing take is moved aside to the Undo side, and the imported sound plays (you can revert with Undo).</li><li><strong>undo</strong>: imports it as the hidden/alternate take that you can recall with Undo. Importing both a <code>current</code> and an <code>undo</code> into the same track lets you <strong>switch between the two loops with the Undo button</strong>, useful as a loop variation.</li></ul>
+<h2 id="sec-67">10-5. Supported Formats and Limits</h2>
+<ul><li>Sampling rate: 44.1kHz / 48kHz / 96kHz (automatically converted to the internal 48kHz)</li><li>Bit depth: 16 / 24 / 32bit integer, or 32bit floating point</li><li>Channels: mono / stereo (mono is duplicated to left and right)</li><li>The maximum length of a single track is about 20 seconds. Files exceeding this are not imported.</li><li>ASCII (half-width alphanumeric) file names are recommended. Long names exceeding 8 characters can also be used.</li><li>The maximum number of rows that can be imported correctly in one <code>import.csv</code> is <strong>256</strong>. Import results for rows beyond this are not guaranteed. If you exceed 256, split <code>import.csv</code> and import in several batches (over several startups).</li></ul>
+<h2 id="sec-68">10-6. Checking the Results</h2>
+<p>When the import completes, "IMPORTED!" and the total number of successes/failures ("OK: n" / "Fail: n") are shown for about 2 seconds.<br>
+Per-row results are recorded in the last column (result) of each row in the post-import <code>_import.csv</code>. Success is <code>OK</code>, failure is <code>ERROR: ...</code> with a reason. If there were errors, a record is also appended to <code>lr_log.txt</code> at the SD card root. Failed rows are skipped and do not affect other rows or existing loops.</p>
+<h1 id="sec-69">11. UART Chain</h1>
+<p>A feature to connect multiple LilaC Repeaters and sync them by sharing the clock and transport (play/stop, etc.).<br>
+By daisy-chaining the UART connectors on the back, the clock/transport of the lead (master) unit is passed one after another to the following units.<br>
+The master's clock does not have to be externally received MIDI clock — it can also be the unit's own internal clock (the SPEED fader tempo) or CLK input/trigger sync. In other words, even a unit without a MIDI expansion module can be the chain master at its internal tempo.</p>
+<figure><img src="img/lr_uart_chain.png" alt="lr_uart_chain" loading="lazy"></figure>
+<h2 id="sec-70">11-1. Connection</h2>
+<p>The connection is one-way, upstream → downstream.</p>
+<ul><li>Connect the upstream unit's <strong>MASTER connector</strong> (back #5) to the downstream unit's <strong>MIDI EXPAND/SLAVE connector</strong> (back #4).</li><li>Repeat this to daisy-chain (unit A #5 → unit B #4, unit B #5 → unit C #4 …).</li><li>You can also connect a MIDI expansion module (MIDI CoM+) to the lead unit's input (MIDI EXPAND/SLAVE connector) to supply external MIDI clock (see <a href="#sec-48">Section 8-3</a>).</li></ul>
+<p>! <strong>Caution: Observe connector polarity. Align the red stripe of the cable with the white line on the silkscreen (see <a href="#sec-5">Section 2-2</a>).</strong></p>
+<h2 id="sec-71">11-2. What Is Relayed</h2>
+<ul><li>Messages received at the SLAVE connector are forwarded as-is to the MASTER connector, except SysEx. MIDI clock, Start/Stop/Continue, Song Position, and so on are passed downstream.</li><li>This forwarding always happens regardless of each unit's MIDI Sync setting. On the other hand, whether each unit actually syncs to the forwarded clock follows that unit's MIDI Sync setting (whether RX is enabled) (see <a href="#sec-51">Section 8-3-3</a>).</li><li>In addition to forwarding received messages, each unit also sends out <strong>the clock/transport it generates itself</strong> (MIDI clock and Start/Stop when operating on the internal clock/CLK input/trigger sync) to the MASTER connector. This lets even a unit with no external MIDI input drive downstream as a master. The send timing follows the system setting "Send MIDI CLK" (PLAY = only during playback / ALWAYS = always including while stopped) (see <a href="#sec-50">Section 8-3-2</a>).</li><li>The chain is currently one-way downstream, but in the future an expansion module capable of bidirectional communication may become connectable.</li></ul>
+<h2 id="sec-72">11-3. Usage Examples</h2>
+<p><strong>Example 1: Making external MIDI the master</strong> — attach a MIDI expansion module to the lead unit and feed MIDI clock from an external sequencer or DAW; that clock and transport pass to all units on the chain, and all units sync at the same tempo and timing.</p>
+<p><strong>Example 2: Making the lead unit's internal clock the master</strong> — run the lead unit on its internal clock (the SPEED fader tempo) without a MIDI expansion module. The lead unit becomes the master, and its playback start/stop and tempo pass to the whole chain. If you want to keep sending clock to the chain even while the lead unit is stopped, set the lead unit's "Send MIDI CLK" to ALWAYS.</p>
+<p>In either case, the downstream units' MIDI Sync must have RX enabled (TX RX or RX) (see <a href="#sec-44">Section 7-4</a>).</p>
+<h1 id="sec-73">Appendix A. Firmware Update</h1>
+<p>You can easily update by placing the firmware file on the microSD card.</p>
+<p>Procedure:</p>
+<ol><li>Power off the rack.</li><li>Remove the LilaC Repeater module from the rack and take out the SD card.</li><li>Open the SD card on a PC using an SD card reader.</li><li>Place the firmware binary file ("lr_v1_0.bin", etc.) in the root directory of the SD card.</li><li>Insert the SD card into the LilaC Repeater module and reinstall the module in the rack.</li><li>Power on; the firmware update process runs automatically, and after a while it starts up normally.</li></ol>
+<p>That completes the firmware update.<br>
+However, if the firmware binary file remains at the SD card root, the firmware update will run on every startup, so once the update succeeds we recommend deleting the binary file on the SD card.</p>
+<h1 id="sec-74">Appendix B. Cheat Sheet</h1>
+<h2 id="sec-75">Button Operations (Common Across Modes)</h2>
+<table>
+<thead>
+<tr><th>Operation</th><th>Function</th></tr>
+</thead>
+<tbody>
+<tr><td>REC</td><td>Record start/stop (overdub on recorded tracks)</td></tr>
+<tr><td>FUNC+REC</td><td>Auto-stop recording (auto-stops at a specified step count or one cycle)</td></tr>
+<tr><td>START</td><td>Play/stop all tracks (transitions to overdub during recording)</td></tr>
+<tr><td>FUNC+START</td><td>Reset playback position to the beginning</td></tr>
+<tr><td>LOOP</td><td>Loopset Select mode (base = all tracks) ⇔ Normal mode</td></tr>
+<tr><td>LOOP+Tn</td><td>Track Loopset Select mode for track n (switch only that track)</td></tr>
+<tr><td>FUNC+LOOP</td><td>System Settings mode ⇔ Normal mode</td></tr>
+<tr><td>FUNC+Tn</td><td>Track Edit mode for track n (press again on the same track = back)</td></tr>
+<tr><td>FUNC+CLEAR</td><td>Undo (press again to Redo)</td></tr>
+<tr><td>CLEAR+Tn</td><td>Clear track n (immediate; revertible with FUNC+CLEAR)</td></tr>
+<tr><td>CLEAR+LOOP</td><td>Clear all tracks (each track empties its own loopset; confirmation required, not undoable)</td></tr>
+<tr><td>FUNC double-tap</td><td>Return to Normal mode</td></tr>
+<tr><td>CLEAR (alone)</td><td>Disabled (to prevent mistakes)</td></tr>
+</tbody>
+</table>
+<h2 id="sec-76">T1-T4 per Mode (Single Press)</h2>
+<table>
+<thead>
+<tr><th>Mode</th><th>T1 / T2</th><th>T3 / T4</th></tr>
+</thead>
+<tbody>
+<tr><td>Normal</td><td>Select recording target (T1-T4)</td><td>Select recording target (T1-T4)</td></tr>
+<tr><td>Track Edit</td><td>Move item (←/→; direction → speed → pan → step control → Loop Start → Loop Length)</td><td>Change value (−/+, hold for continuous; pan/loop range accelerate). T3+T4 = selected item to default (pan = C / Loop Start = 0 / Loop Length = full (entire loop))</td></tr>
+<tr><td>Loopset Select</td><td>Select target loopset (−/+, hold for continuous/accelerate)</td><td>T3 = LOAD→CHNG (NEW for empty numbers) / T4 = unused</td></tr>
+<tr><td>System Settings</td><td>Move cursor (↑/↓; crossing a page edge moves to the adjacent page; 2 pages total)</td><td>Change value (−/+; for Auto Stop, hold to repeat with acceleration; for page-2 MIDI channel items, hold to repeat (no acceleration, stops at the range ends)). Auto Stop T3+T4 = middle (64)</td></tr>
+</tbody>
+</table>
+<h2 id="sec-77">Analog (Knobs/Faders)</h2>
+<table>
+<thead>
+<tr><th>Control</th><th>Function</th></tr>
+</thead>
+<tbody>
+<tr><td>SPEED</td><td>Tempo 60-240 BPM (internal clock; disabled during external sync). During playback the LED pulses in time with the beat (brightest at the start of each beat → dimmest at the beat end)</td></tr>
+<tr><td>FDBK</td><td>Overdub feedback amount</td></tr>
+<tr><td>DRY</td><td>Input/recording level</td></tr>
+<tr><td>T1-T4</td><td>Playback volume of each track</td></tr>
+</tbody>
+</table>
+<h2 id="sec-78">External I/O</h2>
+<table>
+<thead>
+<tr><th>Jack</th><th>Function</th></tr>
+</thead>
+<tbody>
+<tr><td>REC input</td><td>Record toggle (same as the REC button)</td></tr>
+<tr><td>RST input</td><td>Playback-position reset (fixed to the beginning while the gate is HIGH)</td></tr>
+<tr><td>CLK input</td><td>External clock sync (auto-switch on edge input)</td></tr>
+<tr><td>CLK output</td><td>Step clock output (during playback)</td></tr>
+<tr><td>MIDI (optional MIDI CoM+)</td><td>Clock sync / Start / Stop / Continue / Song Position / note-based remote control (<a href="#sec-52">Section 8-4</a>) and step operation (jump/stutter; <a href="#sec-53">Section 8-5</a>) / CC-based level and track playback parameter control (<a href="#sec-57">Section 8-6</a>)</td></tr>
+</tbody>
+</table>
+<p>For operation restrictions (prohibited operations per mode), see <a href="#sec-82">Appendix D</a>.</p>
+<h1 id="sec-79">Appendix C. On-Screen Status Notifications</h1>
+<p>Small on-screen notifications that inform you of operation feedback and processing state. They appear the same way regardless of the current mode.</p>
+<h2 id="sec-80">C-1. Status Badges</h2>
+<p>A small icon indicating that processing is in progress is shown at the top right of the screen (right edge of the header).</p>
+<figure><img src="img/11_status_badge_sd_write.png" alt="11_status_badge_sd_write" loading="lazy"></figure>
+<figure><img src="img/12_status_badge_sync.png" alt="12_status_badge_sync" loading="lazy"></figure>
+<table>
+<thead>
+<tr><th>Icon</th><th>Meaning</th></tr>
+</thead>
+<tbody>
+<tr><td>SD-card-shaped icon</td><td>Saving to the SD card. <strong>Do not power off while it is shown</strong> (for power loss during writing, see <a href="#sec-89">Appendix E-3</a>).</td></tr>
+<tr><td>Downward arrow icon</td><td>Loading Undo data ("undo data loading"). Undo, track clear, starting recording, and similar operations are not possible until it disappears (see <a href="#sec-35">Section 6-3-1</a> and <a href="#sec-92">Appendix E-6</a>).</td></tr>
+</tbody>
+</table>
+<h2 id="sec-81">C-2. Toast Notifications</h2>
+<p>During play/stop, Undo, and track clear operations, a small label showing the operation briefly appears in the center of the screen for about 1 second (a toast). This confirms that the operation was accepted.</p>
+<table>
+<thead>
+<tr><th>Display</th><th>Timing</th></tr>
+</thead>
+<tbody>
+<tr><td>START</td><td>When playback starts</td></tr>
+<tr><td>STOP</td><td>When playback stops</td></tr>
+<tr><td>UNDO</td><td>When Undo/Redo is applied (not shown if the operation was blocked)</td></tr>
+<tr><td>CLEAR TRKn</td><td>When a track is individually cleared with CLEAR+T1-T4 (n is track number 1-4; not shown if the clear was deferred, e.g. during syncing)</td></tr>
+</tbody>
+</table>
+<figure><img src="img/13_display_toast.png" alt="13_display_toast" loading="lazy"></figure>
+<h1 id="sec-82">Appendix D. List of Prohibited Operations by Mode</h1>
+<p>Operation blocking comes in two kinds: (A) those blocked only in a specific mode, and (B) those blocked in every mode depending on the current state. Warning popups disappear automatically after a few seconds.</p>
+<h2 id="sec-83">(A) Mode-Specific Prohibited Operations</h2>
+<p><strong>Normal mode / Track Edit mode / System Settings mode</strong>: no mode-specific prohibited operations (only the (B) common blocks). Note that the role of T1-T4 differs by mode (Normal = select recording target, Track Edit/System Settings = cursor/value change).</p>
+<p><strong>Loopset Select mode</strong>: to prevent mix-ups and conflicts with loading/switching, some operations are restricted.</p>
+<table>
+<thead>
+<tr><th>Operation</th><th>Behavior</th><th>Screen display</th></tr>
+</thead>
+<tbody>
+<tr><td>REC (record) / external REC trigger</td><td>New recording prohibited. However, when another track is recording, only stopping that recording is possible</td><td>"REC BLOCKED" ("LOADING" while loading)</td></tr>
+<tr><td>CLEAR+Tn (individual track clear)</td><td>Prohibited</td><td>"CLEAR BLOCKED / loop select"</td></tr>
+<tr><td>FUNC+CLEAR (Undo)</td><td>Prohibited</td><td>"UNDO BLOCKED"</td></tr>
+<tr><td>CLEAR+LOOP (clear entire loopset)</td><td>Prohibited</td><td>"CLEAR BLOCKED / loop select"</td></tr>
+<tr><td>T4</td><td>Unused (no response)</td><td>—</td></tr>
+<tr><td>All operations while loading (during LOAD with T3)</td><td>Only FUNC+START is accepted</td><td>"LOADING / Please wait..."</td></tr>
+<tr><td>T1/T2/T3 after a switch is confirmed (after CHNG/NEW with T3, awaiting apply)</td><td>No response (target loopset is fixed). Exit with LOOP or FUNC to cancel</td><td>—</td></tr>
+</tbody>
+</table>
+<p>Loopset Select mode is "selection-only". Editing operations such as starting a new recording, clearing, and Undo are not possible (play/stop (START) and transition to Track Edit mode (FUNC+Tn) are possible). However, if you entered this mode while another track was still recording, you can still stop that recording with REC / external REC / MIDI (during this time, a single START press does nothing so it does not turn the recording into an overdub).</p>
+<h2 id="sec-84">(B) State-Based Operation Blocks (Common Across Modes)</h2>
+<table>
+<thead>
+<tr><th>Operation</th><th>Blocked when</th><th>Screen display</th></tr>
+</thead>
+<tbody>
+<tr><td>LOOP / LOOP+Tn (enter Loopset Select)</td><td>SD unavailable</td><td>"LOOP BLOCKED / No SD"</td></tr>
+<tr><td>LOOP (base select)</td><td>During recording/overdub (based on the recording target)</td><td>"LOOP BLOCKED / Recording..."</td></tr>
+<tr><td>LOOP+Tn (track select)</td><td>The target track itself is recording/overdubbing</td><td>"LOOP BLOCKED / Recording..."</td></tr>
+<tr><td>CLEAR+LOOP (clear entire loopset)</td><td>SD unavailable</td><td>"CLEAR BLOCKED / No SD"</td></tr>
+<tr><td>CLEAR+LOOP</td><td>During recording/overdub</td><td>"CLEAR BLOCKED / Recording..."</td></tr>
+<tr><td>CLEAR+LOOP</td><td>While Undo data is syncing</td><td>"SYNCING / undo data loading..."</td></tr>
+<tr><td>CLEAR+LOOP</td><td>During save/load/scan</td><td>"CLEAR BLOCKED / Busy..."</td></tr>
+<tr><td>External REC trigger</td><td>During a confirmation popup / during startup loopset loading</td><td>(no response)</td></tr>
+</tbody>
+</table>
+<h2 id="sec-85">Notes</h2>
+<ul><li><strong>Pressing CLEAR alone does nothing in any mode</strong> (to prevent mistakes; CLEAR is used in combination with other buttons).</li><li><strong>While a confirmation popup is shown</strong>, no buttons other than T3 (OK) / T4 (CANCEL) are accepted.</li><li><strong>FUNC+LOOP (to System Settings) is possible even while recording</strong> (only the transition to Loopset Select can be blocked by recording/overdub; base select is blocked based on the recording target, and track select is blocked only when the target track itself is recording).</li></ul>
+<h1 id="sec-86">Appendix E. Troubleshooting</h1>
+<p>The main warnings shown on screen and how to deal with them. Warning popups disappear automatically after a few seconds.</p>
+<h2 id="sec-87">E-1. NO SD/MMC</h2>
+<p>A state where "NO SD/MMC" ("Disabled: save,load,loop") is shown at startup. Because the SD card is unavailable, saving, loading, and loopset operations are disabled.</p>
+<ul><li>Cause: no SD card inserted, not inserted correctly, unsupported format, or a card failure.</li><li>Remedy:<ol><li>Power off and check that the SD card is correctly seated in the slot.</li><li>Open the card on a PC and check that it is formatted as <strong>FAT32</strong> (32GB or less).</li><li>If it does not improve, replace it with an SD card verified to work with this unit (<a href="#sec-60">Section 9-1</a>).</li></ol></li><li>You can still record and play in this state (in RAM), but the recordings are not saved and are lost when you power off.</li></ul>
+<h2 id="sec-88">E-2. DATA BROKEN</h2>
+<p>A state where "DATA BROKEN" is shown when loading a loopset. It indicates that part of the saved data is corrupted.</p>
+<ul><li>Cause: power loss during saving, or file corruption from a card defect or removing the card while in use.</li><li>Behavior: the broken track is loaded empty ("loaded empty"). Non-broken tracks and other loopsets can still be used.</li><li>Remedy:<ol><li>Re-recording the track overwrites the saved data with a new take, which recovers it.</li><li>If it happens repeatedly, a card defect is suspected, so replace it with another card.</li></ol></li><li>The unit saves each track in two generations (A/B), so it can recover from the other copy (generation) even if one is broken. Only when both are broken is it loaded empty.</li></ul>
+<h2 id="sec-89">E-3. Power Loss During Writing</h2>
+<p>If you power off while saving to the SD card (while the save indicator is shown in the header), the write may be interrupted.</p>
+<ul><li>Because the unit saves in a "finish writing the new file, then switch safely" manner, <strong>the previous recording is preserved</strong> even if power is lost mid-write (half-written files are ignored on the next startup).</li><li>However, the latest recording that was being saved may be lost.</li><li>Remedy: because saving is often in progress right after recording stops, we recommend powering off <strong>after the save indicator disappears</strong>.</li></ul>
+<h2 id="sec-90">E-4. SAVE ERROR</h2>
+<p>A state where "SAVE ERROR" ("SD write failed") is shown during saving. Writing to the SD card failed.</p>
+<ul><li>Cause: the SD card is write-protected (locked), insufficient free space, or a card defect/poor contact.</li><li>Remedy: check the card's lock, free space, and insertion. If it does not improve, replace it with another card.</li></ul>
+<h2 id="sec-91">E-5. REC STOPPED (Memory is full!)</h2>
+<p>A state where "REC STOPPED / Memory is full!" is shown during recording and recording stops automatically.</p>
+<ul><li>Cause: the recordable length limit of a track (about 20 seconds) was reached, so recording stops automatically at that point.</li><li>This is expected behavior. If the recorded length is not what you want, re-record with a shorter length.</li></ul>
+<h2 id="sec-92">E-6. "... BLOCKED" Is Shown</h2>
+<p>"REC BLOCKED" / "LOAD BLOCKED" / "LOOP BLOCKED" / "UNDO BLOCKED" / "CLEAR BLOCKED", etc. are notifications telling you that the operation <strong>cannot be performed right now</strong> (to prevent mistakes/conflicts). It is not a malfunction.</p>
+<ul><li>The operation becomes available once conditions such as recording, save/load in progress (Busy), or SD unavailable are cleared.</li><li>Right after startup or right after a loopset switch, Undo may not be possible for a few seconds because Undo data is loading ("SYNCING / undo data loading"). Wait until the indication disappears before operating.</li><li>See <a href="#sec-82">Appendix D</a> for which operations are blocked in each mode.</li></ul>
+<h2 id="sec-93">E-7. Startup Takes a Long Time / Appears Frozen</h2>
+<ul><li>While a sample import is running, startup can take time with the "IMPORTING" display (larger files and higher sampling rates take longer).</li><li>This is not a malfunction. Wait until the display clears and it starts up normally (do not power off during processing).</li></ul>
+<h2 id="sec-94">E-8. Sample Import Is Not Applied</h2>
+<p>If you placed <code>import.csv</code> and started up but nothing was imported, check the following.</p>
+<ul><li>Open the SD card after startup and check that <code>import.csv</code> was renamed to <code>_import.csv</code>. <code>OK</code> or <code>ERROR: ...</code> is recorded in the last column (result) of each row.</li><li>The reason for an error is also recorded in <code>lr_log.txt</code> at the root.</li><li>Common causes: the WAV is not in the <code>samples/</code> folder, an unsupported format/sampling rate, none of <code>steps</code>/<code>beats</code>/<code>bpm</code> specified, the WAV is too short for the step count (too dense), the loop length limit (about 20 seconds) is exceeded, or unsupported characters in the file name.</li><li>For details, see <a href="#sec-62">Section 10</a>.</li></ul>
+<h1 id="sec-95">Appendix F. SD Card File Structure</h1>
+<p>The structure of the SD card root and the <code>LILACREP</code> folder the unit manages is as follows.</p>
+<pre><code>SD card root/
+├── LILACREP/                   Auto-managed by the unit (do not edit/delete manually)
+│   ├── CONFIG.INI              System settings
+│   ├── STATE.INI               The loopset number each track last selected
+│   └── LOOPS/
+│       ├── 1/                  Loopset 1
+│       │   ├── T1A.WAV  T1B.WAV   Track 1 (A/B two-generation pair)
+│       │   ├── T2A.WAV  T2B.WAV   Track 2
+│       │   ├── T3A.WAV  T3B.WAV   Track 3
+│       │   └── T4A.WAV  T4B.WAV   Track 4
+│       ├── 2/                  Loopset 2
+│       │   └── ...
+│       └── 128/                (folders are created only for recorded loopsets)
+│
+├── samples/                    Sample import source (placed by the user)
+│   ├── drums.wav
+│   └── ...
+├── import.csv                  Import instructions (renamed to _import.csv after processing)
+├── _import.csv                 Record of import results
+├── lr_log.txt                  Import error log
+└── lr_v1_0.bin                 Firmware update file (deletion recommended after update)</code></pre>
+<p>The <code>LILACREP</code> folder (managed by the unit):</p>
+<ul><li>The area the unit uses to save recordings and settings. Manually editing or deleting the contents may corrupt saved data, so normally do not touch it.</li><li><strong>CONFIG.INI</strong>: system settings (Loop Sync / Auto Stop / Smooth / MIDI Sync / Send MIDI CLK / CLK IN Start / MIDI channel settings / Screen Off).</li><li><strong>STATE.INI</strong>: the loopset number each track last selected (per track). Each track loads this loopset on the next startup.</li><li><strong>LOOPS/{number}/</strong>: a folder per loopset (1-128). Only folders for the numbers of recorded loopsets are created.</li><li><strong>T{n}A.WAV / T{n}B.WAV</strong>: the recording data of track n (1-4). A/B is a two-generation pair; the newer generation is the current take, the older one is what Undo restores (see <a href="#sec-61">Section 9-2</a>). Files are in 48kHz / stereo / 32bit float WAV format, playable on a PC too (avoid editing/overwriting). BPM information (ACID chunk) indicating the recording tempo is also embedded, so it is readable by compatible DAWs.</li></ul>
+<p>Files directly under the root:</p>
+<ul><li><strong>samples/</strong>: the folder for placing WAVs to import via sample import (<a href="#sec-62">Section 10</a>).</li><li><strong>import.csv / _import.csv / lr_log.txt</strong>: the instructions/results/error log of sample import (<a href="#sec-62">Section 10</a>).</li><li><strong>lr_v1_0.bin</strong> etc.: the binary for firmware update (<a href="#sec-73">Appendix A</a>). Deletion recommended after update.</li></ul>
+<h1 id="sec-96">Appendix G. MIDI Implementation</h1>
+<p>MIDI transmission/reception requires the optional MIDI expansion module (MIDI CoM+). The clock and transport (Clock / Start / Stop / Song Position) are system messages without a MIDI channel, so they are unaffected by the channel settings. The receive channel for notes and CCs is set with the <strong>MIDI Global Ch</strong> / <strong>MIDI Track1-4 Ch</strong> system settings (Sections 7-4, 8-4 through 8-6).</p>
+<h2 id="sec-97">G-1. MIDI Implementation Chart</h2>
+<p>LilaC Repeater (+ MIDI CoM+) / Version 1.0</p>
+<table>
+<thead>
+<tr><th>Function</th><th style="text-align:center">Transmitted</th><th style="text-align:center">Recognized</th><th>Remarks</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>Basic Channel</strong> — Default</td><td style="text-align:center">×</td><td style="text-align:center">As set</td><td>Clock/transport have no channel</td></tr>
+<tr><td><strong>Basic Channel</strong> — Changed</td><td style="text-align:center">×</td><td style="text-align:center">1-16</td><td>Set by MIDI Global Ch / MIDI Track1-4 Ch</td></tr>
+<tr><td><strong>Mode</strong></td><td style="text-align:center">×</td><td style="text-align:center">×</td><td>Mode messages not supported (OMNI/Mono/Poly)</td></tr>
+<tr><td><strong>Note Number</strong></td><td style="text-align:center">×</td><td style="text-align:center">0-127</td><td>Remote control (8-4) / step operation (jump/stutter; 8-5)</td></tr>
+<tr><td><strong>Note Number</strong> — True Voice</td><td style="text-align:center">×</td><td style="text-align:center">×</td><td>Does not sound (control only)</td></tr>
+<tr><td><strong>Velocity</strong> — Note On</td><td style="text-align:center">×</td><td style="text-align:center">○</td><td>Velocity &gt; 0 = Note On, 0 = Note Off</td></tr>
+<tr><td><strong>Velocity</strong> — Note Off</td><td style="text-align:center">×</td><td style="text-align:center">×</td><td>Velocity not referenced</td></tr>
+<tr><td><strong>After Touch</strong> — Key/Ch</td><td style="text-align:center">×</td><td style="text-align:center">×</td><td></td></tr>
+<tr><td><strong>Pitch Bend</strong></td><td style="text-align:center">×</td><td style="text-align:center">×</td><td></td></tr>
+<tr><td><strong>Control Change</strong> #7, #8</td><td style="text-align:center">×</td><td style="text-align:center">○</td><td>DRY/FDBK level (G-2, global Ch)</td></tr>
+<tr><td><strong>Control Change</strong> #7, #9, #10, #12-#15</td><td style="text-align:center">×</td><td style="text-align:center">○</td><td>Track playback parameters (G-2, track Ch)</td></tr>
+<tr><td><strong>Program Change</strong></td><td style="text-align:center">×</td><td style="text-align:center">○</td><td>Loopset switch (8-7); Program 0-127 → loopset 1-128; global Ch = all tracks / track Ch = that track</td></tr>
+<tr><td><strong>System Exclusive</strong></td><td style="text-align:center">×</td><td style="text-align:center">×</td><td>Not used for operation; not forwarded to the chain (other forwarding: note 3)</td></tr>
+<tr><td><strong>System Common</strong> — Song Pos</td><td style="text-align:center">○ (note 1)</td><td style="text-align:center">○</td><td>Reception is position 0 only (playback-position reset)</td></tr>
+<tr><td><strong>System Common</strong> — Song Sel / Tune</td><td style="text-align:center">×</td><td style="text-align:center">×</td><td></td></tr>
+<tr><td><strong>System Real Time</strong> — Clock</td><td style="text-align:center">○ (note 2)</td><td style="text-align:center">○</td><td>24 ppqn</td></tr>
+<tr><td><strong>System Real Time</strong> — Commands</td><td style="text-align:center">○ (Start/Stop)</td><td style="text-align:center">○ (Start/Continue/Stop)</td><td>Transmission is Start/Stop only (Continue not transmitted)</td></tr>
+<tr><td><strong>Aux</strong> — All Notes Off / Active Sense / Reset / Local</td><td style="text-align:center">×</td><td style="text-align:center">×</td><td></td></tr>
+</tbody>
+</table>
+<p>○ = supported / × = not supported</p>
+<p>Note 1: Song Position sends position 0 (SPP0) when the playback position of all tracks is reset during playback (MIDI remote "B (reset)", RST input, FUNC+START, etc.).<br>
+Note 2: The MIDI clock send timing follows the system setting "Send MIDI CLK" (PLAY = only during playback / ALWAYS = always; <a href="#sec-50">Section 8-3-2</a>). Transmission occurs when TX is enabled in the MIDI Sync setting (<a href="#sec-51">Section 8-3-3</a>).<br>
+Note 3: Received channel messages (notes/CC etc.) are forwarded to the UART chain downstream, except SysEx (<a href="#sec-69">Section 11</a>).</p>
+<h2 id="sec-98">G-2. Control Change (CC) Assignment</h2>
+<p><strong>Global channel (MIDI Global Ch)</strong> — overall level (<a href="#sec-57">Section 8-6</a>).</p>
+<table>
+<thead>
+<tr><th>CC number</th><th>Function</th><th>Value mapping</th></tr>
+</thead>
+<tbody>
+<tr><td>#7 (Volume)</td><td>DRY level</td><td>0 (min) - 127 (max)</td></tr>
+<tr><td>#8 (Balance)</td><td>FDBK level</td><td>0 (min) - 127 (max)</td></tr>
+</tbody>
+</table>
+<p><strong>Track channel (MIDI Track1-4 Ch)</strong> — each track's playback parameters (<a href="#sec-57">Section 8-6</a>).</p>
+<table>
+<thead>
+<tr><th>CC number</th><th>Function</th><th>Value mapping</th></tr>
+</thead>
+<tbody>
+<tr><td>#7 (Volume)</td><td>Track playback level</td><td>0 (min) - 127 (max)</td></tr>
+<tr><td>#9</td><td>Playback direction</td><td>64 or higher = forward (FWD) / below 64 = reverse (REV)</td></tr>
+<tr><td>#10 (Pan)</td><td>Pan</td><td>0 = far left / 64 = center / 127 = far right</td></tr>
+<tr><td>#12</td><td>Loop Start (loop range start)</td><td>value = start step (clamped to recording length)</td></tr>
+<tr><td>#13</td><td>Loop Length (loop range length)</td><td>length = value + 1 steps / 127 = whole recording</td></tr>
+<tr><td>#14</td><td>Playback speed</td><td>below 43 = x0.5 / 86 or higher = x2.0 / otherwise = x1.0</td></tr>
+<tr><td>#15</td><td>Step control</td><td>below 43 = ONE / 43-85 = -- (disabled) / 86-106 = LOOP / 107 or higher = STUT</td></tr>
+</tbody>
+</table>
+<h2 id="sec-99">G-3. Note Assignment (Remote Control / Step Operation)</h2>
+<p><strong>MIDI Global Ch notes</strong> — remote control (<a href="#sec-52">Section 8-4</a>). The function is determined by the note number modulo 12 (white keys = operations, black keys = modifiers that specify the target track).</p>
+<table>
+<thead>
+<tr><th>Key</th><th>Function</th></tr>
+</thead>
+<tbody>
+<tr><td>C / D</td><td>Playback direction REV / FWD</td></tr>
+<tr><td>E / F / G</td><td>Playback speed x0.5 / x1.0 / x2.0</td></tr>
+<tr><td>A</td><td>Record trigger</td></tr>
+<tr><td>B</td><td>Playback-position reset (fixed to the beginning while held)</td></tr>
+<tr><td>C#</td><td>Modifier = all tracks</td></tr>
+<tr><td>D# / F# / G# / A#</td><td>Modifier = track 1 / 2 / 3 / 4</td></tr>
+</tbody>
+</table>
+<p><strong>MIDI Track1-4 Ch notes</strong> — step operation (<a href="#sec-53">Section 8-5</a>). The target step is the note number modulo the number of recorded steps; the playback position is then controlled according to the step control setting in Track Edit mode (ONE / LOOP = jump to that step, STUT = repeat that range while held).</p>
+<h1 id="sec-100">Warranty</h1>
+<p>For one year from purchase, repairs will be performed free of charge as a rule, except for failures due to intentional modification/destruction by the user, failures due to damage from drops or similar negligence, or failures due to incorrect connection of the power or other connectors.<br>
+(However, you may be asked to bear the shipping cost for sending the unit in for repair.)</p>
+<p>When requesting a repair, please submit the store receipt or other proof of purchase.</p>
+<h1 id="sec-101">Contact</h1>
+<p>mail: centrevillage@gmail.com<br>
+site: https://centrevillage.net</p>
+</article>
+</main>
+</body>
+</html>
