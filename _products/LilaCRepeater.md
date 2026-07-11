@@ -11,10 +11,59 @@ hp: 12
 deep: 27
 date: 2026-06-23
 active: true
-publish: false
+publish: true
 ---
 
 # 4 Track Sampling Looper
+
+Available now at Japanese stores:
+
+- [Five G](https://fiveg.net/?mode=grp&gid=1780911)
+
+## English
+
+LilaC Repeater is a 4-track stereo sampling looper.
+Each track has its own independent recording length, playback speed, and playback direction, and all tracks can play back in sync.
+Recordings are automatically saved to the SD card and can be recalled as a loopset at any time.
+
+For external clocking, it supports clock pulse input and MIDI clock input (when using the optional MIDI CoM+), and even after recording you can continuously vary the playback speed in sync with the external clock.
+You can also overdub with the playback speed altered.
+By layering recordings at different playback speeds, you can go beyond simple loops into more experimental performance.
+And because the playback position and the external/internal clock phase are always kept in sync by PLL control, the sample and clock never drift out of phase, no matter how long the loop plays.
+
+Hardware specifications:
+
+- Audio
+  - 96kHz/24bit stereo I/O (sample storage: 48kHz/32bit float)
+  - Input/output latency **under 1ms**
+- Storage
+  - RAM: up to approx. 20 seconds of stereo sample recording per track
+  - SD card: stores all tracks' samples in any of 128 presets (loopsets)
+- Display
+  - White OLED 128x64
+- I/O
+  - Stereo input
+  - Stereo output
+  - Clock input
+  - Reset input
+  - Record trigger input
+  - Clock output
+  - MIDI expansion / UART chain connector
+
+Feature list:
+
+- 4 stereo tracks playing simultaneously
+- Per-track playback direction, speed, panning, and loop range settings
+- Clock-synced recording/playback
+- Variable-speed overdubbing
+- Auto-stop recording
+- Overdub level setting (FDBK)
+- Level faders for Dry (input) and each track
+- One-level Undo/Redo of recorded samples
+- Automatic saving to the SD card
+- Remote control via external MIDI (requires **MIDI CoM+**)
+
+[Manual](/manual/LilaCRepeater/LilaCRepeater_ver1_0_EN.html)
 
 ## 日本語
 
