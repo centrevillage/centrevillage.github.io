@@ -8,7 +8,7 @@ tags:
  - Oscillator
  - Deep_26mm
 price: "38,500 JPY"
-consumption: "50mA (+12V) / 50mA (-12V) / 0mA (+5V)"
+consumption: "5mA (+12V) / 5mA (-12V) / 110mA (+5V)"
 hp: 12
 deep: 26
 date: 2023-03-17
