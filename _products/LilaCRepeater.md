@@ -19,6 +19,7 @@ publish: true
 Available now at Japanese stores:
 
 - [Five G](https://fiveg.net/?mode=grp&gid=1780911)
+- [Clockface Modular](https://clockfacemodular.com/products/centrevillage-lilac-repeater)
 
 ## English
 
