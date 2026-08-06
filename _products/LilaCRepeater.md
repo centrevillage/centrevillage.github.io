@@ -64,8 +64,21 @@ Feature list:
 - One-level Undo/Redo of recorded samples
 - Automatic saving to the SD card
 - Remote control via external MIDI (requires **MIDI CoM+**)
+- 128 loopsets (presets) management
+- External WAV file import
+- Per-track pitch shift / time stretch (±24 semitones) **(ver 2)**
+- Per-track effects (tape / lo-fi / filter / drive) with modulation **(ver 2)**
+- FX macros (8 presets, triggered via MIDI CC) **(ver 2)**
+- Recording source selection (resampling / bouncing) **(ver 2)**
+- Pitch quantize (16 scale presets) and MIDI pitch bend **(ver 2)**
 
-[Manual](/manual/LilaCRepeater/LilaCRepeater_ver1_0_EN.html)
+[Manual ver2.0](/manual/LilaCRepeater/LilaCRepeater_ver2_0_EN.html)
+[Manual ver1.0](/manual/LilaCRepeater/LilaCRepeater_ver1_0_EN.html)
+
+Firmware:
+
+[firmware ver2.0](https://drive.google.com/file/d/1-gNAuppVPpwn8WUM16MXjqkGmjgDvgP7/view?usp=sharing)
+[firmware ver1.0](https://drive.google.com/file/d/1F0nIwwuytCgvFFuru4BKrWZW6WIgaPe7/view?usp=sharing)
 
 ## 日本語
 
@@ -107,5 +120,16 @@ Feature list:
 - SDカードへの自動保存
 - 最大128個のループセット管理
 - 外部Wavファイルの取り込み
+- トラック個別のピッチシフト/タイムストレッチ(±24半音) **(ver 2)**
+- トラック個別のエフェクト(テープ/ローファイ/フィルタ/ドライブ)とモジュレーション **(ver 2)**
+- FXマクロ(8プリセット、MIDI CCで呼び出し) **(ver 2)**
+- 録音ソース選択(リサンプル/バウンス) **(ver 2)**
+- ピッチクオンタイズ(16スケールプリセット)とMIDIピッチベンド **(ver 2)**
 
-[マニュアル](/manual/LilaCRepeater/LilaCRepeater_ver1_0_JP.html)
+[マニュアル ver2.0](/manual/LilaCRepeater/LilaCRepeater_ver2_0_JP.html)
+[マニュアル ver1.0](/manual/LilaCRepeater/LilaCRepeater_ver1_0_JP.html)
+
+ファームウェア:
+
+[ファームウェア ver2.0](https://drive.google.com/file/d/1-gNAuppVPpwn8WUM16MXjqkGmjgDvgP7/view?usp=sharing)
+[ファームウェア ver1.0](https://drive.google.com/file/d/1F0nIwwuytCgvFFuru4BKrWZW6WIgaPe7/view?usp=sharing)
