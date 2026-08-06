@@ -73,11 +73,13 @@ Feature list:
 - Pitch quantize (16 scale presets) and MIDI pitch bend **(ver 2)**
 
 [Manual ver2.0](/manual/LilaCRepeater/LilaCRepeater_ver2_0_EN.html)
+
 [Manual ver1.0](/manual/LilaCRepeater/LilaCRepeater_ver1_0_EN.html)
 
 Firmware:
 
 [firmware ver2.0](https://drive.google.com/file/d/1-gNAuppVPpwn8WUM16MXjqkGmjgDvgP7/view?usp=sharing)
+
 [firmware ver1.0](https://drive.google.com/file/d/1F0nIwwuytCgvFFuru4BKrWZW6WIgaPe7/view?usp=sharing)
 
 ## 日本語
@@ -127,9 +129,11 @@ Firmware:
 - ピッチクオンタイズ(16スケールプリセット)とMIDIピッチベンド **(ver 2)**
 
 [マニュアル ver2.0](/manual/LilaCRepeater/LilaCRepeater_ver2_0_JP.html)
+
 [マニュアル ver1.0](/manual/LilaCRepeater/LilaCRepeater_ver1_0_JP.html)
 
 ファームウェア:
 
 [ファームウェア ver2.0](https://drive.google.com/file/d/1-gNAuppVPpwn8WUM16MXjqkGmjgDvgP7/view?usp=sharing)
+
 [ファームウェア ver1.0](https://drive.google.com/file/d/1F0nIwwuytCgvFFuru4BKrWZW6WIgaPe7/view?usp=sharing)
