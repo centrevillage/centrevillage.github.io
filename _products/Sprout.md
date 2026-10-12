@@ -45,6 +45,7 @@ ver 3.0 で以下のエフェクトが追加されました。
 - String Resonator (MI Rings由来の共鳴弦レゾネーターと新規開発のエレキベース/エレキギターレゾネーター)
 
 [マニュアル ver3.0](/manual/Sprout/Sprout_ver3_0_JP.html)
+
 [マニュアル ver2.0](/manual/Sprout/Sprout_ver2_0_JP.html)
 
 独自のカスタムエフェクトを開発する場合は、下記のGitHubプロジェクトをベースとすることができます。
@@ -88,6 +89,7 @@ The following effects have been added in version 3.0:
 - String Resonator (A sympathetic string (from MI Rings) and a newly developed electric bass/guitar string)
 
 [Manual ver3.0](/manual/Sprout/Sprout_ver3_0_EN.html)
+
 [Manual ver2.0](/manual/Sprout/Sprout_ver2_0_EN.html)
 
 If you want to develop your own custom effects, you can use the following GitHub projects as a starting point:
