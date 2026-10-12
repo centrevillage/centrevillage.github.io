@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sprout ver3.0 manual</title>
+<style>
+:root {
+  --fg: #1c2430; --muted: #61707f; --bg: #ffffff; --soft: #f4f6f9;
+  --line: #d9e0e8; --accent: #3b6ea5; --accent-soft: #eaf1f8;
+  --link: #1155cc; --rule: #000000; --th: #d9d9d9;
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0; color: var(--fg); background: #eef1f5;
+  font-family: Arial,"Meiryo","Hiragino Kaku Gothic ProN","Hiragino Sans",
+               "Noto Sans JP","Yu Gothic","YuGothic",sans-serif;
+  line-height: 1.45; font-size: 16px;
+}
+.page {
+  max-width: 880px; margin: 0 auto; background: var(--bg);
+  padding: 48px 56px 96px; box-shadow: 0 1px 24px rgba(20,30,45,.08);
+}
+.doc-header { text-align: center; border-bottom: 2px solid var(--line); padding-bottom: 28px; margin-bottom: 8px; }
+.title-image { max-width: 100%; height: auto; margin: 0 auto 18px; display: block; }
+.doc-title { font-size: 2.0rem; line-height: 1.4; margin: .2em 0; border: 0; padding: 0; }
+.doc-author { color: #666666; font-size: 1.1rem; margin-bottom: 18px; }
+
+h1, h2, h3, h4 { line-height: 1.45; scroll-margin-top: 12px; }
+h1 { font-size: 1.67rem; margin: 2.2em 0 .8em; padding-bottom: .3em; border-bottom: 2px solid var(--accent); }
+h2 { font-size: 1.33rem; margin: 1.9em 0 .6em; padding-left: .55em; border-left: 5px solid var(--accent); }
+h3 { font-size: 1.17rem; margin: 1.5em 0 .5em; color: #434343; }
+h4 { font-size: 1rem; margin: 1.3em 0 .4em 1.2em; color: #666666; }
+/* the body of the third level and deeper is indented (the Google Docs manual
+   indents every body under its heading; levels 1-2 stand out by size) */
+.sec-body.lv3 { margin-left: 1.2em; }
+.sec-body.lv4 { margin-left: 2.4em; }
+
+p { margin: .45em 0; }
+a { color: var(--link); }
+hr { border: 0; border-top: 1px solid var(--line); margin: 1.8em 0; }
+strong { font-weight: 700; }
+code {
+  font-family: "SFMono-Regular",Menlo,Consolas,"Courier New",monospace;
+  font-size: .88em; background: var(--soft); border: 1px solid var(--line);
+  border-radius: 4px; padding: .08em .38em;
+}
+pre {
+  background: var(--soft); border: 1px solid var(--line); border-radius: 6px;
+  padding: 14px 16px; margin: 1.1em 0; overflow-x: auto;
+  line-height: 1.55; font-size: .85rem;
+}
+pre code {
+  background: none; border: 0; padding: 0; border-radius: 0;
+  font-size: inherit; white-space: pre;
+}
+
+ul, ol { margin: .45em 0; padding-left: 1.7em; }
+li { margin: .1em 0; }
+li > ul, li > ol { margin: .25em 0; }
+
+table { border-collapse: collapse; width: 100%; margin: 1.2em 0; font-size: .95rem; }
+th, td { border: 1px solid var(--rule); padding: .4em .6em; vertical-align: top; line-height: 1.35; }
+th { background: var(--th); font-weight: 700; text-align: center; }
+
+figure { margin: 1.4em auto; max-width: 560px; text-align: center; }
+figure img { max-width: 100%; height: auto; }
+figcaption { margin-top: .3em; font-size: .95rem; }
+/* side by side, shrinking in proportion to the given widths; stacked on phones */
+.figrow { display: flex; justify-content: center; align-items: flex-end; gap: 24px; margin: 1.4em 0; }
+.figrow figure { margin: 0; flex: 0 1 auto; min-width: 0; }
+@media (max-width: 560px) { .figrow { flex-wrap: wrap; } }
+.img-placeholder {
+  max-width: 560px; margin: 1.4em auto; padding: 26px 18px; text-align: center;
+  color: var(--muted); background: repeating-linear-gradient(135deg,#f7f9fb,#f7f9fb 10px,#eef2f6 10px,#eef2f6 20px);
+  border: 2px dashed var(--line); border-radius: 8px; font-size: .9rem;
+}
+.img-placeholder-tag {
+  display: inline-block; margin-right: .6em; padding: .1em .55em; font-size: .72rem;
+  font-weight: 700; color: #fff; background: var(--muted); border-radius: 4px; vertical-align: middle;
+}
+
+.toc {
+  background: var(--soft); border: 1px solid var(--line); border-radius: 8px;
+  padding: 18px 24px; margin: 28px 0 8px; font-size: .93rem;
+}
+.toc-title { font-weight: 700; font-size: 1.02rem; margin-bottom: .5em; }
+.toc ul { list-style: none; margin: .2em 0; padding-left: 1.1em; }
+.toc > ul { padding-left: 0; }
+.toc li { margin: .2em 0; }
+.toc a { text-decoration: none; }
+.toc a:hover { text-decoration: underline; }
+
+@media (max-width: 700px) {
+  .page { padding: 28px 18px 64px; }
+  body { font-size: 15px; }
+}
+/* Wide screens: two-column split — a persistent (sticky) table of contents on
+   the left (~1/3), the article on the right (~2/3); the title/header spans the
+   full width on top. Scoped to `screen` so print (below) and narrow screens
+   keep the single-column flow with the TOC inserted after the title. */
+@media screen and (min-width: 1100px) {
+  .page {
+    max-width: 1280px;
+    display: grid;
+    grid-template-columns: minmax(240px, 1fr) minmax(0, 2fr);
+    grid-template-areas: "header header" "toc content";
+    column-gap: 48px;
+    align-items: start;
+  }
+  .doc-header { grid-area: header; }
+  .toc {
+    grid-area: toc;
+    position: sticky; top: 24px;
+    max-height: calc(100vh - 48px); overflow-y: auto;
+    margin: 28px 0 0;
+  }
+  .content { grid-area: content; min-width: 0; }
+}
+@media print {
+  body { background: #fff; }
+  .page { box-shadow: none; max-width: none; padding: 0; }
+  a { color: var(--fg); }
+  h1, h2, h3 { page-break-after: avoid; }
+  figure, .img-placeholder, table, tr, pre { page-break-inside: avoid; }
+  .toc { page-break-after: always; }
+}
+.c-green { color: #6aa84f; }
+.c-dkgreen { color: #38761d; }
+.c-cyan { color: #45818e; }
+.c-ltcyan { color: #76a5af; }
+.c-yellow { color: #f1c232; }
+.c-dkyellow { color: #bf9000; }
+.c-skyblue { color: #3c78d8; }
+.c-blue { color: #0000ff; }
+.c-purple { color: #9900ff; }
+.c-red { color: #ff0000; }
+.c-gray { color: #666666; }
+.c-emerald { color: #2e9e5b; }
+.c-orange { color: #e69138; }
+.c-pink { color: #d5578a; }
+.c-ygreen { color: #7cb342; }
+tr.row-sun td { background: #fff2cc; }
+tr.row-wet td { background: #c9daf8; }
+tr.row-sprout td { background: #d9ead3; }
+tr.row-wind td { background: #d9d2e9; }
+tr.row-io td { background: #f3f3f3; }
+</style>
+</head>
+<body>
+<main class="page">
+<header class="doc-header"><h1 class="doc-title">Sprout ver3.0 manual</h1><div class="doc-author">manufactured by centrevillage (<a href="https://centrevillage.net">https://centrevillage.net</a>)</div><img class="title-image" src="img/title_panel.png" alt="" style="width:121px"></header>
+<nav class="toc"><div class="toc-title">目次</div><ul><li><a href="#sec-1">1. Introduction</a></li><li><a href="#sec-2">2. Hardware Interface</a></li><li><a href="#sec-3">3. Factory Program</a><ul><li><a href="#sec-4">3.1. Tape Echo</a></li><li><a href="#sec-5">3.2. Modern Delay</a></li><li><a href="#sec-6">3.3. FDN Reverb</a></li><li><a href="#sec-7">3.4. Repeater (ver 2.0)</a></li><li><a href="#sec-8">3.5. Sampler (ver 2.0)</a><ul><li><a href="#sec-9">3.5.1. SD Card Condition</a></li><li><a href="#sec-10">3.5.2. Sample File</a></li><li><a href="#sec-11">3.5.3. Operation</a><ul><li><a href="#sec-12">3.5.3.1. Play Mode</a></li><li><a href="#sec-13">3.5.3.2. Record Mode</a></li></ul></li></ul></li><li><a href="#sec-14">3.6. String Resonator (ver 3)</a><ul><li><a href="#sec-15">3.6.1. Voice Mode</a></li><li><a href="#sec-16">3.6.2. Parameters (1 / 2 / 4 / 8)</a></li><li><a href="#sec-17">3.6.3. Parameters (B / G)</a></li><li><a href="#sec-18">3.6.4. Strum / Pitch / Excitation</a></li><li><a href="#sec-19">3.6.5. Pitch Detection Mode</a></li><li><a href="#sec-20">3.6.6. CV Calibration</a></li></ul></li></ul></li><li><a href="#sec-21">4. MIDI (ver 3)</a><ul><li><a href="#sec-22">4.1. Control Change</a></li><li><a href="#sec-23">4.2. String Resonator</a></li><li><a href="#sec-24">4.3. Repeater</a></li><li><a href="#sec-25">4.4. MIDI Thru</a></li></ul></li><li><a href="#sec-26">5. Settings File (config.ini) (ver 3)</a></li><li><a href="#sec-27">6. Firmware Update</a><ul><li><a href="#sec-28">6.1. Update by SD Card</a></li><li><a href="#sec-29">6.2. Update by USB-DFU</a></li></ul></li><li><a href="#sec-30">7. Factory Reset</a></li><li><a href="#sec-31">8. Warranty</a></li><li><a href="#sec-32">9. Contact</a></li><li><a href="#sec-33">10. License</a></li></ul></nav>
+<article class="content">
+<h1 id="sec-1">1. Introduction</h1>
+<div class="sec-body lv1">
+<p><strong>Sprout</strong> は<a href="https://www.electro-smith.com/daisy/daisy">"Electro-Smith Daisy Seed”</a>をコアとする高解像度 (96kHz/24bit) のマルチエフェクトプロセッサーです。</p>
+<p>プリセットで以下のエフェクトが利用できます。</p>
+<ul><li>Tape Echo (テープのよれまで再現したテープエミュレーションディレイ)</li><li>Modern Delay (最大10秒のディレイタイム。ピッチシフトや逆再生が可能)</li><li>FDN Reverb (反響音のピッチシフト (いわゆるシマー）が可能)</li></ul>
+<p>ver 2.0:</p>
+<ul><li>Repeater (入力された音を記録し、範囲を指定してリピートするエフェクト)</li><li>Sampler (16x16のスロットにサンプルを配置し、Gate入力時に再生)</li></ul>
+<p>ver 3.0:</p>
+<ul><li>String Resonator (入力音で仮想的な弦を共鳴させるエフェクト。エレキベース / エレキギターのモード付き)</li><li>MIDI 入力 (CC によるパラメータ操作、String Resonator のノート演奏、Repeater の MIDI Clock 同期)</li></ul>
+<p>さらに、独自のカスタムエフェクトを作成してアップロードすることが可能です。</p>
+<p>詳細はGitHubのプロジェクトページを参照してください:  <a href="https://github.com/centrevillage/SproutExample">https://github.com/centrevillage/SproutExample</a></p>
+</div>
+<h1 id="sec-2">2. Hardware Interface</h1>
+<div class="sec-body lv1">
+<div class="figrow"><figure style="width:424px"><img src="img/front_annotation.png" alt="" loading="lazy"><figcaption>FRONT</figcaption></figure><figure style="width:306px"><img src="img/back_annotation.png" alt="" loading="lazy"><figcaption style="width:33%">BACK</figcaption></figure></div>
+</div>
+<h1 id="sec-3">3. Factory Program</h1>
+<div class="sec-body lv1">
+<p>出荷時プログラムでは下記の6つのエフェクトが利用できます。:</p>
+<ul><li>Tape Echo</li><li>Modern Delay</li><li>FDN Reverb</li><li><strong>Repeater (ver 2.0)</strong></li><li><strong>Sampler (ver 2.0)</strong></li><li><strong>String Resonator (ver 3)</strong></li></ul>
+<p>それぞれの操作子/表示器/入出力は以下の機能を持っています:</p>
+<table>
+<thead>
+<tr><th>Name</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td>Time Knob/LED</td><td>時間に関するパラメータを設定します。<br>LEDの輝度で現在のパラメータ値が表示されます。<br><br><span class="c-purple"><strong>Wind</strong></span> ボタンを押しながら操作することでセカンダリパラメータにアクセスできます。</td></tr>
+<tr class="row-sun"><td>Sun Knob/LED</td><td>フィードバックに関するパラメータを設定します。<br>LEDの輝度で現在のパラメータ値が表示されます。<br><br><span class="c-purple"><strong>Wind</strong></span> ボタンを押しながら操作することでセカンダリパラメータにアクセスできます</td></tr>
+<tr class="row-wet"><td>Wet Knob/LED</td><td>Dry/Wet バランスを設定します。<br>LEDの輝度で現在のパラメータ値が表示されます。<br><br><span class="c-purple"><strong>Wind</strong></span> ボタンを押しながら操作することでセカンダリパラメータにアクセスできます。</td></tr>
+<tr class="row-sprout"><td>Sprout Button/LED</td><td>現在のエフェクト種類を変更します。<br>LEDの色で現在のエフェクトを表示。</td></tr>
+<tr class="row-wind"><td>Wind Button/LED</td><td>タップテンポ。<br><br>このボタンを押しながらノブを操作することでセカンダリパラメータにアクセスできます。<br><br>* String Resonator ではタップテンポの代わりに、ダブルタップで音色の切り替えを行います <strong>(ver 3)</strong></td></tr>
+<tr class="row-io"><td>Meter LED</td><td>出力レベルをdBメータとして表示します。<br><br>メーターの色は、ピーク位置以外は現在のエフェクトに応じて変化します。</td></tr>
+<tr class="row-io"><td>Gate Input</td><td>クロック同期入力。<br><br>クロックパルスが入力されると、時間に関係するパラメータが同期されます。<br><br>クロックパルスの立ち上がりで反応します <strong>(ver 3)</strong><br><br>入力が2秒以上ない場合、自動的に同期がオフになります。<br><br>* FDN Reverb では無効になります<br>* String Resonator では、弦を弾くトリガー入力になります <strong>(ver 3)</strong></td></tr>
+<tr class="row-io"><td>CV input</td><td>Timeパラメータのモジュレーション<br><br>* String Resonator では、音程の入力 (V/oct) になります <strong>(ver 3)</strong></td></tr>
+<tr class="row-io"><td>L/R Audio Input</td><td>L/R オーディオ入力</td></tr>
+<tr class="row-io"><td>L/R Audio Output</td><td>L/R オーディオ出力</td></tr>
+</tbody>
+</table>
+</div>
+<h2 id="sec-4">3.1. Tape Echo</h2>
+<div class="sec-body lv2">
+<p>現在のエフェクトが <strong>Tape Echo</strong> のとき、<strong>Sprout</strong> LED が<span class="c-green"><strong>緑色</strong></span>に点灯します。<br>
+次のパラメータがあります:</p>
+<table>
+<thead>
+<tr><th>Operation</th><th>Name</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td>Time</td><td>Delay Time</td><td>ディレイタイム（約50ミリ秒 から 1秒まで)<br><br>ディレイタイムを変えると、テープのモーターの慣性のようになめらかに追従します <strong>(ver 3)</strong></td></tr>
+<tr><td>Sun</td><td>Feedback</td><td>フィードバック率 (最大 110%)<br><br><strong>Wind + Time</strong> (Tone) の位置にかかわらず、ほぼ同じノブの位置からフィードバックが飽和し始めます <strong>(ver 3)</strong></td></tr>
+<tr><td>Wet</td><td>Dry/Wet</td><td>Dry (direct signal) / Wet (effect signal) バランス。<br>一番左の位置ではDry=100%、Wet=0%。<br>中間の位置でDry=100%、Wet=100%。<br>一番右の位置でDry=0%、Wet=100%。</td></tr>
+<tr><td>Wind + Time</td><td>Tone</td><td>フィードバックトーンとサチュレーション。<br><br>左側: 暗いサチュレーションサウンド<br>中間: 明瞭なサウンド<br>右側: 明るいサチュレーションサウンド</td></tr>
+<tr><td>Wind + Sun</td><td>Flutter</td><td>フラッター効果のエミュレーション。<br><br>値が大きいほどピッチが不安定になります。</td></tr>
+<tr><td>Wind + Wet</td><td>Spread</td><td>ダブルトラッキング効果をもとにしたステレオエフェクト。<br>同時にPing Pong効果によりフィードバック音が左右に分散します。</td></tr>
+</tbody>
+</table>
+</div>
+<h2 id="sec-5">3.2. Modern Delay</h2>
+<div class="sec-body lv2">
+<p>現在のエフェクトが <strong>Modern Delay</strong> のとき、 <strong>Sprout</strong> LED が<span class="c-blue"><strong>青色</strong></span>に点灯します。<br>
+次のパラメータがあります:</p>
+<table>
+<thead>
+<tr><th>Operation</th><th>Name</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td>Time</td><td>Delay Time</td><td>ディレイタイム（約50ミリ秒 から 10秒まで)</td></tr>
+<tr><td>Sun</td><td>Feedback</td><td>フィードバック率 (最大 110%)<br><br>フィードバックを上げても、高域や超低域だけが先に発振しないように調整されています <strong>(ver 3)</strong></td></tr>
+<tr><td>Wet</td><td>Dry/Wet</td><td>Dry (direct signal) / Wet (effect signal) バランス。<br>一番左の位置ではDry=100%、Wet=0%。<br>中間の位置でDry=100%、Wet=100%。<br>一番右の位置でDry=0%、Wet=100%。</td></tr>
+<tr><td>Wind + Time</td><td>Tone</td><td>フィードバックトーン。<br><br>左側: 暗いサウンド<br>中間: 明瞭なサウンド<br>右側: 明るいサウンド</td></tr>
+<tr><td>Wind + Sun</td><td>Pitch Shift</td><td>フィードバック音のピッチシフト量。<br><br>左側: -1 から -12 半音のピッチシフト<br>中間: +0 ピッチシフトなし<br>右側: +1 から +12 半音のピッチシフト</td></tr>
+<tr><td>Wind + Wet</td><td>Reverse</td><td>フィードバック音の逆再生。<br><br>左側: 逆再生<br>右側: 正再生</td></tr>
+</tbody>
+</table>
+</div>
+<h2 id="sec-6">3.3. FDN Reverb</h2>
+<div class="sec-body lv2">
+<p>現在のエフェクトが <strong>FDN</strong>* <strong>Reverb</strong> のとき、 <strong>Sprout</strong> LED が<span class="c-yellow"><strong>黄色</strong></span>に点灯します。<br>
+* FDN = Feedback Delay Network</p>
+<p>次のパラメータがあります:</p>
+<table>
+<thead>
+<tr><th>Operation</th><th>Name</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td>Time</td><td>Size</td><td>ルームサイズ。<br><br>値が大きいほど、残響音がまばらになり、よりディレイエフェクトに近くなります。</td></tr>
+<tr><td>Sun</td><td>Decay</td><td>値が大きいほど、残響音の減衰時間が長くなります。</td></tr>
+<tr><td>Wet</td><td>Dry/Wet</td><td>Dry (direct signal) / Wet (effect signal) バランス。<br>一番左の位置ではDry=100%、Wet=0%。<br>中間の位置でDry=100%、Wet=100%。<br>一番右の位置でDry=0%、Wet=100%。</td></tr>
+<tr><td>Wind + Time</td><td>Tone</td><td>残響音のトーン。<br><br>左側: 暗いサウンド<br>中間: 明瞭なサウンド<br>右側: 明るいサウンド</td></tr>
+<tr><td>Wind + Sun</td><td>Shimmer <strong>(ver 3)</strong></td><td>残響音に1オクターブ上 / 下にピッチシフトした音を混ぜます。<br>(いわゆるシマー)<br><br>左側: 1オクターブ下<br>中間: シマーなし<br>右側: 1オクターブ上<br><br>中間の位置から離れるほど、シマーの量が多くなります。</td></tr>
+<tr><td>Wind + Wet</td><td>Diffusion</td><td>残響音の拡散量。<br><br>値が大きいほど、残響音が空間中に拡散します。</td></tr>
+</tbody>
+</table>
+</div>
+<h2 id="sec-7">3.4. Repeater (ver 2.0)</h2>
+<div class="sec-body lv2">
+<p>現在のエフェクトが <strong>Repeater</strong> のとき、 <strong>Sprout</strong> LED が<span class="c-skyblue"><strong>水色</strong></span>に点灯します。<br>
+このエフェクトを利用するときは、<strong>GATE</strong> Input に同期用のクロック信号を入力してください。<br>
+MIDI Clock にも同期できます <strong>(ver 3)</strong> (<a href="#sec-24">「4.3. Repeater」</a>参照)。</p>
+<p><strong>Repeater</strong> エフェクトには <strong>Listen</strong> と <strong>Play</strong> の二つの状態があります。<br>
+初期は <strong>Listen</strong> 状態になっています。</p>
+<p><strong>Listen</strong> 状態のとき、入力されたオーディオ信号は最大16ステップ分の長さで記録され続けます。<br>
+また、入力オーディオ信号がそのまま出力されます。</p>
+<p><strong>Play</strong> 状態のときは <strong>Listen</strong> 状態の時に記録したオーディオを再生します。</p>
+<p><strong>Wind</strong> Button を押すと、 <strong>Listen</strong> と <strong>Play</strong> の状態が相互に切り替わります。</p>
+<p>現在の状態は、<strong>Meter</strong> LED の点灯状態で把握することができます。<br>
+<strong>Listen</strong> 状態のときは再生範囲を表す色が<span class="c-blue"><strong>青</strong></span>か<span class="c-purple"><strong>紫色</strong></span>(逆再生時)です。<br>
+<strong>Play</strong> 状態のときは 再生範囲を表す色が<span class="c-dkgreen"><strong>緑</strong></span>か<span class="c-red"><strong>赤色</strong></span>(逆再生時)です。<br>
+また、再生中のステップ位置が明るく点灯します。</p>
+<p>また、以下の操作によって再生するオーディオ位置や速度などを変更することができます:</p>
+<table>
+<thead>
+<tr><th>Operation</th><th>Name</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td>Time</td><td>Speed</td><td>再生速度を変更します。<br><br>左側の位置では再生速度が遅くなり、中間の位置で等速、右側の位置では再生速度が速くなります。<br><br>再生速度を変えた場合にも常にクロック同期されます。</td></tr>
+<tr><td>Sun</td><td>Start Position</td><td>再生開始位置を変更します。</td></tr>
+<tr><td>Wet</td><td>Length</td><td>再生ステップ長さを設定します。<br>ステップ長さは正負の値が設定可能です。<br><br>ノブが右側の位置では正の値が設定可能で、オーディオを順再生します。<br>ノブが左側の位置では負の値が設定可能でオーディオを逆再生します。</td></tr>
+<tr><td>Wind + Sun</td><td>Random Start Position</td><td><strong>Play</strong> 状態での再生開始位置をランダムに移動します。<br>値が大きいほど、遠くのステップに移動しやすくなります。</td></tr>
+<tr><td>Wind + Wet</td><td>Dry / Repeat Balance</td><td><strong>Play</strong> 状態での入力オーディオ信号と再生オーディオ信号の音量バランスを設定します。<br><br>一番左の位置ではDry=100%、Repeat=0%。<br>中間の位置でDry=100%、Repeat=100%。<br>一番右の位置でDry=0%、Repeat=100%。</td></tr>
+</tbody>
+</table>
+</div>
+<h2 id="sec-8">3.5. Sampler (ver 2.0)</h2>
+<div class="sec-body lv2">
+<p>現在のエフェクトが <strong>Sampler</strong> のとき、 <strong>Sprout</strong> LED が<span class="c-purple"><strong>紫色</strong></span>に点灯します。</p>
+<p>このエフェクトを利用する場合は、必ずMicro SD Cardを挿入した状態でモジュールを起動してください。<br>
+（SD Cardが挿入されていない場合、または “samples” ディレクトリが存在しない場合はこのエフェクトは選択できません）</p>
+<p>SD Cardには16バンク×16スロット（合計256サンプル）のオーディオファイルを配置することができます。</p>
+<p><strong>Sampler</strong> エフェクトでは、SD Card内に保存したサンプルを、<strong>GATE</strong> Input にトリガー信号が入力されたタイミングで鳴らすことができます。<br>
+また、オーディオ入力信号をリアルタイム録音することも可能です。</p>
+<p>オーディオの長さは SD Card の容量のみによって制限されます。<br>
+（モジュールのメモリ上の制約はありません）</p>
+</div>
+<h3 id="sec-9">3.5.1. SD Card Condition</h3>
+<div class="sec-body lv3">
+<p>利用可能なMicro SD Cardは以下の条件を満たす必要があります:</p>
+<ul><li>容量が32GB以下</li><li>アプリケーションパフォーマンスクラスがA2</li></ul>
+<p>Micro SD Card の動作確認状況は以下です:</p>
+<table>
+<thead>
+<tr><th>Name</th><th style="text-align:center">Confirmation</th></tr>
+</thead>
+<tbody>
+<tr><td>Gigastone 32GB 4K Camera Pro</td><td style="text-align:center">OK (Write &amp; Read)</td></tr>
+</tbody>
+</table>
+</div>
+<h3 id="sec-10">3.5.2. Sample File</h3>
+<div class="sec-body lv3">
+<p>SDカードのルートディレクトリ直下に “<strong>samples</strong>” ディレクトリを作成し、各サンプルファイルを配置します。</p>
+<p>ファイル名は以下のフォーマットに従ってください:</p>
+<p>「バンク番号(1-16)」_「スロット番号(1-16)」.wav</p>
+<p>(例: 1_1.wav, 2_3.wav 等)</p>
+<p>wavファイルは44.1/48/96kHzの16/24bitまたは32bit floatのステレオに対応しています。<br>
+トラック情報などのメタ情報を含むファイルも、そのまま読み込めます <strong>(ver 3)</strong>。</p>
+<p>録音を行った場合は、自動的に対応するwavファイルがSDカード内に作成されます。<br>
+そのときのフォーマットは96kHz&amp;32bit float&amp;ステレオ固定となります。</p>
+<figure style="width:361px"><img src="img/sample_files.png" alt="" loading="lazy"><figcaption>図: サンプルファイル配置例</figcaption></figure>
+<p>テスト用のサンプルファイルは<a href="https://drive.google.com/drive/folders/1RtEmP73VAlpWUNamcl9HS8u_y-INbV0A?usp=sharing">こちら</a>にあります:</p>
+</div>
+<h3 id="sec-11">3.5.3. Operation</h3>
+<div class="sec-body lv3">
+<p><strong>Sampler</strong> エフェクトには <strong>Play</strong> と <strong>Record</strong> の二つのモードがあります。<br>
+初期では <strong>Play</strong> モードになっています。<br>
+<strong>Wind + Sprout</strong> Button を押すことで二つのモードを相互に切り替えることができます。<br>
+現在のモードは <strong>Sprout</strong> LED で点灯状態で判別でき、<strong>Play</strong>モード中は<span class="c-purple"><strong>紫色</strong></span>で<strong>常時点灯</strong>、<strong>Record</strong> モード中は<span class="c-purple"><strong>紫色</strong></span>で<strong>点滅</strong>します。</p>
+</div>
+<h4 id="sec-12">3.5.3.1. Play Mode</h4>
+<div class="sec-body lv4">
+<p><strong>バンク選択</strong></p>
+<p><strong>Wind + Time</strong> Knobでバンクを変更することができます。<br>
+バンク毎に <strong>Time</strong> LED と <strong>Meter</strong> LED の色が変わります。（<span class="c-red"><strong>赤</strong></span>-&gt;<span class="c-dkgreen"><strong>緑</strong></span>-&gt;<span class="c-blue"><strong>青</strong></span>-&gt;<span class="c-dkyellow"><strong>黄</strong></span>-&gt; ...)</p>
+<p><strong>スロット選択</strong></p>
+<p><strong>Time</strong> Knob でスロットを変更することができます。<br>
+選択可能なスロット位置がバンクの色で <strong>Meter</strong> LED に表示されます。<br>
+選択中のスロット位置は明るい色で表示されます。</p>
+<p>また、CV入力によっても選択スロットを変更することができます。</p>
+<p><strong>サンプル再生</strong></p>
+<p><strong>GATE</strong> Input にトリガー信号を入力すると、選択スロットのサンプルを再生します。<br>
+また、L/R Input にオーディオ信号が入力されている場合は、再生中のサンプルの音声とミックスされた信号が出力されます。</p>
+<p>クリックノイズを抑えるため、再生中に再トリガーしたときは前の音から新しい音へ約1ミリ秒のクロスフェードがかかり、サンプルの終わりでは最後の約1ミリ秒がフェードアウトします <strong>(ver 3)</strong>。<br>
+長さは設定ファイルで変更 / 無効にできます (<a href="#sec-26">「5. Settings File (config.ini)」</a>参照)。</p>
+<p><strong>再生速度変更</strong></p>
+<p><strong>Sun</strong> Knob でサンプルの再生スピードを変更できます。<br>
+中間の位置で等速で、左側が減速、右側が加速になります。</p>
+<p><strong>サンプル再生音量変更</strong></p>
+<p><strong>Wet</strong> Knob でサンプル再生音量を変更できます。</p>
+<p><strong>テープサチュレーターエフェクト</strong></p>
+<p><strong>Wind + Sun</strong> Knob でテープサチュレーターエフェクトの量を設定できます。<br>
+テープのよれによるフラッター効果と、帯域フィルターの効果を再現します。<br>
+最小値でエフェクト0%、最大値で100%です。</p>
+<p><strong>リバーブエフェクト</strong></p>
+<p><strong>Wind</strong> + <strong>Wet</strong> Knob でリバーブエフェクトの量を設定できます。<br>
+このリバーブは <strong>FDN Reverb</strong> エフェクトのアルゴリズムを単純化したものです。<br>
+最小値でエフェクト0%、最大値で100%です。</p>
+</div>
+<h4 id="sec-13">3.5.3.2. Record Mode</h4>
+<div class="sec-body lv4">
+<p><strong>入力オーディオ信号のスルー出力</strong></p>
+<p><strong>Play</strong> モードと同様に、入力オーディオ信号は録音中かどうかにかかわらず常にオーディオ出力されます。</p>
+<p><strong>バンク/スロット選択</strong></p>
+<p><strong>Play</strong> モードと同様に <strong>Wind</strong> + <strong>Time</strong> Knob でバンク選択、<strong>Time</strong> Knob でスロット選択が可能です。<br>
+<strong>Play</strong> モードと違い、サンプルが存在しないバンクやスロットも選択可能です。<br>
+(この場合選択スロット位置の <strong>Meter</strong> LED が弱めのバンクカラーで点灯します)</p>
+<p><strong>録音開始/終了</strong></p>
+<p><strong>Sprout</strong> Button を押すと録音状態になり、入力されているオーディオ信号を選択スロット位置に録音開始します。<br>
+録音中は <strong>Sprout</strong> LED が<span class="c-red"><strong>赤色</strong></span>に点灯します。</p>
+<p>再度<strong>Sprout</strong> Button を押すと録音終了し、<strong>Sprout</strong> LEDが<span class="c-purple"><strong>紫点滅</strong></span>状態に戻ります。</p>
+<p>録音可能な長さは、SDカードの空き容量によって決まります。</p>
+<p>また、もう一つの録音開始方法として、<strong>Sprout</strong> Button を押したままの状態で、 <strong>Gate</strong> Input にクロック信号を入力することで、クロック信号に同期して録音開始することができます。<br>
+この場合も、再度 <strong>Sprout</strong> Button を押すと録音終了します。</p>
+<p><strong>リバーブエフェクト</strong></p>
+<p><strong>Play</strong> モードと同様に、<strong>Wind</strong> + <strong>Wet</strong> Knob でリバーブエフェクトの量を設定できます。<br>
+初期設定では、録音されるのは入力された音だけで、リバーブエフェクトは出力にだけかかります。<br>
+設定ファイルで、録音されるサンプルにリバーブエフェクトを含めることもできます (<a href="#sec-26">「5. Settings File (config.ini)」</a>参照)。</p>
+</div>
+<h2 id="sec-14">3.6. String Resonator (ver 3)</h2>
+<div class="sec-body lv2">
+<p>現在のエフェクトが <strong>String Resonator</strong> のとき、<strong>Sprout</strong> LED が<span class="c-emerald"><strong>エメラルドグリーン</strong></span>に点灯します。</p>
+<p><strong>String Resonator</strong> は、入力されたオーディオ信号で仮想的な弦を共鳴させるエフェクトです。<br>
+<strong>GATE</strong> Input のトリガーで弦を弾き (ストラム)、<strong>CV</strong> Input (V/oct) で音程を指定できるので、音源としても使えます。<br>
+Mutable Instruments Rings の Sympathetic Strings モデル (MIT License、<a href="#sec-33">「10. License」</a>参照) をもとに、エレキベースとエレキギターのモードを加えています。</p>
+<p>出力されるのは弦の音だけです (Dry の信号は含まれません)。<br>
+<strong>Meter</strong> LED には出力レベルが<span class="c-emerald"><strong>エメラルドグリーン</strong></span>で表示されます。</p>
+</div>
+<h3 id="sec-15">3.6.1. Voice Mode</h3>
+<div class="sec-body lv3">
+<p><strong>Wind + Time</strong> Knob で弦の構成 (ボイスモード) を選びます。<br>
+ノブの左から順に次の6つのモードがあり、<strong>Wind</strong> Button を押している間は <strong>Time</strong> LED の色で現在のモードが表示されます。</p>
+<table>
+<thead>
+<tr><th>Mode</th><th>Time LED</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td>B</td><td><span class="c-purple"><strong>紫</strong></span></td><td>エレキベース。1ボイス (弦2本)。基準音 C2。<br>アンプ + キャビネットのシミュレーション付き (<a href="#sec-17">「3.6.3. Parameters (B / G)」</a>参照)</td></tr>
+<tr><td>G</td><td><span class="c-blue"><strong>青</strong></span></td><td>エレキギター。4ボイス (1ボイスに弦2本)。基準音 C3。<br>アンプ + キャビネットのシミュレーション付き (<a href="#sec-17">「3.6.3. Parameters (B / G)」</a>参照)</td></tr>
+<tr><td>1</td><td><span class="c-red"><strong>赤</strong></span></td><td>1ボイス (主弦1本 + 共鳴弦7本)。基準音 C3</td></tr>
+<tr><td>2</td><td><span class="c-orange"><strong>橙</strong></span></td><td>2ボイス (1ボイスに主弦1本 + 共鳴弦3本)。基準音 C3</td></tr>
+<tr><td>4</td><td><span class="c-green"><strong>緑</strong></span></td><td>4ボイス (1ボイスに主弦1本 + 共鳴弦1本)。基準音 C3。初期値</td></tr>
+<tr><td>8</td><td><strong>白</strong></td><td>8ボイス (1ボイスに弦1本。共鳴弦なし)。基準音 C3</td></tr>
+</tbody>
+</table>
+<p>基準音は、<strong>CV</strong> Input が 0V (未接続) で <strong>Transpose</strong> が中間の位置のときの音程です。</p>
+<p>ストラムのたびに次のボイスへ順番に切り替わり、それまで鳴っていたボイスはそのまま減衰していきます。<br>
+ボイスモードを切り替えると、鳴っている弦の音は止まります。</p>
+</div>
+<h3 id="sec-16">3.6.2. Parameters (1 / 2 / 4 / 8)</h3>
+<div class="sec-body lv3">
+<p>ボイスモードが 1 / 2 / 4 / 8 のとき、次のパラメータがあります:</p>
+<table>
+<thead>
+<tr><th>Operation</th><th>Name</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td>Time</td><td>Transpose</td><td>音程を半音単位で移調します。<br><br>一番左の位置で -12半音、中間の位置で ±0、一番右の位置で +12半音。</td></tr>
+<tr><td>Sun</td><td>Brightness</td><td>弦の音色の明るさ。<br><br>値が大きいほど高域の多い明るい音になります。</td></tr>
+<tr><td>Wet</td><td>Damping</td><td>弦の減衰時間。<br><br>値が大きいほど長く鳴ります。<br>一番左の位置で約0.07秒、中間の位置で約4.5秒、一番右の付近では減衰しなくなります。</td></tr>
+<tr><td>Wind + Time</td><td>Voice Mode</td><td>ボイスモード (<a href="#sec-15">「3.6.1. Voice Mode」</a>参照)</td></tr>
+<tr><td>Wind + Sun</td><td>Structure / Position</td><td>1 / 2 / 4ボイス (Structure): 共鳴弦の音程の組み合わせ。<br>左側ほど低い音程 (基準音、オクターブ下、5度下など)、右側ほど高い音程 (5度上、オクターブ上、2オクターブ上など) に共鳴弦が調律されます。<br><br>8ボイス (Position): 弦を弾く位置と音を拾う位置。<br>中間の位置で偶数次の倍音が少なくなります。</td></tr>
+<tr><td>Wind + Wet</td><td>Spread</td><td>ステレオの広がり。<br><br>ストラムのたびにボイスを左から右へ順に配置します (1ボイスでは左右交互)。<br>一番左の位置では全てのボイスが中央、一番右の位置で最も広がります。<br>初期値は一番左の位置です。</td></tr>
+<tr><td>Wind ダブルタップ</td><td>Damping Filter</td><td>余韻の高域から先に減衰させるフィルタ (Rings の製品版と同じ減衰) の ON / OFF。<br>OFF にすると余韻の高域が残り、明るい響きになります。<br><br>初期値は ON で、ON の間は <strong>Wind</strong> LED が<span class="c-emerald"><strong>エメラルドグリーン</strong></span>に点灯します。<br>(設定は保存されず、電源を入れ直すと ON に戻ります)</td></tr>
+<tr><td>Wind + Sprout</td><td>Pitch Detection Mode</td><td>ピッチ検出モードの ON / OFF (<a href="#sec-19">「3.6.5. Pitch Detection Mode」</a>参照)</td></tr>
+<tr><td>Wind + Sprout (2秒)</td><td>CV Calibration</td><td>CV Input の校正 (<a href="#sec-20">「3.6.6. CV Calibration」</a>参照)</td></tr>
+</tbody>
+</table>
+<p><strong>Wind</strong> ダブルタップは、<strong>Wind</strong> Button を0.4秒以内に2回短く押す操作です。</p>
+</div>
+<h3 id="sec-17">3.6.3. Parameters (B / G)</h3>
+<div class="sec-body lv3">
+<p>ボイスモードが B (エレキベース) / G (エレキギター) のとき、次のパラメータがあります。</p>
+<p>どちらも1ボイスは2本の弦 (弦の水平方向と垂直方向の振動) でできていて、わずかに異なる音程と減衰で鳴ることで、実際の弦の二段階の減衰やうなりを再現します。<br>
+音は中央に定位します (L / R は同じ信号)。<br>
+B は1ボイスなので、ストラムのたびに同じ弦を弾き直します。</p>
+<table>
+<thead>
+<tr><th>Operation</th><th>Name</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td>Time</td><td>Transpose</td><td>音程を半音単位で移調します (-12 〜 +12半音)。</td></tr>
+<tr><td>Sun</td><td>Hardness</td><td>弾く強さ。<br><br>B: 左側 指 → 中間 ピック → 右側 スラップ<br>G: 左側 柔らかいピッキング → 右側 強いピッキング<br><br>強く弾くほど明るい音になり、アタックで音程がわずかに上がります。右側ではフレットに弦が当たるビビり音が加わります。<br>弾くたびに強さと弾く位置がわずかにばらつきます。</td></tr>
+<tr><td>Wet</td><td>Damping</td><td>弦の減衰時間 (<a href="#sec-16">「3.6.2. Parameters (1 / 2 / 4 / 8)」</a>と同じ)。</td></tr>
+<tr><td>Wind + Time</td><td>Voice Mode</td><td>ボイスモード (<a href="#sec-15">「3.6.1. Voice Mode」</a>参照)</td></tr>
+<tr><td>Wind + Sun</td><td>Pickup Position</td><td>ピックアップの位置。<br><br>左側: ブリッジ寄り (硬く細い音)<br>右側: ブリッジから離れた位置 (太く丸い音)</td></tr>
+<tr><td>Wind + Wet</td><td>Amp Drive</td><td>アンプ + キャビネットのシミュレーションのドライブ量。<br><br>一番左の位置ではアンプを通りません (バイパス、初期値)。右側ほど歪みが強くなります。</td></tr>
+<tr><td>Wind ダブルタップ</td><td>Dispersion</td><td>弦の硬さによる倍音のずれ (非調和性) の ON / OFF。<br>ON で金属的な張りのある音になります。<br><br>初期値は ON で、ON の間は <strong>Wind</strong> LED が B では<span class="c-purple"><strong>紫</strong></span>、G では<span class="c-blue"><strong>青</strong></span>に点灯します。<br>(設定は保存されず、電源を入れ直すと ON に戻ります)</td></tr>
+<tr><td>Wind + Sprout</td><td>Pitch Detection Mode</td><td>ピッチ検出モードの ON / OFF (<a href="#sec-19">「3.6.5. Pitch Detection Mode」</a>参照)</td></tr>
+<tr><td>Wind + Sprout (2秒)</td><td>CV Calibration</td><td>CV Input の校正 (<a href="#sec-20">「3.6.6. CV Calibration」</a>参照)</td></tr>
+</tbody>
+</table>
+</div>
+<h3 id="sec-18">3.6.4. Strum / Pitch / Excitation</h3>
+<div class="sec-body lv3">
+<p><strong>ストラム (GATE Input)</strong></p>
+<p><strong>GATE</strong> Input にトリガー / ゲート信号を入力すると、信号の立ち上がりで次のボイスの弦を弾きます (ストラム)。</p>
+<p>ゲートが40ミリ秒より長く ON のときは、ON の間そのボイスが減衰せずに鳴り続けます。<br>
+OFF にすると <strong>Wet</strong> Knob (Damping) の減衰に戻ります。<br>
+短いトリガーでは <strong>Wet</strong> Knob の減衰のまま鳴ります。</p>
+<p><strong>音程 (CV Input)</strong></p>
+<p><strong>CV</strong> Input は V/oct の音程入力です。<br>
+弦の音程は、基準音 + <strong>Transpose</strong> + CV Input の電圧 (1V = 1オクターブ) で決まります。<br>
+最後にストラムしたボイスの音程は CV Input に追従します。</p>
+<p><strong>CV</strong> Input の精度は<a href="#sec-20">「3.6.6. CV Calibration」</a>で校正できます。</p>
+<p><strong>励振 (L/R Audio Input)</strong></p>
+<p>L/R Input に入力したオーディオ信号で、最後にストラムしたボイスの弦を共鳴させます。<br>
+入力はストラムのたびに L と R が交互に使われます (R Input が未接続のときは L Input の信号が R にも入ります)。</p>
+<p><strong>L</strong> Input が3秒以上無音のときは、内部の励振 (1 / 2 / 4 / 8 はノイズバースト、B / G は指やピックで弾いた波形) でストラムのたびに弦を弾きます。<br>
+<strong>L</strong> Input に音が入ると、すぐに入力信号による共鳴に戻ります。<br>
+<strong>String Resonator</strong> を選択した直後は内部の励振になっています。</p>
+<p><strong>MIDI</strong></p>
+<p>MIDI のノートでも弦を弾けます (<a href="#sec-21">「4. MIDI」</a>参照)。</p>
+</div>
+<h3 id="sec-19">3.6.5. Pitch Detection Mode</h3>
+<div class="sec-body lv3">
+<p><strong>Wind</strong> Button を押しながら <strong>Sprout</strong> Button を押して離すと、ピッチ検出モードの ON / OFF が切り替わります。<br>
+ON の間は <strong>Sprout</strong> LED がゆっくり明滅します。</p>
+<p>ピッチ検出モードでは、<strong>R</strong> Input に入力した単音 (VCO の基本波形など) の音程を検出し、最後にストラムしたボイスの音程がそれに追従します。<br>
+<strong>Transpose</strong> と <strong>CV</strong> Input の電圧は、検出した音程に加算されます。<br>
+励振には常に <strong>L</strong> Input を使います (<strong>L</strong> Input が3秒以上無音のときは内部の励振)。</p>
+<p>ピッチ検出モードは電源を切っても保持されます。ほかのエフェクトに切り替えると OFF になります。</p>
+</div>
+<h3 id="sec-20">3.6.6. CV Calibration</h3>
+<div class="sec-body lv3">
+<p>正確に 1V/oct で追従する VCO を使って、<strong>CV</strong> Input の V/oct の精度 (0V の位置と1オクターブあたりの幅) を校正できます。<br>
+校正値は電源を切っても、ファクトリリセット (<a href="#sec-30">「7. Factory Reset」</a>参照) をしても保持されます。</p>
+<p>準備するもの:</p>
+<ul><li>1V/oct で正確に追従する VCO</li><li>VCO の V/oct 入力に送る CV 源 (キーボード、シーケンサなど) と、その出力を分岐するマルチプル</li></ul>
+<p>手順:</p>
+<ol><li><strong>String Resonator</strong> で <strong>Wind</strong> Button を押しながら <strong>Sprout</strong> Button を2秒長押しします。<br>校正モードに入り、<strong>Sprout</strong> LED が<span class="c-orange"><strong>橙色</strong></span>に点滅し、音が止まります。<strong>Meter</strong> LED の一番上がゆっくり点滅します。</li><li><strong>CV</strong> Input のケーブルを抜いた状態で <strong>Sprout</strong> Button を押します (0V の測定)。<br><strong>Meter</strong> LED の一番上が点灯します。</li><li>CV 源の出力を分岐して <strong>CV</strong> Input と VCO の V/oct 入力の両方に入力し、VCO の出力を <strong>R</strong> Input に入力します。</li><li>CV 源の電圧を変えるたびに <strong>Sprout</strong> Button を押します (1回の測定は0.2秒)。<br>測定するたびに <strong>Meter</strong> LED が上から1つずつ点灯します。<br>2点以上、1オクターブ以上の範囲で測定してください (4〜5点、例えば 0V 〜 4V を推奨)。<br>音程を検出できなかったときは <strong>Meter</strong> LED が<span class="c-red"><strong>赤</strong></span>く光り、その点は使われません。</li><li><strong>Wind</strong> Button を短く押すと、校正値を計算して保存します。<br>成功すると <strong>Meter</strong> LED が全て<span class="c-green"><strong>緑</strong></span>に、失敗すると<span class="c-red"><strong>赤</strong></span>に0.5秒点灯し、通常の表示に戻ります (失敗したときは前の校正値のまま)。</li></ol>
+<p>途中でやめるときは <strong>Wind</strong> Button を2秒長押しします (何も保存されません)。<br>
+校正値を消して工場出荷時の値に戻すときは、校正モードに入って測定をせずに <strong>Wind</strong> Button を短く押します。</p>
+</div>
+<h1 id="sec-21">4. MIDI (ver 3)</h1>
+<div class="sec-body lv1">
+<p>MIDI メッセージを受信して、パラメータの操作 (全てのエフェクト)、<strong>String Resonator</strong> の演奏、<strong>Repeater</strong> のクロック同期ができます。<br>
+MIDI の入出力には、別売の MIDI 拡張モジュール <strong>MIDI CoM+</strong> を背面の <strong>MIDI Expand Connector</strong> に接続します。<br>
+接続するときは、ケーブルの赤いラインを基板の “RED” の表示の側に合わせてください (逆向きに挿さないでください)。</p>
+<p>受信する MIDI チャンネルの初期値は1です。SDカードの設定ファイルで変更できます (<a href="#sec-26">「5. Settings File (config.ini)」</a>参照)。</p>
+</div>
+<h2 id="sec-22">4.1. Control Change</h2>
+<div class="sec-body lv2">
+<p>全てのエフェクトで、次の CC により6つのパラメータを操作できます:</p>
+<table>
+<thead>
+<tr><th style="text-align:center">CC</th><th>Parameter</th></tr>
+</thead>
+<tbody>
+<tr><td style="text-align:center">16</td><td>Time</td></tr>
+<tr><td style="text-align:center">17</td><td>Sun</td></tr>
+<tr><td style="text-align:center">18</td><td>Wet</td></tr>
+<tr><td style="text-align:center">19</td><td>Wind + Time</td></tr>
+<tr><td style="text-align:center">20</td><td>Wind + Sun</td></tr>
+<tr><td style="text-align:center">21</td><td>Wind + Wet</td></tr>
+</tbody>
+</table>
+<p>CC の値 0〜127 がノブの一番左から一番右の位置に対応します。<br>
+細かく変化するパラメータは、CC の値の間をなめらかにつないで変化します。</p>
+<p>CC で変えた値は保存されず、電源を入れ直すとノブの値に戻ります。また、ノブの LED には表示されません。<br>
+CC で値を変えた後にノブを動かすと、ノブが現在の値の位置を通過したところからノブの操作が有効になります。</p>
+</div>
+<h2 id="sec-23">4.2. String Resonator</h2>
+<div class="sec-body lv2">
+<p><strong>String Resonator</strong> では、次のメッセージで演奏できます:</p>
+<table>
+<thead>
+<tr><th>Message</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td>Note On / Off</td><td>ノートの音程 (+ <strong>Transpose</strong>) で次のボイスの弦を弾きます。<strong>CV</strong> Input の電圧は加算されません。<br><br>ノートを40ミリ秒より長く押さえていると、押さえている間そのボイスは減衰せずに鳴り続け、Note Off で <strong>Wet</strong> Knob の減衰に戻ります。<br>和音も弾けます (同時に鳴るのはボイスの数まで)。</td></tr>
+<tr><td>Velocity</td><td><strong>Sun</strong> (Brightness、B / G では Hardness) の値に加算されます。<br>64 で変化なし、1 でノブの範囲の半分だけ小さく、127 で半分だけ大きくなります。<br><br>設定ファイルで無効にできます (<a href="#sec-26">「5. Settings File (config.ini)」</a>参照)。</td></tr>
+<tr><td>Pitch Bend</td><td>全てのボイスの音程を ±2半音の範囲で変えます。</td></tr>
+</tbody>
+</table>
+<p>ベロシティを固定値で送るシーケンサでは、ベロシティを64にするか、設定ファイルでベロシティを無効にしてください。</p>
+</div>
+<h2 id="sec-24">4.3. Repeater</h2>
+<div class="sec-body lv2">
+<p><strong>Repeater</strong> は MIDI Clock に同期できます:</p>
+<table>
+<thead>
+<tr><th>Message</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td>Clock</td><td>6クロック (16分音符) を1ステップとして同期します (<strong>GATE</strong> Input のクロック1回と同じ)。</td></tr>
+<tr><td>Start</td><td>次のクロックがステップの区切りになります。</td></tr>
+</tbody>
+</table>
+<p><strong>GATE</strong> Input にクロックが入力されているときは、<strong>GATE</strong> Input が優先されます。<br>
+<strong>GATE</strong> Input のクロックが2秒以上 (遅いクロックでは間隔の4倍以上) 途切れると、MIDI Clock に同期します。</p>
+</div>
+<h2 id="sec-25">4.4. MIDI Thru</h2>
+<div class="sec-body lv2">
+<p>受信した MIDI Clock / Start / Continue / Stop は、そのまま MIDI 出力に送られます (全てのエフェクト)。</p>
+</div>
+<h1 id="sec-26">5. Settings File (config.ini) (ver 3)</h1>
+<div class="sec-body lv1">
+<p>SDカードのルートディレクトリに “<strong>config.ini</strong>” というテキストファイルを置くと、設定を変更できます。<br>
+ファイルは電源投入時に一度だけ読み込まれます (ファイルを変更したときは、モジュールの電源を入れ直してください)。<br>
+ファイルがないとき、または値が読み取れないときは初期値になります。</p>
+<pre><code>[midi]
+; 1..16
+channel = 1
+; on / off
+velocity = on
+
+[sampler]
+; 0..10 (ms), 0 = off
+declick_ms = 1.0
+; on / off
+rec_reverb = off</code></pre>
+<table>
+<thead>
+<tr><th>Section</th><th>Key</th><th>Value</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td>[midi]</td><td>channel</td><td>1〜16 (初期値 1)</td><td>受信する MIDI チャンネル</td></tr>
+<tr><td>[midi]</td><td>velocity</td><td>on / off (初期値 on)</td><td><strong>String Resonator</strong> でベロシティを使うかどうか (<a href="#sec-23">「4.2. String Resonator」</a>参照)</td></tr>
+<tr><td>[sampler]</td><td>declick_ms</td><td>0〜10、小数可 (初期値 1.0)</td><td><strong>Sampler</strong> の再トリガー時のクロスフェードと、サンプルの終わりのフェードアウトの長さ (ミリ秒)。0 で無効 (<a href="#sec-12">「3.5.3.1. Play Mode」</a>参照)</td></tr>
+<tr><td>[sampler]</td><td>rec_reverb</td><td>on / off (初期値 off)</td><td><strong>Sampler</strong> の Record Mode で、録音されるサンプルにリバーブエフェクトを含めるかどうか (<a href="#sec-13">「3.5.3.2. Record Mode」</a>参照)</td></tr>
+</tbody>
+</table>
+<p>コメントは、行の先頭に <code>;</code> か <code>#</code> を書いた別の行に書いてください。<br>
+値の後ろにコメントを書くと、その値は読み取れず初期値になります。</p>
+</div>
+<h1 id="sec-27">6. Firmware Update</h1>
+<div class="sec-body lv1">
+<p>ファームウェアアップデートには二つの方法があります。<br>
+もしマイクロ SDカードをお持ちであれば、簡単にアップデートができます。<br>
+もしお持ちでない場合は、USB-DFUを使っての更新も可能です。ただし、別途DFUプログラムを用意する必要があります。</p>
+<p>ver 2.0 以前から ver 3.0 に更新すると、保存されていた設定 (選択中のエフェクトとパラメータの値) は初期化されます。</p>
+</div>
+<h2 id="sec-28">6.1. Update by SD Card</h2>
+<div class="sec-body lv2">
+<p>手順:</p>
+<ol><li>ファームウェアのバイナリファイル (“Sprout_firm_v3_0.bin”など) をSDカードのルートディレクトリに配置します。</li><li>ラックの電源を落とします。</li><li>Sproutモジュールをラックから外し、SDカードを挿入します。</li><li>Sproutモジュールをマウントし直します。</li><li>ラックの電源を入れると、自動的にファームウェアアップデートが行われます。</li><li>アップデートが終わったら、SDカードからファームウェアのバイナリファイルを削除してください。<br>(残しておくと、電源を入れるたびに書き込みが行われます)</li></ol>
+</div>
+<h2 id="sec-29">6.2. Update by USB-DFU</h2>
+<div class="sec-body lv2">
+<p>はじめに、USB-DFUでのアップデートのために、DFUプログラムを準備する必要があります。<br>
+例えば, “dfu-util” (<a href="https://dfu-util.sourceforge.net/">https://dfu-util.sourceforge.net/</a>) や “zadig”(<a href="https://zadig.akeo.ie/">https://zadig.akeo.ie/</a>)  等のプログラムがあります。</p>
+<p>手順:</p>
+<ol><li>PCとDaisy SeedをUSBケーブルで接続します。</li><li>Daisy Seed の Reset ボタンを押します。</li><li>ボタンを押してから2.5秒以内にファームウェア(“Sprout_firm_v3_0.bin”など)をDFUプログラムでアップロードします。 (2.5秒間はLEDが点滅状態になります)</li></ol>
+</div>
+<h1 id="sec-30">7. Factory Reset</h1>
+<div class="sec-body lv1">
+<p><strong>Sprout</strong> Button と <strong>Wind</strong> Button を両方押しながら電源を入れると、保存されている設定 (選択中のエフェクト、パラメータの値、<strong>String Resonator</strong> のピッチ検出モード) が工場出荷時の状態に戻ります。<br>
+全ての LED が<span class="c-green"><strong>緑色</strong></span>に点灯したら、ボタンを離してください。</p>
+<p><strong>CV</strong> Input の校正値 (<a href="#sec-20">「3.6.6. CV Calibration」</a>参照) は消えません。</p>
+</div>
+<h1 id="sec-31">8. Warranty</h1>
+<div class="sec-body lv1">
+<p>購入より1年間、ユーザーの意図的な改造/破壊による故障、不注意による落下などによる故障あるいは電源等コネクタの間違った接続による故障を除き、基本無償にて修理を行います。<br>
+(ただしモジュール発送時の送料はご負担いただくことがあります)</p>
+<p>修理依頼時は購入店のレシート、もしくは購入時の明細などを証明書類としてご提出ください。</p>
+</div>
+<h1 id="sec-32">9. Contact</h1>
+<div class="sec-body lv1">
+<p>mail: <a href="mailto:centrevillage@gmail.com">centrevillage@gmail.com</a><br>
+site: <a href="https://centrevillage.net">https://centrevillage.net</a></p>
+</div>
+<h1 id="sec-33">10. License</h1>
+<div class="sec-body lv1">
+<p><strong>String Resonator</strong> は、Mutable Instruments Rings のソースコード (MIT License) をもとにしています。</p>
+<ul><li>Mutable Instruments Rings (<a href="https://github.com/pichenettes/eurorack">https://github.com/pichenettes/eurorack</a>): Copyright 2015 Emilie Gillet.</li><li>stmlib (<a href="https://github.com/pichenettes/stmlib">https://github.com/pichenettes/stmlib</a>): Copyright 2014 Emilie Gillet.</li></ul>
+<pre><code>Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.</code></pre>
+</div>
+</article>
+</main>
+</body>
+</html>

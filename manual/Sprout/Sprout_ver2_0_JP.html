@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sprout ver2.0 manual</title>
+<style>
+:root {
+  --fg: #1c2430; --muted: #61707f; --bg: #ffffff; --soft: #f4f6f9;
+  --line: #d9e0e8; --accent: #3b6ea5; --accent-soft: #eaf1f8;
+  --link: #1155cc; --rule: #000000; --th: #d9d9d9;
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0; color: var(--fg); background: #eef1f5;
+  font-family: Arial,"Meiryo","Hiragino Kaku Gothic ProN","Hiragino Sans",
+               "Noto Sans JP","Yu Gothic","YuGothic",sans-serif;
+  line-height: 1.45; font-size: 16px;
+}
+.page {
+  max-width: 880px; margin: 0 auto; background: var(--bg);
+  padding: 48px 56px 96px; box-shadow: 0 1px 24px rgba(20,30,45,.08);
+}
+.doc-header { text-align: center; border-bottom: 2px solid var(--line); padding-bottom: 28px; margin-bottom: 8px; }
+.title-image { max-width: 100%; height: auto; margin: 0 auto 18px; display: block; }
+.doc-title { font-size: 2.0rem; line-height: 1.4; margin: .2em 0; border: 0; padding: 0; }
+.doc-author { color: #666666; font-size: 1.1rem; margin-bottom: 18px; }
+
+h1, h2, h3, h4 { line-height: 1.45; scroll-margin-top: 12px; }
+h1 { font-size: 1.67rem; margin: 2.2em 0 .8em; padding-bottom: .3em; border-bottom: 2px solid var(--accent); }
+h2 { font-size: 1.33rem; margin: 1.9em 0 .6em; padding-left: .55em; border-left: 5px solid var(--accent); }
+h3 { font-size: 1.17rem; margin: 1.5em 0 .5em; color: #434343; }
+h4 { font-size: 1rem; margin: 1.3em 0 .4em 1.2em; color: #666666; }
+/* the body of the third level and deeper is indented (the Google Docs manual
+   indents every body under its heading; levels 1-2 stand out by size) */
+.sec-body.lv3 { margin-left: 1.2em; }
+.sec-body.lv4 { margin-left: 2.4em; }
+
+p { margin: .45em 0; }
+a { color: var(--link); }
+hr { border: 0; border-top: 1px solid var(--line); margin: 1.8em 0; }
+strong { font-weight: 700; }
+code {
+  font-family: "SFMono-Regular",Menlo,Consolas,"Courier New",monospace;
+  font-size: .88em; background: var(--soft); border: 1px solid var(--line);
+  border-radius: 4px; padding: .08em .38em;
+}
+pre {
+  background: var(--soft); border: 1px solid var(--line); border-radius: 6px;
+  padding: 14px 16px; margin: 1.1em 0; overflow-x: auto;
+  line-height: 1.55; font-size: .85rem;
+}
+pre code {
+  background: none; border: 0; padding: 0; border-radius: 0;
+  font-size: inherit; white-space: pre;
+}
+
+ul, ol { margin: .45em 0; padding-left: 1.7em; }
+li { margin: .1em 0; }
+li > ul, li > ol { margin: .25em 0; }
+
+table { border-collapse: collapse; width: 100%; margin: 1.2em 0; font-size: .95rem; }
+th, td { border: 1px solid var(--rule); padding: .4em .6em; vertical-align: top; line-height: 1.35; }
+th { background: var(--th); font-weight: 700; text-align: center; }
+
+figure { margin: 1.4em auto; max-width: 560px; text-align: center; }
+figure img { max-width: 100%; height: auto; }
+figcaption { margin-top: .3em; font-size: .95rem; }
+/* side by side, shrinking in proportion to the given widths; stacked on phones */
+.figrow { display: flex; justify-content: center; align-items: flex-end; gap: 24px; margin: 1.4em 0; }
+.figrow figure { margin: 0; flex: 0 1 auto; min-width: 0; }
+@media (max-width: 560px) { .figrow { flex-wrap: wrap; } }
+.img-placeholder {
+  max-width: 560px; margin: 1.4em auto; padding: 26px 18px; text-align: center;
+  color: var(--muted); background: repeating-linear-gradient(135deg,#f7f9fb,#f7f9fb 10px,#eef2f6 10px,#eef2f6 20px);
+  border: 2px dashed var(--line); border-radius: 8px; font-size: .9rem;
+}
+.img-placeholder-tag {
+  display: inline-block; margin-right: .6em; padding: .1em .55em; font-size: .72rem;
+  font-weight: 700; color: #fff; background: var(--muted); border-radius: 4px; vertical-align: middle;
+}
+
+.toc {
+  background: var(--soft); border: 1px solid var(--line); border-radius: 8px;
+  padding: 18px 24px; margin: 28px 0 8px; font-size: .93rem;
+}
+.toc-title { font-weight: 700; font-size: 1.02rem; margin-bottom: .5em; }
+.toc ul { list-style: none; margin: .2em 0; padding-left: 1.1em; }
+.toc > ul { padding-left: 0; }
+.toc li { margin: .2em 0; }
+.toc a { text-decoration: none; }
+.toc a:hover { text-decoration: underline; }
+
+@media (max-width: 700px) {
+  .page { padding: 28px 18px 64px; }
+  body { font-size: 15px; }
+}
+/* Wide screens: two-column split — a persistent (sticky) table of contents on
+   the left (~1/3), the article on the right (~2/3); the title/header spans the
+   full width on top. Scoped to `screen` so print (below) and narrow screens
+   keep the single-column flow with the TOC inserted after the title. */
+@media screen and (min-width: 1100px) {
+  .page {
+    max-width: 1280px;
+    display: grid;
+    grid-template-columns: minmax(240px, 1fr) minmax(0, 2fr);
+    grid-template-areas: "header header" "toc content";
+    column-gap: 48px;
+    align-items: start;
+  }
+  .doc-header { grid-area: header; }
+  .toc {
+    grid-area: toc;
+    position: sticky; top: 24px;
+    max-height: calc(100vh - 48px); overflow-y: auto;
+    margin: 28px 0 0;
+  }
+  .content { grid-area: content; min-width: 0; }
+}
+@media print {
+  body { background: #fff; }
+  .page { box-shadow: none; max-width: none; padding: 0; }
+  a { color: var(--fg); }
+  h1, h2, h3 { page-break-after: avoid; }
+  figure, .img-placeholder, table, tr, pre { page-break-inside: avoid; }
+  .toc { page-break-after: always; }
+}
+.c-green { color: #6aa84f; }
+.c-dkgreen { color: #38761d; }
+.c-cyan { color: #45818e; }
+.c-ltcyan { color: #76a5af; }
+.c-yellow { color: #f1c232; }
+.c-dkyellow { color: #bf9000; }
+.c-skyblue { color: #3c78d8; }
+.c-blue { color: #0000ff; }
+.c-purple { color: #9900ff; }
+.c-red { color: #ff0000; }
+.c-gray { color: #666666; }
+tr.row-sun td { background: #fff2cc; }
+tr.row-wet td { background: #c9daf8; }
+tr.row-sprout td { background: #d9ead3; }
+tr.row-wind td { background: #d9d2e9; }
+tr.row-io td { background: #f3f3f3; }
+</style>
+</head>
+<body>
+<main class="page">
+<header class="doc-header"><h1 class="doc-title">Sprout ver2.0 manual</h1><div class="doc-author">manufactured by centrevillage (<a href="https://centrevillage.net">https://centrevillage.net</a>)</div><img class="title-image" src="img/title_panel.png" alt="" style="width:121px"></header>
+<nav class="toc"><div class="toc-title">目次</div><ul><li><a href="#sec-1">1. Introduction</a></li><li><a href="#sec-2">2. Hardware Interface</a></li><li><a href="#sec-3">3. Factory Program</a><ul><li><a href="#sec-4">3.1. Tape Echo</a></li><li><a href="#sec-5">3.2. Modern Delay</a></li><li><a href="#sec-6">3.3. FDN Reverb</a></li><li><a href="#sec-7">3.4. Repeater (ver 2.0)</a></li><li><a href="#sec-8">3.5. Sampler (ver 2.0)</a><ul><li><a href="#sec-9">3.5.1. SD Card Condition</a></li><li><a href="#sec-10">3.5.2. Sample File</a></li><li><a href="#sec-11">3.5.3. Operation</a><ul><li><a href="#sec-12">3.5.3.1. Play Mode</a></li><li><a href="#sec-13">3.5.3.2. Record Mode</a></li></ul></li></ul></li></ul></li><li><a href="#sec-14">4. Firmware Update</a><ul><li><a href="#sec-15">4.1. Update by SD Card</a></li><li><a href="#sec-16">4.2. Update by USB-DFU</a></li></ul></li><li><a href="#sec-17">5. Warranty</a></li><li><a href="#sec-18">6. Contact</a></li></ul></nav>
+<article class="content">
+<h1 id="sec-1">1. Introduction</h1>
+<div class="sec-body lv1">
+<p><strong>Sprout</strong> は<a href="https://www.electro-smith.com/daisy/daisy">"Electro-Smith Daisy Seed”</a>をコアとする高解像度 (96kHz/24bit) のマルチエフェクトプロセッサーです。</p>
+<p>プリセットで以下のエフェクトが利用できます。</p>
+<ul><li>Tape Echo (テープのよれまで再現したテープエミュレーションディレイ)</li><li>Modern Delay (最大10秒のディレイタイム。ピッチシフトや逆再生が可能)</li><li>FDN Reverb (反響音のピッチシフト (いわゆるシマー）が可能)</li></ul>
+<p>ver 2.0:</p>
+<ul><li>Repeater (入力された音を記録し、範囲を指定してリピートするエフェクト)</li><li>Sampler (16x16のスロットにサンプルを配置し、Gate入力時に再生)</li></ul>
+<p>さらに、独自のカスタムエフェクトを作成してアップロードすることが可能です。</p>
+<p>詳細はGitHubのプロジェクトページを参照してください:  <a href="https://github.com/centrevillage/SproutExample">https://github.com/centrevillage/SproutExample</a></p>
+</div>
+<h1 id="sec-2">2. Hardware Interface</h1>
+<div class="sec-body lv1">
+<div class="figrow"><figure style="width:424px"><img src="img/front_annotation.png" alt="" loading="lazy"><figcaption>FRONT</figcaption></figure><figure style="width:306px"><img src="img/back_annotation.png" alt="" loading="lazy"><figcaption style="width:33%">BACK</figcaption></figure></div>
+</div>
+<h1 id="sec-3">3. Factory Program</h1>
+<div class="sec-body lv1">
+<p>出荷時プログラムでは下記の5つのエフェクトが利用できます。:</p>
+<ul><li>Tape Echo</li><li>Modern Delay</li><li>FDN Reverb</li><li><strong>Repeater (ver 2.0)</strong></li><li><strong>Sampler (ver 2.0)</strong></li></ul>
+<p>それぞれの操作子/表示器/入出力は以下の機能を持っています:</p>
+<table>
+<thead>
+<tr><th>Name</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td>Time Knob/LED</td><td>時間に関するパラメータを設定します。<br>LEDの輝度で現在のパラメータ値が表示されます。<br><br><span class="c-purple"><strong>Wind</strong></span> ボタンを押しながら操作することでセカンダリパラメータにアクセスできます。</td></tr>
+<tr class="row-sun"><td>Sun Knob/LED</td><td>フィードバックに関するパラメータを設定します。<br>LEDの輝度で現在のパラメータ値が表示されます。<br><br><span class="c-purple"><strong>Wind</strong></span> ボタンを押しながら操作することでセカンダリパラメータにアクセスできます</td></tr>
+<tr class="row-wet"><td>Wet Knob/LED</td><td>Dry/Wet バランスを設定します。<br>LEDの輝度で現在のパラメータ値が表示されます。<br><br><span class="c-purple"><strong>Wind</strong></span> ボタンを押しながら操作することでセカンダリパラメータにアクセスできます。</td></tr>
+<tr class="row-sprout"><td>Sprout Button/LED</td><td>現在のエフェクト種類を変更します。<br>LEDの色で現在のエフェクトを表示。</td></tr>
+<tr class="row-wind"><td>Wind Button/LED</td><td>タップテンポ。<br><br>このボタンを押しながらノブを操作することでセカンダリパラメータにアクセスできます。</td></tr>
+<tr class="row-io"><td>Meter LED</td><td>出力レベルをdBメータとして表示します。<br><br>メーターの色は、ピーク位置以外は現在のエフェクトに応じて変化します。</td></tr>
+<tr class="row-io"><td>Gate Input</td><td>クロック同期入力。<br><br>クロックパルスが入力されると、時間に関係するパラメータが同期されます。<br><br>入力が2秒以上ない場合、自動的に同期がオフになります。<br><br>* FDN Reverb では無効になります</td></tr>
+<tr class="row-io"><td>CV input</td><td>Timeパラメータのモジュレーション</td></tr>
+<tr class="row-io"><td>L/R Audio Input</td><td>L/R オーディオ入力</td></tr>
+<tr class="row-io"><td>L/R Audio Output</td><td>L/R オーディオ出力</td></tr>
+</tbody>
+</table>
+</div>
+<h2 id="sec-4">3.1. Tape Echo</h2>
+<div class="sec-body lv2">
+<p>現在のエフェクトが <strong>Tape Echo</strong> のとき、<strong>Sprout</strong> LED が<span class="c-green"><strong>緑色</strong></span>に点灯します。<br>
+次のパラメータがあります:</p>
+<table>
+<thead>
+<tr><th>Operation</th><th>Name</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td>Time</td><td>Delay Time</td><td>ディレイタイム（20ミリ秒 から 1秒まで)</td></tr>
+<tr><td>Sun</td><td>Feedback</td><td>フィードバック率 (最大 110%)</td></tr>
+<tr><td>Wet</td><td>Dry/Wet</td><td>Dry (direct signal) / Wet (effect signal) バランス。<br>一番左の位置ではDry=100%、Wet=0%。<br>中間の位置でDry=100%、Wet=100%。<br>一番右の位置でDry=0%、Wet=100%。</td></tr>
+<tr><td>Wind + Time</td><td>Tone</td><td>フィードバックトーンとサチュレーション。<br><br>左側: 暗いサチュレーションサウンド<br>中間: 明瞭なサウンド<br>右側: 明るいサチュレーションサウンド</td></tr>
+<tr><td>Wind + Sun</td><td>Flutter</td><td>フラッター効果のエミュレーション。<br><br>値が大きいほどピッチが不安定になります。</td></tr>
+<tr><td>Wind + Wet</td><td>Spread</td><td>ダブルトラッキング効果をもとにしたステレオエフェクト。<br>同時にPing Pong効果によりフィードバック音が左右に分散します。</td></tr>
+</tbody>
+</table>
+</div>
+<h2 id="sec-5">3.2. Modern Delay</h2>
+<div class="sec-body lv2">
+<p>現在のエフェクトが <strong>Modern Delay</strong> のとき、 <strong>Sprout</strong> LED が<span class="c-blue"><strong>青色</strong></span>に点灯します。<br>
+次のパラメータがあります:</p>
+<table>
+<thead>
+<tr><th>Operation</th><th>Name</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td>Time</td><td>Delay Time</td><td>ディレイタイム（20ミリ秒 から 10秒まで)</td></tr>
+<tr><td>Sun</td><td>Feedback</td><td>フィードバック率 (最大 110%)</td></tr>
+<tr><td>Wet</td><td>Dry/Wet</td><td>Dry (direct signal) / Wet (effect signal) バランス。<br>一番左の位置ではDry=100%、Wet=0%。<br>中間の位置でDry=100%、Wet=100%。<br>一番右の位置でDry=0%、Wet=100%。</td></tr>
+<tr><td>Wind + Time</td><td>Tone</td><td>フィードバックトーン。<br><br>左側: 暗いサウンド<br>中間: 明瞭なサウンド<br>右側: 明るいサウンド</td></tr>
+<tr><td>Wind + Sun</td><td>Pitch Shift</td><td>フィードバック音のピッチシフト量。<br><br>左側: -1 から -12 半音のピッチシフト<br>中間: +0 ピッチシフトなし<br>右側: +1 から +12 半音のピッチシフト</td></tr>
+<tr><td>Wind + Wet</td><td>Reverse</td><td>フィードバック音の逆再生。<br><br>左側: 逆再生<br>右側: 正再生</td></tr>
+</tbody>
+</table>
+</div>
+<h2 id="sec-6">3.3. FDN Reverb</h2>
+<div class="sec-body lv2">
+<p>現在のエフェクトが <strong>FDN</strong>* <strong>Reverb</strong> のとき、 <strong>Sprout</strong> LED が<span class="c-yellow"><strong>黄色</strong></span>に点灯します。<br>
+* FDN = Feedback Delay Network</p>
+<p>次のパラメータがあります:</p>
+<table>
+<thead>
+<tr><th>Operation</th><th>Name</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td>Time</td><td>Size</td><td>ルームサイズ。<br><br>値が大きいほど、残響音がまばらになり、よりディレイエフェクトに近くなります。</td></tr>
+<tr><td>Sun</td><td>Decay</td><td>値が大きいほど、残響音の減衰時間が長くなります。</td></tr>
+<tr><td>Wet</td><td>Dry/Wet</td><td>Dry (direct signal) / Wet (effect signal) バランス。<br>一番左の位置ではDry=100%、Wet=0%。<br>中間の位置でDry=100%、Wet=100%。<br>一番右の位置でDry=0%、Wet=100%。</td></tr>
+<tr><td>Wind + Time</td><td>Tone</td><td>残響音のトーン。<br><br>左側: 暗いサウンド<br>中間: 明瞭なサウンド<br>右側: 明るいサウンド</td></tr>
+<tr><td>Wind + Sun</td><td>Pitch Shift</td><td>残響音のピッチシフト。<br>(いわゆるシマー)<br><br>左側: -1 から -12 半音のピッチシフト<br>中間: +0 ピッチシフトなし<br>右側: +1 から +12 半音のピッチシフト</td></tr>
+<tr><td>Wind + Wet</td><td>Diffusion</td><td>残響音の拡散量。<br><br>値が大きいほど、残響音が空間中に拡散します。</td></tr>
+</tbody>
+</table>
+</div>
+<h2 id="sec-7">3.4. Repeater (ver 2.0)</h2>
+<div class="sec-body lv2">
+<p>現在のエフェクトが <strong>Repeater</strong> のとき、 <strong>Sprout</strong> LED が<span class="c-skyblue"><strong>水色</strong></span>に点灯します。<br>
+このエフェクトを利用するときは、<strong>GATE</strong> Input に同期用のクロック信号を入力してください。</p>
+<p><strong>Repeater</strong> エフェクトには <strong>Listen</strong> と <strong>Play</strong> の二つの状態があります。<br>
+初期は <strong>Listen</strong> 状態になっています。</p>
+<p><strong>Listen</strong> 状態のとき、入力されたオーディオ信号は最大16ステップ分の長さで記録され続けます。<br>
+また、入力オーディオ信号がそのまま出力されます。</p>
+<p><strong>Play</strong> 状態のときは <strong>Listen</strong> 状態の時に記録したオーディオを再生します。</p>
+<p><strong>Wind</strong> Button を押すと、 <strong>Listen</strong> と <strong>Play</strong> の状態が相互に切り替わります。</p>
+<p>現在の状態は、<strong>Meter</strong> LED の点灯状態で把握することができます。<br>
+<strong>Listen</strong> 状態のときは再生範囲を表す色が<span class="c-blue"><strong>青</strong></span>か<span class="c-purple"><strong>紫色</strong></span>(逆再生時)です。<br>
+<strong>Play</strong> 状態のときは 再生範囲を表す色が<span class="c-dkgreen"><strong>緑</strong></span>か<span class="c-red"><strong>赤色</strong></span>(逆再生時)です。<br>
+また、再生中のステップ位置が明るく点灯します。</p>
+<p>また、以下の操作によって再生するオーディオ位置や速度などを変更することができます:</p>
+<table>
+<thead>
+<tr><th>Operation</th><th>Name</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td>Time</td><td>Speed</td><td>再生速度を変更します。<br><br>左側の位置では再生速度が遅くなり、中間の位置で等速、右側の位置では再生速度が速くなります。<br><br>再生速度を変えた場合にも常にクロック同期されます。</td></tr>
+<tr><td>Sun</td><td>Start Position</td><td>再生開始位置を変更します。</td></tr>
+<tr><td>Wet</td><td>Length</td><td>再生ステップ長さを設定します。<br>ステップ長さは正負の値が設定可能です。<br><br>ノブが右側の位置では正の値が設定可能で、オーディオを順再生します。<br>ノブが左側の位置では負の値が設定可能でオーディオを逆再生します。</td></tr>
+<tr><td>Wind + Sun</td><td>Random Start Position</td><td><strong>Play</strong> 状態での再生開始位置をランダムに移動します。<br>値が大きいほど、遠くのステップに移動しやすくなります。</td></tr>
+<tr><td>Wind + Wet</td><td>Dry / Repeat Balance</td><td><strong>Play</strong> 状態での入力オーディオ信号と再生オーディオ信号の音量バランスを設定します。<br><br>一番左の位置ではDry=100%、Repeat=0%。<br>中間の位置でDry=100%、Repeat=100%。<br>一番右の位置でDry=0%、Repeat=100%。</td></tr>
+</tbody>
+</table>
+</div>
+<h2 id="sec-8">3.5. Sampler (ver 2.0)</h2>
+<div class="sec-body lv2">
+<p>現在のエフェクトが <strong>Sampler</strong> のとき、 <strong>Sprout</strong> LED が<span class="c-purple"><strong>紫色</strong></span>に点灯します。</p>
+<p>このエフェクトを利用する場合は、必ずMicro SD Cardを挿入した状態でモジュールを起動してください。<br>
+（SD Cardが挿入されていない場合、または “samples” ディレクトリが存在しない場合はこのエフェクトは選択できません）</p>
+<p>SD Cardには16バンク×16スロット（合計256サンプル）のオーディオファイルを配置することができます。</p>
+<p><strong>Sampler</strong> エフェクトでは、SD Card内に保存したサンプルを、<strong>GATE</strong> Input にトリガー信号が入力されたタイミングで鳴らすことができます。<br>
+また、オーディオ入力信号をリアルタイム録音することも可能です。</p>
+<p>オーディオの長さは SD Card の容量のみによって制限されます。<br>
+（モジュールのメモリ上の制約はありません）</p>
+</div>
+<h3 id="sec-9">3.5.1. SD Card Condition</h3>
+<div class="sec-body lv3">
+<p>利用可能なMicro SD Cardは以下の条件を満たす必要があります:</p>
+<ul><li>容量が32GB以下</li><li>アプリケーションパフォーマンスクラスがA2</li></ul>
+<p>Micro SD Card の動作確認状況は以下です:</p>
+<table>
+<thead>
+<tr><th>Name</th><th style="text-align:center">Confirmation</th></tr>
+</thead>
+<tbody>
+<tr><td>Gigastone 32GB 4K Camera Pro</td><td style="text-align:center">OK (Write &amp; Read)</td></tr>
+</tbody>
+</table>
+</div>
+<h3 id="sec-10">3.5.2. Sample File</h3>
+<div class="sec-body lv3">
+<p>SDカードのルートディレクトリ直下に “<strong>samples</strong>” ディレクトリを作成し、各サンプルファイルを配置します。</p>
+<p>ファイル名は以下のフォーマットに従ってください:</p>
+<p>「バンク番号(1-16)」_「スロット番号(1-16)」.wav</p>
+<p>(例: 1_1.wav, 2_3.wav 等)</p>
+<p>wavファイルは44.1/48/96kHzの16/24bitまたは32bit floatのステレオに対応しています。<br>
+ただし、waveファイル中のトラック情報などのメタ情報は可能な限り削除してください。<br>
+メタ情報があると正常に読み込みができない場合があります。<br>
+(Audacity などのツールでwaveファイル中のメタ情報を削除することができます）</p>
+<p>録音を行った場合は、自動的に対応するwavファイルがSDカード内に作成されます。<br>
+そのときのフォーマットは96kHz&amp;32bit float&amp;ステレオ固定となります。</p>
+<figure style="width:361px"><img src="img/sample_files.png" alt="" loading="lazy"><figcaption>図: サンプルファイル配置例</figcaption></figure>
+<p>テスト用のサンプルファイルは<a href="https://drive.google.com/drive/folders/1RtEmP73VAlpWUNamcl9HS8u_y-INbV0A?usp=sharing">こちら</a>にあります:</p>
+</div>
+<h3 id="sec-11">3.5.3. Operation</h3>
+<div class="sec-body lv3">
+<p><strong>Sampler</strong> エフェクトには <strong>Play</strong> と <strong>Record</strong> の二つのモードがあります。<br>
+初期では <strong>Play</strong> モードになっています。<br>
+<strong>Wind + Sprout</strong> Button を押すことで二つのモードを相互に切り替えることができます。<br>
+現在のモードは <strong>Sprout</strong> LED で点灯状態で判別でき、<strong>Play</strong>モード中は<span class="c-purple"><strong>紫色</strong></span>で<strong>常時点灯</strong>、<strong>Record</strong> モード中は<span class="c-purple"><strong>紫色</strong></span>で<strong>点滅</strong>します。</p>
+</div>
+<h4 id="sec-12">3.5.3.1. Play Mode</h4>
+<div class="sec-body lv4">
+<p><strong>バンク選択</strong></p>
+<p><strong>Wind + Time</strong> Knobでバンクを変更することができます。<br>
+バンク毎に <strong>Time</strong> LED と <strong>Meter</strong> LED の色が変わります。（<span class="c-red"><strong>赤</strong></span>-&gt;<span class="c-dkgreen"><strong>緑</strong></span>-&gt;<span class="c-blue"><strong>青</strong></span>-&gt;<span class="c-dkyellow"><strong>黄</strong></span>-&gt; ...)</p>
+<p><strong>スロット選択</strong></p>
+<p><strong>Time</strong> Knob でスロットを変更することができます。<br>
+選択可能なスロット位置がバンクの色で <strong>Meter</strong> LED に表示されます。<br>
+選択中のスロット位置は明るい色で表示されます。</p>
+<p>また、CV入力によっても選択スロットを変更することができます。</p>
+<p><strong>サンプル再生</strong></p>
+<p><strong>GATE</strong> Input にトリガー信号を入力すると、選択スロットのサンプルを再生します。<br>
+また、L/R Input にオーディオ信号が入力されている場合は、再生中のサンプルの音声とミックスされた信号が出力されます。</p>
+<p><strong>再生速度変更</strong></p>
+<p><strong>Sun</strong> Knob でサンプルの再生スピードを変更できます。<br>
+中間の位置で等速で、左側が減速、右側が加速になります。</p>
+<p><strong>サンプル再生音量変更</strong></p>
+<p><strong>Wet</strong> Knob でサンプル再生音量を変更できます。</p>
+<p><strong>テープサチュレーターエフェクト</strong></p>
+<p><strong>Wind + Sun</strong> Knob でテープサチュレーターエフェクトの量を設定できます。<br>
+テープのよれによるフラッター効果と、帯域フィルターの効果を再現します。<br>
+最小値でエフェクト0%、最大値で100%です。</p>
+<p><strong>リバーブエフェクト</strong></p>
+<p><strong>Wind</strong> + <strong>Wet</strong> Knob でリバーブエフェクトの量を設定できます。<br>
+このリバーブは <strong>FDN Reverb</strong> エフェクトのアルゴリズムを単純化したものです。<br>
+最小値でエフェクト0%、最大値で100%です。</p>
+</div>
+<h4 id="sec-13">3.5.3.2. Record Mode</h4>
+<div class="sec-body lv4">
+<p><strong>入力オーディオ信号のスルー出力</strong></p>
+<p><strong>Play</strong> モードと同様に、入力オーディオ信号は録音中かどうかにかかわらず常にオーディオ出力されます。</p>
+<p><strong>バンク/スロット選択</strong></p>
+<p><strong>Play</strong> モードと同様に <strong>Wind</strong> + <strong>Time</strong> Knob でバンク選択、<strong>Time</strong> Knob でスロット選択が可能です。<br>
+<strong>Play</strong> モードと違い、サンプルが存在しないバンクやスロットも選択可能です。<br>
+(この場合選択スロット位置の <strong>Meter</strong> LED が弱めのバンクカラーで点灯します)</p>
+<p><strong>録音開始/終了</strong></p>
+<p><strong>Sprout</strong> Button を押すと録音状態になり、入力されているオーディオ信号を選択スロット位置に録音開始します。<br>
+録音中は <strong>Sprout</strong> LED が<span class="c-red"><strong>赤色</strong></span>に点灯します。</p>
+<p>再度<strong>Sprout</strong> Button を押すと録音終了し、<strong>Sprout</strong> LEDが<span class="c-purple"><strong>紫点滅</strong></span>状態に戻ります。</p>
+<p>録音可能な長さは、SDカードの空き容量によって決まります。</p>
+<p>また、もう一つの録音開始方法として、<strong>Sprout</strong> Button を押したままの状態で、 <strong>Gate</strong> Input にクロック信号を入力することで、クロック信号に同期して録音開始することができます。<br>
+この場合も、再度 <strong>Sprout</strong> Button を押すと録音終了します。</p>
+<p><strong>リバーブエフェクト</strong></p>
+<p><strong>Play</strong> モードと同様に、<strong>Wind</strong> + <strong>Wet</strong> Knob でリバーブエフェクトの量を設定できます。<br>
+また、録音されるサンプルにもリバーブエフェクトが反映されます。</p>
+</div>
+<h1 id="sec-14">4. Firmware Update</h1>
+<div class="sec-body lv1">
+<p>ファームウェアアップデートには二つの方法があります。<br>
+もしマイクロ SDカードをお持ちであれば、簡単にアップデートができます。<br>
+もしお持ちでない場合は、USB-DFUを使っての更新も可能です。ただし、別途DFUプログラムを用意する必要があります。</p>
+</div>
+<h2 id="sec-15">4.1. Update by SD Card</h2>
+<div class="sec-body lv2">
+<p>手順:</p>
+<ol><li>ファームウェアのバイナリファイル (“Sprout_factory_v2_0.bin”など) をSDカードのルートディレクトリに配置します。</li><li>ラックの電源を落とします。</li><li>Sproutモジュールをラックから外し、SDカードを挿入します。</li><li>Sproutモジュールをマウントし直します。</li><li>ラックの電源を入れると、自動的にファームウェアアップデートが行われます。</li></ol>
+</div>
+<h2 id="sec-16">4.2. Update by USB-DFU</h2>
+<div class="sec-body lv2">
+<p>はじめに、USB-DFUでのアップデートのために、DFUプログラムを準備する必要があります。<br>
+例えば, “dfu-util” (<a href="https://dfu-util.sourceforge.net/">https://dfu-util.sourceforge.net/</a>) や “zadig”(<a href="https://zadig.akeo.ie/">https://zadig.akeo.ie/</a>)  等のプログラムがあります。</p>
+<p>手順:</p>
+<ol><li>PCとDaisy SeedをUSBケーブルで接続します。</li><li>Daisy Seed の Reset ボタンを押します。</li><li>ボタンを押してから2.5秒以内にファームウェア(“Sprout_factory_v2_0.bin”など)をDFUプログラムでアップロードします。 (2.5秒間はLEDが点滅状態になります)</li></ol>
+</div>
+<h1 id="sec-17">5. Warranty</h1>
+<div class="sec-body lv1">
+<p>購入より1年間、ユーザーの意図的な改造/破壊による故障、不注意による落下などによる故障あるいは電源等コネクタの間違った接続による故障を除き、基本無償にて修理を行います。<br>
+(ただしモジュール発送時の送料はご負担いただくことがあります)</p>
+<p>修理依頼時は購入店のレシート、もしくは購入時の明細などを証明書類としてご提出ください。</p>
+</div>
+<h1 id="sec-18">6. Contact</h1>
+<div class="sec-body lv1">
+<p>mail: <a href="mailto:centrevillage@gmail.com">centrevillage@gmail.com</a><br>
+site: <a href="https://centrevillage.net">https://centrevillage.net</a></p>
+</div>
+</article>
+</main>
+</body>
+</html>

@@ -40,13 +40,24 @@ ver 2.0 で以下のエフェクトが追加されました。
 - Repeater (ビートシンクしたルーパーエフェクト)
 - Sampler (SD/MMC Card上のサンプルを再生したり録音できるサンプラー)
 
-[マニュアル](https://docs.google.com/document/d/1apVUUiGIaIQViQSAks7RVHKDTl2Ry1V78VCpQpplp_M/edit?usp=sharing)
+ver 3.0 で以下のエフェクトが追加されました。
+
+- String Resonator (MI Rings由来の共鳴弦レゾネーターと新規開発のエレキベース/エレキギターレゾネーター)
+
+[マニュアル ver3.0](/manual/Sprout/Sprout_ver3_0_JP.html)
+[マニュアル ver2.0](/manual/Sprout/Sprout_ver2_0_JP.html)
 
 独自のカスタムエフェクトを開発する場合は、下記のGitHubプロジェクトをベースとすることができます。
 
 [GitHub](https://github.com/centrevillage/SproutExample)
 
 ### ファームウェア
+
+#### [firmware ver 3.0](https://drive.google.com/file/d/1c6ZFdKX9AgIY9rmsGaPvOaj0oQbV9rAV/view?usp=sharing)
+  - String Resonator エフェクトの追加
+  - MIDI 入力のサポート
+  - Tape Echo/Modern Delay/FDN Reverb の音質調整
+  - 細かなバグ修正
 
 #### [firmware ver 2.0](https://drive.google.com/file/d/16vZ40cNdy22Fc4jyhvY9BkWEhvdq3BGR/view?usp=sharing)
   - Repeater
@@ -72,13 +83,24 @@ The following effects have been added in version 2.0:
 - Repeater (Beat-synced looper effect)
 - Sampler (A sampler that can play and record samples from an SD/MMC card)
 
-[Manual](https://docs.google.com/document/d/142V0yAuUvugsJmAiCbDv9kSxcT6qSRdWkPANhdt3ZkA/edit?usp=sharing)
+The following effects have been added in version 3.0:
+
+- String Resonator (A sympathetic string (from MI Rings) and a newly developed electric bass/guitar string)
+
+[Manual ver3.0](/manual/Sprout/Sprout_ver3_0_EN.html)
+[Manual ver2.0](/manual/Sprout/Sprout_ver2_0_EN.html)
 
 If you want to develop your own custom effects, you can use the following GitHub projects as a starting point:
 
 [GitHub](https://github.com/centrevillage/SproutExample)
 
 ### Firmware
+
+#### [firmware ver 3.0](https://drive.google.com/file/d/1c6ZFdKX9AgIY9rmsGaPvOaj0oQbV9rAV/view?usp=sharing)
+  - new fx: String Resonator
+  - add MIDI IN support
+  - tuning sound quality for Tape Echo/Modern Delay/FDN Reverb
+  - minor bug fixes
 
 #### [firmware ver 2.0](https://drive.google.com/file/d/16vZ40cNdy22Fc4jyhvY9BkWEhvdq3BGR/view?usp=sharing)
   - Repeater 

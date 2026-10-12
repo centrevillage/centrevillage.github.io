@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sprout ver3.0 manual</title>
+<style>
+:root {
+  --fg: #1c2430; --muted: #61707f; --bg: #ffffff; --soft: #f4f6f9;
+  --line: #d9e0e8; --accent: #3b6ea5; --accent-soft: #eaf1f8;
+  --link: #1155cc; --rule: #000000; --th: #d9d9d9;
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0; color: var(--fg); background: #eef1f5;
+  font-family: Arial,"Meiryo","Hiragino Kaku Gothic ProN","Hiragino Sans",
+               "Noto Sans JP","Yu Gothic","YuGothic",sans-serif;
+  line-height: 1.45; font-size: 16px;
+}
+.page {
+  max-width: 880px; margin: 0 auto; background: var(--bg);
+  padding: 48px 56px 96px; box-shadow: 0 1px 24px rgba(20,30,45,.08);
+}
+.doc-header { text-align: center; border-bottom: 2px solid var(--line); padding-bottom: 28px; margin-bottom: 8px; }
+.title-image { max-width: 100%; height: auto; margin: 0 auto 18px; display: block; }
+.doc-title { font-size: 2.0rem; line-height: 1.4; margin: .2em 0; border: 0; padding: 0; }
+.doc-author { color: #666666; font-size: 1.1rem; margin-bottom: 18px; }
+
+h1, h2, h3, h4 { line-height: 1.45; scroll-margin-top: 12px; }
+h1 { font-size: 1.67rem; margin: 2.2em 0 .8em; padding-bottom: .3em; border-bottom: 2px solid var(--accent); }
+h2 { font-size: 1.33rem; margin: 1.9em 0 .6em; padding-left: .55em; border-left: 5px solid var(--accent); }
+h3 { font-size: 1.17rem; margin: 1.5em 0 .5em; color: #434343; }
+h4 { font-size: 1rem; margin: 1.3em 0 .4em 1.2em; color: #666666; }
+/* the body of the third level and deeper is indented (the Google Docs manual
+   indents every body under its heading; levels 1-2 stand out by size) */
+.sec-body.lv3 { margin-left: 1.2em; }
+.sec-body.lv4 { margin-left: 2.4em; }
+
+p { margin: .45em 0; }
+a { color: var(--link); }
+hr { border: 0; border-top: 1px solid var(--line); margin: 1.8em 0; }
+strong { font-weight: 700; }
+code {
+  font-family: "SFMono-Regular",Menlo,Consolas,"Courier New",monospace;
+  font-size: .88em; background: var(--soft); border: 1px solid var(--line);
+  border-radius: 4px; padding: .08em .38em;
+}
+pre {
+  background: var(--soft); border: 1px solid var(--line); border-radius: 6px;
+  padding: 14px 16px; margin: 1.1em 0; overflow-x: auto;
+  line-height: 1.55; font-size: .85rem;
+}
+pre code {
+  background: none; border: 0; padding: 0; border-radius: 0;
+  font-size: inherit; white-space: pre;
+}
+
+ul, ol { margin: .45em 0; padding-left: 1.7em; }
+li { margin: .1em 0; }
+li > ul, li > ol { margin: .25em 0; }
+
+table { border-collapse: collapse; width: 100%; margin: 1.2em 0; font-size: .95rem; }
+th, td { border: 1px solid var(--rule); padding: .4em .6em; vertical-align: top; line-height: 1.35; }
+th { background: var(--th); font-weight: 700; text-align: center; }
+
+figure { margin: 1.4em auto; max-width: 560px; text-align: center; }
+figure img { max-width: 100%; height: auto; }
+figcaption { margin-top: .3em; font-size: .95rem; }
+/* side by side, shrinking in proportion to the given widths; stacked on phones */
+.figrow { display: flex; justify-content: center; align-items: flex-end; gap: 24px; margin: 1.4em 0; }
+.figrow figure { margin: 0; flex: 0 1 auto; min-width: 0; }
+@media (max-width: 560px) { .figrow { flex-wrap: wrap; } }
+.img-placeholder {
+  max-width: 560px; margin: 1.4em auto; padding: 26px 18px; text-align: center;
+  color: var(--muted); background: repeating-linear-gradient(135deg,#f7f9fb,#f7f9fb 10px,#eef2f6 10px,#eef2f6 20px);
+  border: 2px dashed var(--line); border-radius: 8px; font-size: .9rem;
+}
+.img-placeholder-tag {
+  display: inline-block; margin-right: .6em; padding: .1em .55em; font-size: .72rem;
+  font-weight: 700; color: #fff; background: var(--muted); border-radius: 4px; vertical-align: middle;
+}
+
+.toc {
+  background: var(--soft); border: 1px solid var(--line); border-radius: 8px;
+  padding: 18px 24px; margin: 28px 0 8px; font-size: .93rem;
+}
+.toc-title { font-weight: 700; font-size: 1.02rem; margin-bottom: .5em; }
+.toc ul { list-style: none; margin: .2em 0; padding-left: 1.1em; }
+.toc > ul { padding-left: 0; }
+.toc li { margin: .2em 0; }
+.toc a { text-decoration: none; }
+.toc a:hover { text-decoration: underline; }
+
+@media (max-width: 700px) {
+  .page { padding: 28px 18px 64px; }
+  body { font-size: 15px; }
+}
+/* Wide screens: two-column split — a persistent (sticky) table of contents on
+   the left (~1/3), the article on the right (~2/3); the title/header spans the
+   full width on top. Scoped to `screen` so print (below) and narrow screens
+   keep the single-column flow with the TOC inserted after the title. */
+@media screen and (min-width: 1100px) {
+  .page {
+    max-width: 1280px;
+    display: grid;
+    grid-template-columns: minmax(240px, 1fr) minmax(0, 2fr);
+    grid-template-areas: "header header" "toc content";
+    column-gap: 48px;
+    align-items: start;
+  }
+  .doc-header { grid-area: header; }
+  .toc {
+    grid-area: toc;
+    position: sticky; top: 24px;
+    max-height: calc(100vh - 48px); overflow-y: auto;
+    margin: 28px 0 0;
+  }
+  .content { grid-area: content; min-width: 0; }
+}
+@media print {
+  body { background: #fff; }
+  .page { box-shadow: none; max-width: none; padding: 0; }
+  a { color: var(--fg); }
+  h1, h2, h3 { page-break-after: avoid; }
+  figure, .img-placeholder, table, tr, pre { page-break-inside: avoid; }
+  .toc { page-break-after: always; }
+}
+.c-green { color: #6aa84f; }
+.c-dkgreen { color: #38761d; }
+.c-cyan { color: #45818e; }
+.c-ltcyan { color: #76a5af; }
+.c-yellow { color: #f1c232; }
+.c-dkyellow { color: #bf9000; }
+.c-skyblue { color: #3c78d8; }
+.c-blue { color: #0000ff; }
+.c-purple { color: #9900ff; }
+.c-red { color: #ff0000; }
+.c-gray { color: #666666; }
+.c-emerald { color: #2e9e5b; }
+.c-orange { color: #e69138; }
+.c-pink { color: #d5578a; }
+.c-ygreen { color: #7cb342; }
+tr.row-sun td { background: #fff2cc; }
+tr.row-wet td { background: #c9daf8; }
+tr.row-sprout td { background: #d9ead3; }
+tr.row-wind td { background: #d9d2e9; }
+tr.row-io td { background: #f3f3f3; }
+</style>
+</head>
+<body>
+<main class="page">
+<header class="doc-header"><h1 class="doc-title">Sprout ver3.0 manual</h1><div class="doc-author">manufactured by centrevillage (<a href="https://centrevillage.net">https://centrevillage.net</a>)</div><img class="title-image" src="img/title_panel.png" alt="" style="width:121px"></header>
+<nav class="toc"><div class="toc-title">Contents</div><ul><li><a href="#sec-1">1. Introduction</a></li><li><a href="#sec-2">2. Hardware Interface</a></li><li><a href="#sec-3">3. Factory Program</a><ul><li><a href="#sec-4">3.1. Tape Echo</a></li><li><a href="#sec-5">3.2. Modern Delay</a></li><li><a href="#sec-6">3.3. FDN Reverb</a></li><li><a href="#sec-7">3.4. Repeater (ver 2.0)</a></li><li><a href="#sec-8">3.5. Sampler (ver 2.0)</a><ul><li><a href="#sec-9">3.5.1. SD Card Condition</a></li><li><a href="#sec-10">3.5.2. Sample File</a></li><li><a href="#sec-11">3.5.3. Operation</a><ul><li><a href="#sec-12">3.5.3.1. Play Mode</a></li><li><a href="#sec-13">3.5.3.2. Record Mode</a></li></ul></li></ul></li><li><a href="#sec-14">3.6. String Resonator (ver 3)</a><ul><li><a href="#sec-15">3.6.1. Voice Mode</a></li><li><a href="#sec-16">3.6.2. Parameters (1 / 2 / 4 / 8)</a></li><li><a href="#sec-17">3.6.3. Parameters (B / G)</a></li><li><a href="#sec-18">3.6.4. Strum / Pitch / Excitation</a></li><li><a href="#sec-19">3.6.5. Pitch Detection Mode</a></li><li><a href="#sec-20">3.6.6. CV Calibration</a></li></ul></li></ul></li><li><a href="#sec-21">4. MIDI (ver 3)</a><ul><li><a href="#sec-22">4.1. Control Change</a></li><li><a href="#sec-23">4.2. String Resonator</a></li><li><a href="#sec-24">4.3. Repeater</a></li><li><a href="#sec-25">4.4. MIDI Thru</a></li></ul></li><li><a href="#sec-26">5. Settings File (config.ini) (ver 3)</a></li><li><a href="#sec-27">6. Firmware Update</a><ul><li><a href="#sec-28">6.1. Update by SD Card</a></li><li><a href="#sec-29">6.2. Update by USB-DFU</a></li></ul></li><li><a href="#sec-30">7. Factory Reset</a></li><li><a href="#sec-31">8. Warranty</a></li><li><a href="#sec-32">9. Contact</a></li><li><a href="#sec-33">10. License</a></li></ul></nav>
+<article class="content">
+<h1 id="sec-1">1. Introduction</h1>
+<div class="sec-body lv1">
+<p><strong>Sprout</strong> is a high-resolution (96kHz/24bit) multi-effects processor based on the <a href="https://www.electro-smith.com/daisy/daisy">"Electro-Smith Daisy Seed”</a>.</p>
+<p>The preset effects available on <strong>Sprout</strong> are as follows:</p>
+<ul><li>Tape Echo (Tape Emulation Delay, includes wow &amp; flutter for a unique tone effect)</li><li>Modern Delay (up to 10 seconds, with pitch shift and reverse capabilities)</li><li>FDN Reverb (with pitch shift functionality)</li></ul>
+<p>ver2.0:</p>
+<ul><li>Repeater (Record the input sound and repeat it by specifying the range)</li><li>Sampler (Place samples in 16x16 slots and play them when the Gate is input)</li></ul>
+<p>ver3.0:</p>
+<ul><li>String Resonator (Resonates virtual strings with the input sound. Includes electric bass / electric guitar modes)</li><li>MIDI input (Parameter control by CC, playing notes on the String Resonator, MIDI Clock sync for the Repeater)</li></ul>
+<p>Additionally, if you are a programmer, you have the ability to program your own custom effects. You can refer to the GitHub page for Sprout's programming examples at: <a href="https://github.com/centrevillage/SproutExample">https://github.com/centrevillage/SproutExample</a></p>
+</div>
+<h1 id="sec-2">2. Hardware Interface</h1>
+<div class="sec-body lv1">
+<div class="figrow"><figure style="width:424px"><img src="img/front_annotation.png" alt="" loading="lazy"><figcaption>FRONT</figcaption></figure><figure style="width:306px"><img src="img/back_annotation.png" alt="" loading="lazy"><figcaption style="width:33%">BACK</figcaption></figure></div>
+</div>
+<h1 id="sec-3">3. Factory Program</h1>
+<div class="sec-body lv1">
+<p>Factory Program has following 6 effects:</p>
+<ul><li>Tape Echo</li><li>Modern Delay</li><li>FDN Reverb</li><li><strong>Repeater (ver 2.0)</strong></li><li><strong>Sampler (ver 2.0)</strong></li><li><strong>String Resonator (ver 3)</strong></li></ul>
+<p>And each control on <strong>Sprout</strong> has the following functions:</p>
+<table>
+<thead>
+<tr><th>Name</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td>Time Knob/LED</td><td>Adjust the time-like parameter.<br>The LED indicates the current value by its level of brightness.<br><br>If you press and hold the <span class="c-purple"><strong>Wind</strong></span> button, it allows you to modify the secondary parameter.</td></tr>
+<tr class="row-sun"><td>Sun Knob/LED</td><td>Adjust the feedback-like parameter.<br>The LED indicates the current value by its level of brightness.<br><br>If you press and hold the <span class="c-purple"><strong>Wind</strong></span> button, it allows you to modify the secondary parameter.</td></tr>
+<tr class="row-wet"><td>Wet Knob/LED</td><td>Adjust the dry/wet balance.<br>The LED indicates the current value by its level of brightness.<br><br>If you press and hold the <span class="c-purple"><strong>Wind</strong></span> button, it allows you to modify the secondary parameter.</td></tr>
+<tr class="row-sprout"><td>Sprout Button/LED</td><td>Change the current preset.<br>The LED indicates the current effect by the color.</td></tr>
+<tr class="row-wind"><td>Wind Button/LED</td><td>Tap-tempo function.<br><br>If you press and hold this button, it allows you to access the secondary parameter.<br><br>* On the String Resonator, a double tap switches a tone option instead of the tap tempo <strong>(ver 3)</strong></td></tr>
+<tr class="row-io"><td>Meter LED</td><td>Indicate the output level as dB meter.<br><br>The color of the meter, excluding the peak position, changes based on the current effect.</td></tr>
+<tr class="row-io"><td>Gate Input</td><td>Clock Sync input.<br><br>If the input receives a clock pulse, the time-based parameter synchronizes to this clock.<br><br>Responds to the rising edge of the clock pulse <strong>(ver 3)</strong><br><br>If the input doesn't receive a clock pulse for 2 seconds, the clock sync function gets disabled.<br><br>* Disabled for FDN Reverb<br>* On the String Resonator, it is the trigger input that plucks the strings <strong>(ver 3)</strong></td></tr>
+<tr class="row-io"><td>CV input</td><td>Modulate the Time parameter.<br><br>* On the String Resonator, it is the pitch input (V/oct) <strong>(ver 3)</strong></td></tr>
+<tr class="row-io"><td>L/R Audio Input</td><td>L/R Audio Input</td></tr>
+<tr class="row-io"><td>L/R Audio Output</td><td>L/R Audio Output</td></tr>
+</tbody>
+</table>
+</div>
+<h2 id="sec-4">3.1. Tape Echo</h2>
+<div class="sec-body lv2">
+<p>If the current effect is <strong>Tape Echo</strong>, <strong>Sprout</strong> LED color is <span class="c-green">green</span>.<br>
+This effect has following parameters:</p>
+<table>
+<thead>
+<tr><th>Operation</th><th>Name</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td>Time</td><td>Delay Time</td><td>Delay Time from about 50 msec to 1 sec<br><br>When the delay time changes, the tape speed follows smoothly, like the inertia of a tape motor <strong>(ver 3)</strong></td></tr>
+<tr><td>Sun</td><td>Feedback</td><td>Feedback rate up to 110%<br><br>The feedback starts to saturate at about the same knob position whatever the <strong>Wind + Time</strong> (Tone) setting <strong>(ver 3)</strong></td></tr>
+<tr><td>Wet</td><td>Dry/Wet</td><td>Dry (direct signal) / Wet (effect signal) balance from Dry=100% and Wet=0% to Dry = 0% and Wet = 100%.<br>The center position is Dry=100% and Wet=100%.</td></tr>
+<tr><td>Wind + Time</td><td>Tone</td><td>Feedback Tone and Saturation.<br><br>Left position: Darker saturated tone<br>Center position: Clean tone<br>Right position: Brighter saturated tone</td></tr>
+<tr><td>Wind + Sun</td><td>Flutter</td><td>Flutter effect emulation.<br><br>The higher the value, the more unstable the pitch.</td></tr>
+<tr><td>Wind + Wet</td><td>Spread</td><td>Double-Tracking like stereo effect with ping pong.<br><br>The higher the value, the echo sound is more spread in the stereo image.</td></tr>
+</tbody>
+</table>
+</div>
+<h2 id="sec-5">3.2. Modern Delay</h2>
+<div class="sec-body lv2">
+<p>If the current effect is <strong>Modern Delay</strong>, <strong>Sprout</strong> LED color is <span class="c-blue">blue</span>.<br>
+This effect has following parameters:</p>
+<table>
+<thead>
+<tr><th>Operation</th><th>Name</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td>Time</td><td>Delay Time</td><td>Delay Time from about 50 msec to 10 sec</td></tr>
+<tr><td>Sun</td><td>Feedback</td><td>Feedback rate up to 110%<br><br>Tuned so that raising the feedback does not make only the highs or the sub-lows oscillate first <strong>(ver 3)</strong></td></tr>
+<tr><td>Wet</td><td>Dry/Wet</td><td>Dry (direct signal) / Wet (effect signal) balance from Dry=100% and Wet=0% to Dry = 0% and Wet = 100%.<br>The center position is Dry=100% and Wet=100%.</td></tr>
+<tr><td>Wind + Time</td><td>Tone</td><td>Feedback Tone.<br><br>Left position: Darker tone<br>Center position: Clean tone<br>Right position: Brighter tone</td></tr>
+<tr><td>Wind + Sun</td><td>Pitch Shift</td><td>Pitch shift the feedback sound.<br><br>Left position: -1 to -12 semitones pitch shift<br>Center position: no pitch shift<br>Right position: +1 to +12 semitones pitch shift</td></tr>
+<tr><td>Wind + Wet</td><td>Reverse</td><td>Reverse play the feedback sound.<br><br>Left position: Reverse<br>Right position: Forward</td></tr>
+</tbody>
+</table>
+</div>
+<h2 id="sec-6">3.3. FDN Reverb</h2>
+<div class="sec-body lv2">
+<p>If the current effect is <strong>FDN</strong>* <strong>Reverb</strong>, <strong>Sprout</strong> LED color is <span class="c-yellow">yellow</span>.<br>
+* FDN = Feedback Delay Network</p>
+<p>This effect has following parameters:</p>
+<table>
+<thead>
+<tr><th>Operation</th><th>Name</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td>Time</td><td>Size</td><td>Room Size.<br><br>The higher the value, the reflection sound is more sparse and similar with delay sound.</td></tr>
+<tr><td>Sun</td><td>Decay</td><td>The higher the value, the reflection sound has  more long decay time.</td></tr>
+<tr><td>Wet</td><td>Dry/Wet</td><td>Dry (direct signal) / Wet (effect signal) balance from Dry=100% and Wet=0% to Dry = 0% and Wet = 100%.<br>The center position is Dry=100% and Wet=100%.</td></tr>
+<tr><td>Wind + Time</td><td>Tone</td><td>Left position: Darker reflection tone<br>Center position: Clean reflection tone<br>Right position: Brighter reflection tone</td></tr>
+<tr><td>Wind + Sun</td><td>Shimmer <strong>(ver 3)</strong></td><td>Mixes the reflection sound pitch-shifted one octave up / down into the reflections.<br>(The so-called “Shimmer”)<br><br>Left position: One octave down<br>Center position: No shimmer<br>Right position: One octave up<br><br>The farther from the center position, the more shimmer.</td></tr>
+<tr><td>Wind + Wet</td><td>Diffusion</td><td>Diffusion for the reflection sound.<br><br>The higher the value, the reflection sound is more diffuse in space</td></tr>
+</tbody>
+</table>
+</div>
+<h2 id="sec-7">3.4. Repeater (ver 2.0)</h2>
+<div class="sec-body lv2">
+<p>When the current effect is <strong>Repeater</strong>, the Sprout LED will <span class="c-skyblue"><strong>light blue</strong></span>.<br>
+When using this effect, input a sync clock pulse into the GATE Input.<br>
+It can also sync to MIDI Clock <strong>(ver 3)</strong> (see <a href="#sec-24">Section 4.3</a>).</p>
+<p>The <strong>Repeater</strong> effect has two states: <strong>Listen</strong> and <strong>Play</strong>.<br>
+It is initially in the <strong>Listen</strong> state.</p>
+<p>When in <strong>Listen</strong> state, the input audio signal is continuously recorded for a maximum of 16 steps.<br>
+Also, the input audio signal is output as is.</p>
+<p>When in the <strong>Play</strong> state, it plays back the audio that was recorded when in the <strong>Listen</strong> state.</p>
+<p>Pressing the <strong>Wind</strong> Button toggles between <strong>Listen</strong> and <strong>Play</strong> states.</p>
+<p>The current state can be determined by the lighting state of the <strong>Meter</strong> LED.<br>
+When in <strong>Listen</strong> state, the color representing the playback range is <span class="c-blue"><strong>blue</strong></span> or <span class="c-purple"><strong>purple</strong></span> (for reverse playback).<br>
+When in <strong>Play</strong> state, the color that indicates the playback range is <span class="c-dkgreen"><strong>green</strong></span> or <span class="c-red"><strong>red</strong></span> (for reverse playback).<br>
+Additionally, the step position currently being played will be brightly lit.</p>
+<p>You can also change the playback position, speed, etc. of the audio by doing the following:</p>
+<table>
+<thead>
+<tr><th>Operation</th><th>Name</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td>Time</td><td>Speed</td><td>Change the playback speed.<br><br>The left position slows the playback speed, the middle position keeps the original speed, and the right position speeds the playback speed up.<br><br>The clock is always synchronized even when the playback speed is changed.</td></tr>
+<tr><td>Sun</td><td>Start Position</td><td>Changes the playback start position.</td></tr>
+<tr><td>Wet</td><td>Length</td><td>Sets the playback step length.<br>The step length can be set to a positive or negative value.<br><br>The right position of the knob plays the audio forward.<br>The left position of the knob plays the audio backwards.</td></tr>
+<tr><td>Wind + Sun</td><td>Random Start Position</td><td>Randomly moves the playback start position in <strong>Play</strong> state.<br>The higher the value, the easier it is to move to a far step.</td></tr>
+<tr><td>Wind + Wet</td><td>Dry / Repeat Balance</td><td>Sets the volume balance between the input audio and the playback audio in the <strong>Play</strong> state.<br><br>At the leftmost position, Dry=100%, Repeat=0%.<br>At the middle position, Dry=100%, Repeat=100%.<br>At the rightmost position, Dry=0%, Repeat=100%.</td></tr>
+</tbody>
+</table>
+</div>
+<h2 id="sec-8">3.5. Sampler (ver 2.0)</h2>
+<div class="sec-body lv2">
+<p>When the current effect is Sampler, the Sprout LED lights <span class="c-purple"><strong>purple</strong></span>.</p>
+<p>When using this effect, be sure to start the module with a Micro SD card inserted.<br>
+(If no SD card is inserted or the “samples” directory does not exist, this effect cannot be selected.)</p>
+<p>The SD card can hold 16 banks x 16 slots (256 samples in total) of audio files.</p>
+<p>The Sampler effect allows you to play samples stored on an SD card when a trigger signal is received at the <strong>GATE</strong> Input.<br>
+It is also possible to record the audio input signal.</p>
+<p>The audio length is limited only by the memory size of the SD card.</p>
+</div>
+<h3 id="sec-9">3.5.1. SD Card Condition</h3>
+<div class="sec-body lv3">
+<p>Micro SD cards that meet the following requirements are accepted:</p>
+<ul><li>Memory size is 32GB or less.</li><li>Application Performance Class is A2</li></ul>
+<p>The Micro SD card compatibility is as follows:</p>
+<table>
+<thead>
+<tr><th>Name</th><th style="text-align:center">Confirmation</th></tr>
+</thead>
+<tbody>
+<tr><td>Gigastone 32GB 4K Camera Pro</td><td style="text-align:center">OK (Write &amp; Read)</td></tr>
+</tbody>
+</table>
+</div>
+<h3 id="sec-10">3.5.2. Sample File</h3>
+<div class="sec-body lv3">
+<p>Create a “<strong>samples</strong>” directory under the root directory of the SD card and place each sample file in it.</p>
+<p>The file name must follow this format:</p>
+<p>“Bank Number(1-16)”_”Slot Number(1-16)”.wav</p>
+<p>(ex: 1_1.wav, 2_3.wav, etc ...)</p>
+<p>Supports 44.1/48/96kHz 16/24-bit or 32-bit float stereo wav files.<br>
+Files that contain meta information such as track information can be loaded as they are <strong>(ver 3)</strong>.</p>
+<p>When you record, a corresponding wav file will be automatically created on the SD card.<br>
+The format will be fixed at 96kHz, 32-bit float, and stereo.</p>
+<figure style="width:361px"><img src="img/sample_files.png" alt="" loading="lazy"></figure>
+<p>fig: Sample file directory</p>
+<p>The sample files for test is <a href="https://drive.google.com/drive/folders/1RtEmP73VAlpWUNamcl9HS8u_y-INbV0A?usp=sharing">here</a>.</p>
+</div>
+<h3 id="sec-11">3.5.3. Operation</h3>
+<div class="sec-body lv3">
+<p>The Sampler effect has two modes: <strong>Play</strong> and <strong>Record</strong>.<br>
+By default, it is in <strong>Play</strong> mode.<br>
+You can toggle between the two modes by pressing <strong>Wind</strong> + <strong>Sprout</strong> Button.<br>
+The current mode can be determined by the Sprout LED's lighting status; it lights up <span class="c-purple"><strong>purple</strong></span> when in Play mode and <span class="c-purple"><strong>flashes</strong></span> <span class="c-purple"><strong>purple</strong></span> when in <strong>Record</strong> mode.</p>
+</div>
+<h4 id="sec-12">3.5.3.1. Play Mode</h4>
+<div class="sec-body lv4">
+<p><strong>Bank Select</strong></p>
+<p>You can change banks with the <strong>Wind + Time</strong> knob.<br>
+The <strong>Time</strong> LED and <strong>Meter</strong> LED colors change for each bank.（<span class="c-red"><strong>red</strong></span>-&gt;<span class="c-dkgreen"><strong>green</strong></span>-&gt;<span class="c-blue"><strong>blue</strong></span>-&gt;<span class="c-dkyellow"><strong>yellow</strong></span>-&gt; ...)</p>
+<p><strong>Slot Select</strong></p>
+<p>You can change the slot with the <strong>Time</strong> Knob.<br>
+The <strong>Meter</strong> LEDs indicate the available slot positions using the bank color.<br>
+The currently selected slot position is displayed in a brighter color.</p>
+<p>You can also change the selected slot using CV input.</p>
+<p><strong>Play Sample</strong></p>
+<p>A trigger input to the <strong>GATE</strong> Input will play the sample in the selected slot.<br>
+Also, if an audio signal is input to the <strong>L/R</strong> Input, the signal will be mixed with the audio of the sample being played and output.</p>
+<p>To suppress click noise, a retrigger during playback crossfades from the previous sound to the new one over about 1 msec, and the last about 1 msec of a sample fades out <strong>(ver 3)</strong>.<br>
+The length can be changed or disabled in the settings file (see <a href="#sec-26">Section 5</a>).</p>
+<p><strong>Change Speed</strong></p>
+<p>The <strong>Sun</strong> Knob allows you to change the playback speed of the sample.<br>
+The middle position is the same speed, the left is slower, and the right is faster.</p>
+<p><strong>Change Volume</strong></p>
+<p>The <strong>Wet</strong> Knob allows you to change the sample playback volume.</p>
+<p><strong>Tape Saturator Effect</strong></p>
+<p>The <strong>Wind + Sun</strong> knob sets the amount of tape saturation effect.<br>
+They recreate the flutter effect caused by tape aging and the effect of a bandpass filter.<br>
+The minimum setting gives 0% effect, and the maximum setting gives 100%.</p>
+<p><strong>Reverb Effect</strong></p>
+<p><strong>Wind + Wet</strong> Knob sets the amount of reverb effect.<br>
+This reverb is a simplified algorithm of the <strong>FDN Reverb</strong> effect.</p>
+</div>
+<h4 id="sec-13">3.5.3.2. Record Mode</h4>
+<div class="sec-body lv4">
+<p><strong>Through output of input audio signal</strong></p>
+<p>Like <strong>Play</strong> mode, the input audio signal is always mixed to the audio output, regardless of whether recording is in progress.</p>
+<p><strong>Bank / Slot Select</strong></p>
+<p>Unlike <strong>Play</strong> mode, you can select banks and slots that do not contain samples.<br>
+(In this case, the <strong>Meter</strong> LED at the selected slot will light up in a fainter bank color.)</p>
+<p><strong>Start / Stop Recording</strong></p>
+<p>Pressing the <strong>Sprout</strong> Button will enter <strong>Record</strong> mode and begin recording the incoming audio signal to the selected slot position.<br>
+The <strong>Sprout</strong> LED will light <span class="c-red"><strong>red</strong></span> while recording.</p>
+<p>Press the <strong>Sprout</strong>  button again to stop recording and the <strong>Sprout</strong> LED will return to <span class="c-purple"><strong>flashing purple</strong></span>.</p>
+<p>The recording length is limited to the remained memory size of the SD card.</p>
+<p>Another way to start recording is to hold down the <strong>Sprout</strong> button and input a trigger signal into the <strong>Gate</strong> Input, which will start recording in sync with the trigger signal.<br>
+Also in this case, pressing the <strong>Sprout</strong> button again will stop recording.</p>
+<p><strong>Reverb Effect</strong></p>
+<p>Like the <strong>Play</strong> mode, the <strong>Wind + Wet</strong> knob set the amount of reverb effect.<br>
+By default, only the input sound is recorded, and the reverb effect is applied to the output only.<br>
+The settings file can make the recorded samples include the reverb effect (see <a href="#sec-26">Section 5</a>).</p>
+</div>
+<h2 id="sec-14">3.6. String Resonator (ver 3)</h2>
+<div class="sec-body lv2">
+<p>If the current effect is <strong>String Resonator</strong>, <strong>Sprout</strong> LED color is <span class="c-emerald"><strong>emerald green</strong></span>.</p>
+<p><strong>String Resonator</strong> resonates virtual strings with the input audio signal.<br>
+A trigger at the <strong>GATE</strong> Input plucks the strings (strum) and the <strong>CV</strong> Input (V/oct) sets the pitch, so it can also be played as a sound source.<br>
+It is based on the Sympathetic Strings model of Mutable Instruments Rings (MIT License, see <a href="#sec-33">Section 10</a>), with electric bass and electric guitar modes added.</p>
+<p>Only the string sound is output (the dry signal is not included).<br>
+The <strong>Meter</strong> LED shows the output level in <span class="c-emerald"><strong>emerald green</strong></span>.</p>
+</div>
+<h3 id="sec-15">3.6.1. Voice Mode</h3>
+<div class="sec-body lv3">
+<p>The <strong>Wind + Time</strong> Knob selects the string configuration (voice mode).<br>
+There are the following 6 modes, in order from the left of the knob. While the <strong>Wind</strong> Button is held, the color of the <strong>Time</strong> LED shows the current mode.</p>
+<table>
+<thead>
+<tr><th>Mode</th><th>Time LED</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td>B</td><td><span class="c-purple"><strong>purple</strong></span></td><td>Electric bass. 1 voice (2 strings). Base note C2.<br>With an amp + cabinet simulation (see <a href="#sec-17">Section 3.6.3</a>)</td></tr>
+<tr><td>G</td><td><span class="c-blue"><strong>blue</strong></span></td><td>Electric guitar. 4 voices (2 strings per voice). Base note C3.<br>With an amp + cabinet simulation (see <a href="#sec-17">Section 3.6.3</a>)</td></tr>
+<tr><td>1</td><td><span class="c-red"><strong>red</strong></span></td><td>1 voice (1 main string + 7 sympathetic strings). Base note C3</td></tr>
+<tr><td>2</td><td><span class="c-orange"><strong>orange</strong></span></td><td>2 voices (1 main string + 3 sympathetic strings per voice). Base note C3</td></tr>
+<tr><td>4</td><td><span class="c-green"><strong>green</strong></span></td><td>4 voices (1 main string + 1 sympathetic string per voice). Base note C3. Default</td></tr>
+<tr><td>8</td><td><strong>white</strong></td><td>8 voices (1 string per voice, no sympathetic strings). Base note C3</td></tr>
+</tbody>
+</table>
+<p>The base note is the pitch when the <strong>CV</strong> Input is at 0V (unconnected) and <strong>Transpose</strong> is at the center position.</p>
+<p>Each strum moves to the next voice in turn, and the voices played before keep decaying.<br>
+Changing the voice mode stops the strings that are sounding.</p>
+</div>
+<h3 id="sec-16">3.6.2. Parameters (1 / 2 / 4 / 8)</h3>
+<div class="sec-body lv3">
+<p>In the voice modes 1 / 2 / 4 / 8, this effect has the following parameters:</p>
+<table>
+<thead>
+<tr><th>Operation</th><th>Name</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td>Time</td><td>Transpose</td><td>Transposes the pitch in semitones.<br><br>-12 semitones at the leftmost position, ±0 at the center position, +12 semitones at the rightmost position.</td></tr>
+<tr><td>Sun</td><td>Brightness</td><td>Brightness of the string tone.<br><br>The higher the value, the brighter the sound, with more high frequencies.</td></tr>
+<tr><td>Wet</td><td>Damping</td><td>Decay time of the strings.<br><br>The higher the value, the longer the strings ring.<br>About 0.07 sec at the leftmost position, about 4.5 sec at the center position, and near the rightmost position the strings no longer decay.</td></tr>
+<tr><td>Wind + Time</td><td>Voice Mode</td><td>Voice mode (see <a href="#sec-15">Section 3.6.1</a>)</td></tr>
+<tr><td>Wind + Sun</td><td>Structure / Position</td><td>1 / 2 / 4 voices (Structure): the combination of the pitches of the sympathetic strings.<br>Toward the left, the sympathetic strings are tuned lower (the base note, an octave below, a fifth below, etc.), and toward the right higher (a fifth above, an octave above, two octaves above, etc.).<br><br>8 voices (Position): the position where the string is plucked and where its sound is picked up.<br>At the center position, the even harmonics become weaker.</td></tr>
+<tr><td>Wind + Wet</td><td>Spread</td><td>Stereo width.<br><br>Each strum places the voices from left to right in turn (left and right alternately with 1 voice).<br>At the leftmost position all voices are in the center, and at the rightmost position the sound is widest.<br>The default is the leftmost position.</td></tr>
+<tr><td>Wind double tap</td><td>Damping Filter</td><td>Turns on / off the filter that damps the high frequencies of the decay first (the same damping as the production Rings).<br>When off, the highs of the decay remain and the sound is brighter.<br><br>The default is on. While on, the <strong>Wind</strong> LED lights <span class="c-emerald"><strong>emerald green</strong></span>.<br>(The setting is not saved; it returns to on at the next power-on)</td></tr>
+<tr><td>Wind + Sprout</td><td>Pitch Detection Mode</td><td>Turns the pitch detection mode on / off (see <a href="#sec-19">Section 3.6.5</a>)</td></tr>
+<tr><td>Wind + Sprout (2 sec)</td><td>CV Calibration</td><td>Calibrates the CV Input (see <a href="#sec-20">Section 3.6.6</a>)</td></tr>
+</tbody>
+</table>
+<p>A <strong>Wind</strong> double tap means pressing the <strong>Wind</strong> Button briefly twice within 0.4 seconds.</p>
+</div>
+<h3 id="sec-17">3.6.3. Parameters (B / G)</h3>
+<div class="sec-body lv3">
+<p>In the voice modes B (electric bass) / G (electric guitar), this effect has the following parameters.</p>
+<p>In both modes, one voice is made of 2 strings (the horizontal and the vertical vibration of a string) that ring with slightly different pitches and decays, which recreates the two-stage decay and the beating of a real string.<br>
+The sound sits in the center (L / R carry the same signal).<br>
+Since B has 1 voice, each strum plucks the same strings again.</p>
+<table>
+<thead>
+<tr><th>Operation</th><th>Name</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td>Time</td><td>Transpose</td><td>Transposes the pitch in semitones (-12 to +12 semitones).</td></tr>
+<tr><td>Sun</td><td>Hardness</td><td>Plucking strength.<br><br>B: Left: finger → Center: pick → Right: slap<br>G: Left: soft picking → Right: hard picking<br><br>The harder the pluck, the brighter the sound, and the pitch rises slightly at the attack. Toward the right, the buzz of the string hitting the frets is added.<br>The strength and the plucking position vary slightly with each pluck.</td></tr>
+<tr><td>Wet</td><td>Damping</td><td>Decay time of the strings (the same as <a href="#sec-16">Section 3.6.2</a>).</td></tr>
+<tr><td>Wind + Time</td><td>Voice Mode</td><td>Voice mode (see <a href="#sec-15">Section 3.6.1</a>)</td></tr>
+<tr><td>Wind + Sun</td><td>Pickup Position</td><td>Position of the pickup.<br><br>Left position: Near the bridge (hard, thin sound)<br>Right position: Away from the bridge (thick, round sound)</td></tr>
+<tr><td>Wind + Wet</td><td>Amp Drive</td><td>Drive of the amp + cabinet simulation.<br><br>At the leftmost position the sound does not go through the amp (bypass, default). Toward the right, the distortion gets stronger.</td></tr>
+<tr><td>Wind double tap</td><td>Dispersion</td><td>Turns on / off the inharmonicity (the overtones shifted by the stiffness of the string).<br>When on, the sound is metallic and taut.<br><br>The default is on. While on, the <strong>Wind</strong> LED lights <span class="c-purple"><strong>purple</strong></span> in B and <span class="c-blue"><strong>blue</strong></span> in G.<br>(The setting is not saved; it returns to on at the next power-on)</td></tr>
+<tr><td>Wind + Sprout</td><td>Pitch Detection Mode</td><td>Turns the pitch detection mode on / off (see <a href="#sec-19">Section 3.6.5</a>)</td></tr>
+<tr><td>Wind + Sprout (2 sec)</td><td>CV Calibration</td><td>Calibrates the CV Input (see <a href="#sec-20">Section 3.6.6</a>)</td></tr>
+</tbody>
+</table>
+</div>
+<h3 id="sec-18">3.6.4. Strum / Pitch / Excitation</h3>
+<div class="sec-body lv3">
+<p><strong>Strum (GATE Input)</strong></p>
+<p>A trigger / gate signal at the <strong>GATE</strong> Input plucks the strings of the next voice at its rising edge (strum).</p>
+<p>When the gate stays on longer than 40 msec, that voice keeps ringing without decaying while the gate is on.<br>
+When the gate turns off, the voice returns to the decay of the <strong>Wet</strong> Knob (Damping).<br>
+A short trigger rings with the decay of the <strong>Wet</strong> Knob.</p>
+<p><strong>Pitch (CV Input)</strong></p>
+<p>The <strong>CV</strong> Input is a V/oct pitch input.<br>
+The pitch of the strings is the base note + <strong>Transpose</strong> + the voltage at the CV Input (1V = 1 octave).<br>
+The pitch of the last strummed voice follows the CV Input.</p>
+<p>The accuracy of the <strong>CV</strong> Input can be calibrated as described in <a href="#sec-20">Section 3.6.6</a>.</p>
+<p><strong>Excitation (L/R Audio Input)</strong></p>
+<p>The audio signal at the L/R Input makes the strings of the last strummed voice resonate.<br>
+L and R are used alternately with each strum (when the R Input is unconnected, the signal of the L Input also feeds R).</p>
+<p>When the <strong>L</strong> Input has been silent for 3 seconds or more, an internal exciter (a noise burst in 1 / 2 / 4 / 8, a waveform of a finger or pick pluck in B / G) plucks the strings at each strum.<br>
+As soon as sound comes into the <strong>L</strong> Input, the strings resonate with the input signal again.<br>
+Right after <strong>String Resonator</strong> is selected, the internal exciter is active.</p>
+<p><strong>MIDI</strong></p>
+<p>MIDI notes can also pluck the strings (see <a href="#sec-21">Section 4</a>).</p>
+</div>
+<h3 id="sec-19">3.6.5. Pitch Detection Mode</h3>
+<div class="sec-body lv3">
+<p>Pressing and releasing the <strong>Sprout</strong> Button while holding the <strong>Wind</strong> Button toggles the pitch detection mode on / off.<br>
+While it is on, the <strong>Sprout</strong> LED slowly fades in and out.</p>
+<p>In the pitch detection mode, the pitch of a single note at the <strong>R</strong> Input (such as a basic VCO waveform) is detected, and the pitch of the last strummed voice follows it.<br>
+<strong>Transpose</strong> and the voltage at the <strong>CV</strong> Input are added to the detected pitch.<br>
+The excitation always uses the <strong>L</strong> Input (the internal exciter when the <strong>L</strong> Input has been silent for 3 seconds or more).</p>
+<p>The pitch detection mode is kept when the power is turned off. Switching to another effect turns it off.</p>
+</div>
+<h3 id="sec-20">3.6.6. CV Calibration</h3>
+<div class="sec-body lv3">
+<p>With a VCO that tracks 1V/oct accurately, you can calibrate the V/oct accuracy of the <strong>CV</strong> Input (the 0V position and the width of one octave).<br>
+The calibration is kept when the power is turned off, and also after a factory reset (see <a href="#sec-30">Section 7</a>).</p>
+<p>What you need:</p>
+<ul><li>A VCO that tracks 1V/oct accurately</li><li>A CV source (a keyboard, a sequencer, etc.) for the V/oct input of the VCO, and a multiple to split its output</li></ul>
+<p>Procedure:</p>
+<ol><li>On the <strong>String Resonator</strong>, hold the <strong>Wind</strong> Button and press the <strong>Sprout</strong> Button for 2 seconds.<br>The calibration mode starts: the <strong>Sprout</strong> LED blinks <span class="c-orange"><strong>orange</strong></span>, the sound stops, and the top of the <strong>Meter</strong> LED blinks slowly.</li><li>With the cable unplugged from the <strong>CV</strong> Input, press the <strong>Sprout</strong> Button (the 0V measurement).<br>The top of the <strong>Meter</strong> LED lights.</li><li>Split the output of the CV source into both the <strong>CV</strong> Input and the V/oct input of the VCO, and connect the output of the VCO to the <strong>R</strong> Input.</li><li>Press the <strong>Sprout</strong> Button each time you change the voltage of the CV source (one measurement takes 0.2 sec).<br>With each measurement, the <strong>Meter</strong> LED lights one more step from the top.<br>Measure at least 2 points over a range of at least one octave (4 to 5 points, for example 0V to 4V, are recommended).<br>When the pitch cannot be detected, the <strong>Meter</strong> LED flashes <span class="c-red"><strong>red</strong></span> and that point is not used.</li><li>A short press of the <strong>Wind</strong> Button computes and saves the calibration.<br>On success all <strong>Meter</strong> LEDs light <span class="c-green"><strong>green</strong></span>, on failure <span class="c-red"><strong>red</strong></span>, for 0.5 sec, and then the normal display returns (on failure, the previous calibration is kept).</li></ol>
+<p>To quit midway, hold the <strong>Wind</strong> Button for 2 seconds (nothing is saved).<br>
+To clear the calibration and return to the factory values, enter the calibration mode and press the <strong>Wind</strong> Button briefly without measuring.</p>
+</div>
+<h1 id="sec-21">4. MIDI (ver 3)</h1>
+<div class="sec-body lv1">
+<p><strong>Sprout</strong> receives MIDI messages to control the parameters (all effects), play the <strong>String Resonator</strong>, and sync the <strong>Repeater</strong> to the clock.<br>
+For MIDI input and output, connect the separately sold MIDI expansion module <strong>MIDI CoM+</strong> to the <strong>MIDI Expand Connector</strong> on the back.<br>
+When connecting, align the red line of the cable with the side of the “RED” mark on the board (do not insert it the other way round).</p>
+<p>The default MIDI receive channel is 1. It can be changed in the settings file on the SD card (see <a href="#sec-26">Section 5</a>).</p>
+</div>
+<h2 id="sec-22">4.1. Control Change</h2>
+<div class="sec-body lv2">
+<p>On all effects, the following CCs control the 6 parameters:</p>
+<table>
+<thead>
+<tr><th style="text-align:center">CC</th><th>Parameter</th></tr>
+</thead>
+<tbody>
+<tr><td style="text-align:center">16</td><td>Time</td></tr>
+<tr><td style="text-align:center">17</td><td>Sun</td></tr>
+<tr><td style="text-align:center">18</td><td>Wet</td></tr>
+<tr><td style="text-align:center">19</td><td>Wind + Time</td></tr>
+<tr><td style="text-align:center">20</td><td>Wind + Sun</td></tr>
+<tr><td style="text-align:center">21</td><td>Wind + Wet</td></tr>
+</tbody>
+</table>
+<p>The CC values 0 to 127 correspond to the knob positions from the leftmost to the rightmost.<br>
+Parameters with fine steps change smoothly between the CC values.</p>
+<p>Values changed by CC are not saved; after a power cycle, the knob values apply again. They are not shown on the knob LEDs either.<br>
+When you move a knob after its value was changed by CC, the knob takes effect from the point where it passes the position of the current value.</p>
+</div>
+<h2 id="sec-23">4.2. String Resonator</h2>
+<div class="sec-body lv2">
+<p>The <strong>String Resonator</strong> can be played with the following messages:</p>
+<table>
+<thead>
+<tr><th>Message</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td>Note On / Off</td><td>Plucks the strings of the next voice at the pitch of the note (+ <strong>Transpose</strong>). The voltage at the <strong>CV</strong> Input is not added.<br><br>When a note is held longer than 40 msec, that voice keeps ringing without decaying while the note is held, and returns to the decay of the <strong>Wet</strong> Knob at Note Off.<br>Chords can be played (up to the number of voices at once).</td></tr>
+<tr><td>Velocity</td><td>Added to the value of <strong>Sun</strong> (Brightness, Hardness in B / G).<br>64 leaves it unchanged, 1 lowers it by half the knob range, and 127 raises it by half the knob range.<br><br>Can be disabled in the settings file (see <a href="#sec-26">Section 5</a>).</td></tr>
+<tr><td>Pitch Bend</td><td>Changes the pitch of all voices within ±2 semitones.</td></tr>
+</tbody>
+</table>
+<p>With a sequencer that sends a fixed velocity, set the velocity to 64 or disable the velocity in the settings file.</p>
+</div>
+<h2 id="sec-24">4.3. Repeater</h2>
+<div class="sec-body lv2">
+<p>The <strong>Repeater</strong> can sync to MIDI Clock:</p>
+<table>
+<thead>
+<tr><th>Message</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td>Clock</td><td>Syncs with 6 clocks (a 16th note) as 1 step (the same as 1 clock at the <strong>GATE</strong> Input).</td></tr>
+<tr><td>Start</td><td>The next clock becomes a step boundary.</td></tr>
+</tbody>
+</table>
+<p>While a clock is input to the <strong>GATE</strong> Input, the <strong>GATE</strong> Input has priority.<br>
+When the clock at the <strong>GATE</strong> Input stops for 2 seconds or more (4 times the clock interval or more for a slow clock), the <strong>Repeater</strong> syncs to MIDI Clock.</p>
+</div>
+<h2 id="sec-25">4.4. MIDI Thru</h2>
+<div class="sec-body lv2">
+<p>Received MIDI Clock / Start / Continue / Stop messages are sent to the MIDI output as they are (all effects).</p>
+</div>
+<h1 id="sec-26">5. Settings File (config.ini) (ver 3)</h1>
+<div class="sec-body lv1">
+<p>Placing a text file named “<strong>config.ini</strong>” in the root directory of the SD card changes the settings.<br>
+The file is read only once at power-on (after changing the file, turn the module off and on again).<br>
+When there is no file, or a value cannot be read, the default value is used.</p>
+<pre><code>[midi]
+; 1..16
+channel = 1
+; on / off
+velocity = on
+
+[sampler]
+; 0..10 (ms), 0 = off
+declick_ms = 1.0
+; on / off
+rec_reverb = off</code></pre>
+<table>
+<thead>
+<tr><th>Section</th><th>Key</th><th>Value</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td>[midi]</td><td>channel</td><td>1 to 16 (default 1)</td><td>The MIDI receive channel</td></tr>
+<tr><td>[midi]</td><td>velocity</td><td>on / off (default on)</td><td>Whether the <strong>String Resonator</strong> uses the velocity (see <a href="#sec-23">Section 4.2</a>)</td></tr>
+<tr><td>[sampler]</td><td>declick_ms</td><td>0 to 10, decimals allowed (default 1.0)</td><td>The length (msec) of the crossfade at a retrigger and of the fade-out at the end of a sample in the <strong>Sampler</strong>. 0 disables them (see <a href="#sec-12">Section 3.5.3.1</a>)</td></tr>
+<tr><td>[sampler]</td><td>rec_reverb</td><td>on / off (default off)</td><td>Whether the samples recorded in the <strong>Record Mode</strong> of the <strong>Sampler</strong> include the reverb effect (see <a href="#sec-13">Section 3.5.3.2</a>)</td></tr>
+</tbody>
+</table>
+<p>Write comments on their own lines, starting with <code>;</code> or <code>#</code>.<br>
+A comment written after a value makes the value unreadable, and the default value is used.</p>
+</div>
+<h1 id="sec-27">6. Firmware Update</h1>
+<div class="sec-body lv1">
+<p>There are 2 ways of the firmware update process.<br>
+If you have micro SD Card, it’s easy to upload by that.<br>
+If not, you can upload firmware by USB-DFU, but you need to prepare a DFU program.</p>
+<p>Updating from ver 2.0 or earlier to ver 3.0 resets the saved settings (the selected effect and the parameter values).</p>
+</div>
+<h2 id="sec-28">6.1. Update by SD Card</h2>
+<div class="sec-body lv2">
+<p>Update Procedure:</p>
+<ol><li>Put the firmware binary file (ex: “Sprout_firm_v3_0.bin”) on the root directory of the SD Card.</li><li>Power off your rack.</li><li>Unmount the Sprout module from your rack, and insert the SD Card.</li><li>Mount the Sprout module.</li><li>Power on your rack. Then the Sprout module is automatically updated.</li><li>After the update, delete the firmware binary file from the SD card.<br>(If you leave it, the firmware is written again at every power-on)</li></ol>
+</div>
+<h2 id="sec-29">6.2. Update by USB-DFU</h2>
+<div class="sec-body lv2">
+<p>First, you need to prepare a DFU program for update by USB-DFU.<br>
+For example, “dfu-util” (<a href="https://dfu-util.sourceforge.net/">https://dfu-util.sourceforge.net/</a>) or “zadig”(<a href="https://zadig.akeo.ie/">https://zadig.akeo.ie/</a>) , or etc ...</p>
+<p>Update Procedure:</p>
+<ol><li>Connect usb cable between pc and daisy seed.</li><li>Press daisy seed’s reset button</li><li>Upload the firmware binary file (ex: “Sprout_firm_v3_0.bin”) by DFU program within 2.5 seconds (while daisy’s led is flashing).</li></ol>
+</div>
+<h1 id="sec-30">7. Factory Reset</h1>
+<div class="sec-body lv1">
+<p>Powering on while holding both the <strong>Sprout</strong> Button and the <strong>Wind</strong> Button returns the saved settings (the selected effect, the parameter values, and the pitch detection mode of the <strong>String Resonator</strong>) to the factory state.<br>
+Release the buttons when all LEDs light <span class="c-green"><strong>green</strong></span>.</p>
+<p>The calibration of the <strong>CV</strong> Input (see <a href="#sec-20">Section 3.6.6</a>) is not cleared.</p>
+</div>
+<h1 id="sec-31">8. Warranty</h1>
+<div class="sec-body lv1">
+<p>We offer a one-year warranty on this product from the date of purchase, providing free repairs for any issues that occur during this period, with the exception of any failures that result from intentional modifications or destruction by the user, careless dropping, or incorrect connection of connectors such as power supplies.</p>
+<p>Please note that you will be responsible for the shipping fee when sending the module for repair.</p>
+<p>When requesting repairs, please submit a receipt from the store where you purchased the product or a statement of purchase as proof.</p>
+</div>
+<h1 id="sec-32">9. Contact</h1>
+<div class="sec-body lv1">
+<p>mail: <a href="mailto:centrevillage@gmail.com">centrevillage@gmail.com</a><br>
+site: <a href="https://centrevillage.net">https://centrevillage.net</a></p>
+</div>
+<h1 id="sec-33">10. License</h1>
+<div class="sec-body lv1">
+<p><strong>String Resonator</strong> is based on the source code of Mutable Instruments Rings (MIT License).</p>
+<ul><li>Mutable Instruments Rings (<a href="https://github.com/pichenettes/eurorack">https://github.com/pichenettes/eurorack</a>): Copyright 2015 Emilie Gillet.</li><li>stmlib (<a href="https://github.com/pichenettes/stmlib">https://github.com/pichenettes/stmlib</a>): Copyright 2014 Emilie Gillet.</li></ul>
+<pre><code>Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.</code></pre>
+</div>
+</article>
+</main>
+</body>
+</html>
