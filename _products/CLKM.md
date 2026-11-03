@@ -34,6 +34,10 @@ Also, CLKM can change the clocks per beat, the swing and the reset timing.
 ---
 firmware:
 
+[v1.9](https://drive.google.com/file/d/12obgD4YhFYoMKV7h5uzSquLtNL29iaxw/view?usp=sharing)
+
+- add clock / midi output delay config
+
 [v1.8](https://drive.google.com/file/d/15M8Fad0XpwsCEGB1HZNaThQTUZvMre1R/view?usp=drive_link)
 
 - Fixed an issue where the clock output would be skipped in rare cases when used as a master clock.
@@ -69,6 +73,10 @@ CLKM はわずか2HPのコンパクトなクロックマスターモジュール
 
 ---
 firmware:
+
+[v1.9](https://drive.google.com/file/d/12obgD4YhFYoMKV7h5uzSquLtNL29iaxw/view?usp=sharing)
+
+- クロック/MIDIディレイ設定を追加
 
 [v1.8](https://drive.google.com/file/d/15M8Fad0XpwsCEGB1HZNaThQTUZvMre1R/view?usp=drive_link)
 
